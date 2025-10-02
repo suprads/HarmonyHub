@@ -21,6 +21,17 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+    rules: {
+      camelcase: "warn",
+      eqeqeq: "warn",
+      "no-array-constructor": "warn",
+      "no-global-assign": "warn",
+      "no-new-wrappers": "warn",
+      "no-param-reassign": ["warn", { props: true }],
+      "no-var": "warn",
+      "prefer-const": "warn",
+      "require-await": "warn",
+    },
   },
 ];
 
