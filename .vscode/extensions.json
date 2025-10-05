@@ -1,6 +1,8 @@
 {
     "recommendations": [
         "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "docker.docker",
+        "ms-azuretools.vscode-containers"
     ]
 }

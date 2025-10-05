@@ -1,0 +1,18 @@
+# git
+.git
+
+# next.js
+.next
+
+# dependencies
+node_modules
+dist
+
+# debug
+npm-debug.log*
+
+# misc
+*.local
+
+# env files
+.env
