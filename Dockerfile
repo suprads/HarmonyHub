@@ -2,29 +2,29 @@
 ARG NODE_VERSION=24
 
 # Dependencies
-FROM node:${NODE_VERSION}-alpine AS Dependeinces
+FROM node:${NODE_VERSION}-alpine AS dependencies
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
 # Builder
-FROM node:${NODE_VERSION}-alpine as Builder
+FROM node:${NODE_VERSION}-alpine AS builder
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
-COPY --from=Dependeinces /app/node_modules ./node_modules
+COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
-RUN npm run Builder
+RUN npm run build
 
 # Runner
-FROM node:${NODE_VERSION}-alpine AS Runner
+FROM node:${NODE_VERSION}-alpine AS runner
 WORKDIR /app
 
 # Non-root user
-RUN addgroup -S node && adduser -S nextjs -G node
+RUN adduser -S nextjs -G node
 
-COPY --from=build /app/.next/standalone ./
-COPY --from=build /app/.next/static ./.next/static
-COPY --from=build /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
 USER nextjs
 EXPOSE 3000
