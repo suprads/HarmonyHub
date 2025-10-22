@@ -26,12 +26,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-              <nav>
-                  <Link href="/">Home</Link>
-                  <Link href="/search">Search</Link>
-                  <Link href="/ratings">Ratings</Link>
-                  <Link href="/chart">Chart</Link>
-                  <Link href="/settings">Settings</Link>
+              <nav className="navbar">
+                  <div className="navbar-name">
+                      HarmonyHub
+                  </div>
+                  <div className="navbar-center">
+                    <Link href="/">Home</Link>
+                    <Link href="/search">Search</Link>
+                    <Link href="/ratings">Ratings</Link>
+                    <Link href="/chart">Chart</Link>
+                    <Link href="/settings">Settings</Link>
+                  </div>
               </nav>
               {children}
       </body>
