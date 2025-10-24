@@ -37,7 +37,7 @@ export async function getAccessToken(): Promise<AccessTokenResponse> {
 }
 
 /**
- * Fetches the user's top tracks or artists from Spotify.
+ * Gets the user's top tracks or artists from Spotify.
  * @url https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
  */
 export async function getTopItems(
@@ -49,7 +49,7 @@ export async function getTopItems(
     offset = 0,
   }: TopTrackRequest,
 ) {
-  await fetch(
+  const response = await fetch(
     `https://api.spotify.com/v1/me/top/${type}?time_range=${timeRange}&limit=${limit}&offset=${offset}`,
     {
       headers: {
@@ -57,4 +57,6 @@ export async function getTopItems(
       },
     },
   );
+
+  return response.json();
 }
