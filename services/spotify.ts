@@ -1,5 +1,8 @@
 import "server-only";
 import { env } from "process";
+import { redirect } from "next/navigation";
+
+const REDIRECT_URI = "http://127.0.0.1:3000";
 
 type AccessTokenResponse = {
   access_token: string;
@@ -22,15 +25,40 @@ type TopTrackRequest = Paging & {
 };
 
 /**
- * Retrieves an access token from the Spotify API using the client credentials
- * flow.
- * @url https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
+ * Redirects the user to the Spotify authorization page to give our app access
+ * to their account.
  */
-export async function getAccessToken(): Promise<AccessTokenResponse> {
+export function authorizeUser() {
+  const searchParams = new URLSearchParams({
+    client_id: env.SPOTIFY_CLIENT_ID ?? "",
+    response_type: "code",
+    redirect_uri: REDIRECT_URI,
+    //state,
+    scope: "user-top-read",
+  });
+
+  redirect(`https://accounts.spotify.com/authorize?${searchParams.toString()}`);
+}
+
+/**
+ * Retrieves an access token from the Spotify API.
+ * @param code The authorization code returned from the Spotify authorization
+ * page.
+ */
+export async function getAccessToken(
+  code: string,
+): Promise<AccessTokenResponse> {
+  const encodedKeys = Buffer.from(
+    `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`,
+  ).toString("base64");
+
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
-    body: `grant_type=client_credentials&client_id=${env.SPOTIFY_CLIENT_ID}&client_secret=${env.SPOTIFY_CLIENT_SECRET}`,
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `grant_type=authorization_code&code=${code}&redirect_uri=${REDIRECT_URI}`,
+    headers: {
+      Authorization: `Basic ${encodedKeys}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
   });
 
   return response.json();
@@ -53,7 +81,7 @@ export async function getTopItems(
     `https://api.spotify.com/v1/me/top/${type}?time_range=${timeRange}&limit=${limit}&offset=${offset}`,
     {
       headers: {
-        Authorization: `Bearer  ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     },
   );
