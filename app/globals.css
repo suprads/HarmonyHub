@@ -36,20 +36,20 @@ a {
 }
 
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
 }
 
 .navbar-name {
-    font-weight: bold;
-    font-size: 1.5rem;
+  font-weight: bold;
+  font-size: 1.5rem;
 }
 
 .navbar-center {
-    display: flex;
-    gap: 1rem;
-    padding: 0;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
 }
 
 @media (prefers-color-scheme: dark) {
