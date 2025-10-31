@@ -42,3 +42,10 @@ yarn-error.log*
 next-env.d.ts
 
 # make
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
