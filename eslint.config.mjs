@@ -21,6 +21,8 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+  },
+  {
     rules: {
       camelcase: "warn",
       eqeqeq: "warn",
