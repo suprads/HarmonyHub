@@ -31,6 +31,7 @@ const eslintConfig = [
       "no-var": "warn",
       "prefer-const": "warn",
       "require-await": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
     },
   },
 ];
