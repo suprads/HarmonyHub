@@ -24,9 +24,34 @@ type TopTrackRequest = Paging & {
   timeRange?: "short_term" | "medium_term" | "long_term";
 };
 
+type TopTrackResponse = {
+  href: string;
+  limit: number;
+  next: string | null;
+  offset: number;
+  previous: string | null;
+  total: number;
+  /** A set of artists or tracks. */
+  items: any[];
+};
+
+type AuthenticationError = {
+  error: string;
+  error_description: string;
+};
+
+/** Returned by Spotify for errors relating to API calls */
+type SpotifyError = {
+  error: {
+    status: number;
+    message: string;
+  };
+};
+
 /**
  * Redirects the user to the Spotify authorization page to give our app access
- * to their account.
+ * to their account. Should return to the redirect URI with a code search
+ * parameter.
  */
 export function authorizeUser() {
   const searchParams = new URLSearchParams({
@@ -47,7 +72,7 @@ export function authorizeUser() {
  */
 export async function getAccessToken(
   code: string,
-): Promise<AccessTokenResponse> {
+): Promise<AccessTokenResponse | AuthenticationError> {
   const encodedKeys = Buffer.from(
     `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`,
   ).toString("base64");
@@ -76,7 +101,7 @@ export async function getTopItems(
     limit = 20,
     offset = 0,
   }: TopTrackRequest,
-) {
+): Promise<TopTrackResponse | SpotifyError> {
   const response = await fetch(
     `https://api.spotify.com/v1/me/top/${type}?time_range=${timeRange}&limit=${limit}&offset=${offset}`,
     {
