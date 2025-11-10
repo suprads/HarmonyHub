@@ -114,6 +114,12 @@ a.secondary {
   flex-shrink: 0;
 }
 
+.toptracks,
+.topartists {
+  margin-bottom: 12px;
+  text-align: center;
+}
+
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   a.primary:hover {
@@ -170,5 +176,31 @@ a.secondary {
 @media (prefers-color-scheme: dark) {
   .logo {
     filter: invert();
+  }
+}
+
+/* Layout for the paired lists (tracks + artists) */
+.logoContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: flex-start;
+  width: 100%;
+  justify-content: center;
+}
+
+.listColumn {
+  flex: 1 1 320px;
+  max-width: 520px;
+}
+
+@media (max-width: 800px) {
+  .logoContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  .listColumn {
+    max-width: 100%;
+    width: 100%;
   }
 }
