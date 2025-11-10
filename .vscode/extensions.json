@@ -1,8 +1,10 @@
 {
-    "recommendations": [
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "docker.docker",
-        "ms-azuretools.vscode-containers"
-    ]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "docker.docker",
+    "ms-azuretools.vscode-containers",
+    "orta.vscode-jest",
+    "ms-playwright.playwright"
+  ]
 }

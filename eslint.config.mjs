@@ -21,6 +21,8 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+  },
+  {
     rules: {
       camelcase: "warn",
       eqeqeq: "warn",
@@ -31,6 +33,7 @@ const eslintConfig = [
       "no-var": "warn",
       "prefer-const": "warn",
       "require-await": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
     },
   },
 ];
