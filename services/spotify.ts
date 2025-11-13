@@ -2,7 +2,11 @@ import "server-only";
 import { env } from "process";
 import { redirect } from "next/navigation";
 
-const REDIRECT_URI = "http://127.0.0.1:3000";
+/**
+ * A valid redirect URI for the Spotify API. These should match the valid URIs
+ * in our app information registered in Spotify.
+ */
+type RedirectUri = "http://127.0.0.1:3000" | "http://127.0.0.1:3000/chart";
 
 type AccessTokenResponse = {
   access_token: string;
@@ -54,12 +58,13 @@ type SpotifyError = {
  * Redirects the user to the Spotify authorization page to give our app access
  * to their account. Should return to the redirect URI with a code search
  * parameter.
+ * @param redirectURI The URI that should be returned to after authentication.
  */
-export function authorizeUser() {
+export function authorizeUser(redirectURI: RedirectUri) {
   const searchParams = new URLSearchParams({
     client_id: env.SPOTIFY_CLIENT_ID ?? "",
     response_type: "code",
-    redirect_uri: REDIRECT_URI,
+    redirect_uri: redirectURI,
     //state,
     scope: "user-top-read",
     //show_dialog
@@ -75,6 +80,7 @@ export function authorizeUser() {
  */
 export async function getAccessToken(
   code: string,
+  redirectURI: RedirectUri,
 ): Promise<AccessTokenResponse | AuthenticationError> {
   const encodedKeys = Buffer.from(
     `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`,
@@ -82,7 +88,7 @@ export async function getAccessToken(
 
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
-    body: `grant_type=authorization_code&code=${code}&redirect_uri=${REDIRECT_URI}`,
+    body: `grant_type=authorization_code&code=${code}&redirect_uri=${redirectURI}`,
     headers: {
       Authorization: `Basic ${encodedKeys}`,
       "Content-Type": "application/x-www-form-urlencoded",
