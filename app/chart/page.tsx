@@ -1,46 +1,46 @@
 import styles from "./chart.module.css";
-import { getTopItems } from "@/services/spotify";
+import * as SpotifyAPI from "@/services/spotify";
+import Image from "next/image";
 
-// Authorization token that must have been created previously. See : https://developer.spotify.com/documentation/web-api/concepts/authorization
-const token =
-  "BQCb5s9XZw10bc7PmyTDsJC5m-9aqnTG-wwhtugM_hy56GfTA-0W3rlseXQadKllYdwEQ-ARdkAXsUphanrWzC_2ZuvRCkWkeKN4Y4KZztfwYDUzZRDpJAUAJFTbrAQe0AZ4QLLIeciKjWDroKcQxyhIB8oG-NFF83bFszI56XdAXKwiS9TFPFXJ5TjZMjmzDxOxGgucXIaZc6tysTTqTQYa0FxTO1ZtyjBeRKJtFtYdNpcSR7ID-jY_MVWxzPTCGHp4gbGXVYe3nbvqjcPAl4C73B0ei-dR8lHIav12g8Qd73OAhrJo";
-async function fetchWebApi(endpoint: string, method: string, body?: any) {
-  const res = await fetch(`https://api.spotify.com/${endpoint}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    method,
-    body: body ? JSON.stringify(body) : undefined,
+const REDIRECT_URI = "http://127.0.0.1:3000/chart";
+
+// Note: Need to build project for PageProps<"/chart"> to not show as error.
+// See https://nextjs.org/docs/15/app/getting-started/layouts-and-pages#route-props-helpers
+export default async function ChartPage(props: PageProps<"/chart">) {
+  const { code: spotifyCode } = (await props.searchParams) as { code?: string };
+
+  if (!spotifyCode) {
+    console.log("Redirecting to Spotify to authorize user.");
+    SpotifyAPI.authorizeUser(REDIRECT_URI);
+  }
+  const tokenResponse = await SpotifyAPI.getAccessToken(
+    spotifyCode ?? "",
+    REDIRECT_URI,
+  );
+
+  if ("error" in tokenResponse) {
+    throw new Error(
+      `${tokenResponse.error}: ${tokenResponse.error_description}`,
+    );
+  }
+
+  const topTracks = await SpotifyAPI.getTopItems(tokenResponse.access_token, {
+    type: "tracks",
+    timeRange: "long_term",
+    limit: 5,
   });
-  return await res.json();
-}
+  const topArtists = await SpotifyAPI.getTopItems(tokenResponse.access_token, {
+    type: "artists",
+    timeRange: "long_term",
+    limit: 5,
+  });
 
-async function getTopTracks() {
-  // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
-  return (
-    await fetchWebApi("v1/me/top/tracks?time_range=long_term&limit=5", "GET")
-  ).items;
-}
+  if ("error" in topTracks) {
+    throw new Error(topTracks.error.message);
+  } else if ("error" in topArtists) {
+    throw new Error(topArtists.error.message);
+  }
 
-const topTracks = await getTopTracks();
-console.log(
-  topTracks?.map(
-    ({ name, artists }) =>
-      `${name} by ${artists.map((artist) => artist.name).join(", ")}`,
-  ),
-);
-
-async function getTopArtists() {
-  // Endpoint reference: https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
-  return (
-    await fetchWebApi("v1/me/top/artists?time_range=long_term&limit=5", "GET")
-  ).items;
-}
-
-const topArtists = await getTopArtists();
-console.log(topArtists?.map(({ name }) => name));
-
-export default function Page() {
   return (
     <div className={styles.page}>
       <h1 className={styles.chartHeader}>Your Personalized Charts</h1>
@@ -49,8 +49,8 @@ export default function Page() {
           <div className={styles.listColumn}>
             <h3 className={styles.toptracks}>Your Top Tracks</h3>
             <ol style={{ paddingLeft: 0, listStyle: "none" }}>
-              {topTracks?.map((track: any, index: number) => (
-                <li key={track?.id ?? index} style={{ marginBottom: 12 }}>
+              {topTracks.items.map((track, i) => (
+                <li key={track.id} style={{ marginBottom: 12 }}>
                   <div
                     style={{ display: "flex", gap: 12, alignItems: "center" }}
                   >
@@ -61,10 +61,10 @@ export default function Page() {
                         fontWeight: 700,
                       }}
                     >
-                      {index + 1}
+                      {i + 1}
                     </div>
-                    {track?.album?.images?.[2]?.url && (
-                      <img
+                    {track.album.images[2]?.url && (
+                      <Image
                         src={track.album.images[2].url}
                         alt={track.name}
                         width={64}
@@ -75,7 +75,7 @@ export default function Page() {
                     <div>
                       <div style={{ fontWeight: 600 }}>{track.name}</div>
                       <div style={{ fontSize: 12, color: "#666" }}>
-                        {track.artists?.map((a: any) => a.name).join(", ")}
+                        {track.artists.map((a: any) => a.name).join(", ")}
                       </div>
                     </div>
                   </div>
@@ -87,8 +87,8 @@ export default function Page() {
           <div className={styles.listColumn} style={{ marginTop: 0 }}>
             <h3 className={styles.topartists}>Your Top Artists</h3>
             <ol style={{ paddingLeft: 0, listStyle: "none" }}>
-              {topArtists?.map((artist: any, index: number) => (
-                <li key={artist?.id ?? index} style={{ marginBottom: 12 }}>
+              {topArtists.items.map((artist, i) => (
+                <li key={artist.id} style={{ marginBottom: 12 }}>
                   <div
                     style={{ display: "flex", gap: 12, alignItems: "center" }}
                   >
@@ -99,10 +99,10 @@ export default function Page() {
                         fontWeight: 700,
                       }}
                     >
-                      {index + 1}
+                      {i + 1}
                     </div>
-                    {artist?.images?.[2]?.url && (
-                      <img
+                    {artist.images[2]?.url && (
+                      <Image
                         src={artist.images[2].url}
                         alt={artist.name}
                         width={64}
@@ -113,7 +113,7 @@ export default function Page() {
                     <div>
                       <div style={{ fontWeight: 600 }}>{artist.name}</div>
                       <div style={{ fontSize: 12, color: "#666" }}>
-                        {artist.genres?.slice(0, 3).join(", ")}
+                        {artist.genres.slice(0, 3).join(", ")}
                       </div>
                     </div>
                   </div>
