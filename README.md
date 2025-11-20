@@ -2,7 +2,11 @@
 
 Senior Design Project
 
-## Project Plan Links:
+## Development Environment Set Up
+
+Create a file called `.env` in the root directory of the project, and make sure to include the items showcased in [`.env.example`](.env.example). Ask team members what values secret items like `POSTGRES_PASSWORD` and `SPOTIFY_CLIENT_SECRET` should be assigned in your local `.env` file.
+
+## Project Plan Links
 
 GitHub Projects: https://github.com/users/suprads/projects/2
 

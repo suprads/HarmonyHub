@@ -5,6 +5,7 @@
     "docker.docker",
     "ms-azuretools.vscode-containers",
     "orta.vscode-jest",
-    "ms-playwright.playwright"
+    "ms-playwright.playwright",
+    "prisma.prisma"
   ]
 }
