@@ -7,23 +7,17 @@ const REDIRECT_URI = "http://127.0.0.1:3000/chart";
 // Note: Need to build project for PageProps<"/chart"> to not show as error.
 // See https://nextjs.org/docs/15/app/getting-started/layouts-and-pages#route-props-helpers
 export default async function ChartPage(props: PageProps<"/chart">) {
-  const { code: spotifyCode } = (await props.searchParams) as { code?: string };
+  const { code: spotifyCode }: { code?: string } = await props.searchParams;
 
   if (!spotifyCode) {
     console.log("Redirecting to Spotify to authorize user.");
     SpotifyAPI.authorizeUser(REDIRECT_URI);
   }
+
   const tokenResponse = await SpotifyAPI.getAccessToken(
     spotifyCode ?? "",
     REDIRECT_URI,
   );
-
-  if ("error" in tokenResponse) {
-    throw new Error(
-      `${tokenResponse.error}: ${tokenResponse.error_description}`,
-    );
-  }
-
   const topTracks = await SpotifyAPI.getTopItems(tokenResponse.access_token, {
     type: "tracks",
     timeRange: "long_term",
@@ -34,12 +28,6 @@ export default async function ChartPage(props: PageProps<"/chart">) {
     timeRange: "long_term",
     limit: 5,
   });
-
-  if ("error" in topTracks) {
-    throw new Error(topTracks.error.message);
-  } else if ("error" in topArtists) {
-    throw new Error(topArtists.error.message);
-  }
 
   return (
     <div className={styles.page}>

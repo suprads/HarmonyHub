@@ -77,11 +77,12 @@ export function authorizeUser(redirectURI: RedirectUri) {
  * Retrieves an access token from the Spotify API.
  * @param code The authorization code returned from the Spotify authorization
  * page.
+ * @throws Error if something went wrong with the authentication request.
  */
 export async function getAccessToken(
   code: string,
   redirectURI: RedirectUri,
-): Promise<AccessTokenResponse | AuthenticationError> {
+): Promise<AccessTokenResponse> {
   const encodedKeys = Buffer.from(
     `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`,
   ).toString("base64");
@@ -95,18 +96,26 @@ export async function getAccessToken(
     },
   });
 
-  return response.json();
+  const json = await response.json();
+
+  if (json.error) {
+    const authError: AuthenticationError = json;
+    throw new Error(`${authError.error}: ${authError.error_description}}`);
+  }
+
+  return json;
 }
 
 /**
  * Used to refesh the access token when it expires.
  * @returns JSON response from requesting a refresh. If a new refresh_token
  * isn't included, keep using the existing token.
+ * @throws Error if something went wrong with the authentication request.
  * @url https://developer.spotify.com/documentation/web-api/tutorials/refreshing-tokens
  */
 export async function refreshAccessToken(
   refreshToken: string,
-): Promise<AccessTokenResponse | AuthenticationError> {
+): Promise<AccessTokenResponse> {
   const encodedKeys = Buffer.from(
     `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`,
   ).toString("base64");
@@ -120,11 +129,19 @@ export async function refreshAccessToken(
     },
   });
 
-  return response.json();
+  const json = await response.json();
+
+  if (json.error) {
+    const authError: AuthenticationError = json;
+    throw new Error(`${authError.error}: ${authError.error_description}}`);
+  }
+
+  return json;
 }
 
 /**
  * Gets the user's top tracks or artists from Spotify.
+ * @throws Error if something went wrong when trying to access the API.
  * @url https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
  */
 export async function getTopItems(
@@ -135,7 +152,7 @@ export async function getTopItems(
     limit = 20,
     offset = 0,
   }: TopTrackRequest,
-): Promise<TopTrackResponse | SpotifyError> {
+): Promise<TopTrackResponse> {
   const response = await fetch(
     `https://api.spotify.com/v1/me/top/${type}?time_range=${timeRange}&limit=${limit}&offset=${offset}`,
     {
@@ -145,5 +162,12 @@ export async function getTopItems(
     },
   );
 
-  return response.json();
+  const json = await response.json();
+
+  if (json.error) {
+    const apiError: SpotifyError = json;
+    throw new Error(apiError.error.message);
+  }
+
+  return json;
 }
