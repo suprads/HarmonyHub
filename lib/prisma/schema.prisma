@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgras:postgrase@db:5432/harmonyhub?schema=public"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
