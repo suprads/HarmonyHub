@@ -11,7 +11,7 @@ If you are getting type errors, make sure to run `npx next typegen` and `npx pri
 ### Database Set Up
 
 1. Use the exact `POSTGRES*` and `DATABASE_URL` environment variables from `.env.example` in your `.env` file.
-2. If not already done, run the command `npx prisma generate`.
+2. Run the command `npx prisma generate`.
 3. Run the command `docker compose up db` to start a local PostgresSQL database.
 
 Note: To use the actual production database hosted by Supabase, set the `POSTGRES*` variables and the `DATABASE_URL` to our secret values.
