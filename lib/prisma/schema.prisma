@@ -9,13 +9,13 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  handle    String   @unique
-  email     String?  @unique
-  createdAt DateTime @default(now())
-  likes     Like[]
-  following Follow[] @relation("follower")
-  followers Follow[] @relation("followee")
+  id         String   @id @default(uuid())
+  handle     String   @unique
+  email      String?  @unique
+  createdAt  DateTime @default(now())
+  likes      Like[]
+  following  Follow[] @relation("following")
+  followedBy Follow[] @relation("followedBy")
 }
 
 model Artist {
@@ -62,13 +62,13 @@ model TrackSource {
 }
 
 model Follow {
-  follower   User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
-  followerId String
-  followee   User     @relation("followee", fields: [followeeId], references: [id], onDelete: Cascade)
-  followeeId String
-  createdAt  DateTime @default(now())
+  following    User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId  String
+  followedBy   User     @relation("followedBy", fields: [followedById], references: [id], onDelete: Cascade)
+  followedById String
+  createdAt    DateTime @default(now())
 
-  @@id([followerId, followeeId])
+  @@id([followingId, followedById])
 }
 
 model Like {
