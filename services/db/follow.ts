@@ -43,5 +43,5 @@ export async function isFriend(userId1: string, userId2: string) {
     },
   });
 
-  return followsUser2 && followsUser1;
+  return followsUser2 !== null && followsUser1 !== null;
 }
