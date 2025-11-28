@@ -1,6 +1,7 @@
 // Import this file to load environment variables outside of the Next.js
 // runtime.
-import { loadEnvConfig } from "@next/env";
+import nextEnv from "@next/env";
 
+const { loadEnvConfig } = nextEnv;
 const projectDir = process.cwd();
 loadEnvConfig(projectDir);
