@@ -2,6 +2,16 @@
 
 Senior Design Project
 
+## Tech Stack
+
+- Framework: Next.js
+- Database: PostgreSQL, Prisma ORM, and Neon for database hosting
+- Testing: Jest and PlayWright
+- Code Quality: ESLint, Prettier, and TypeScript
+- Local Dev Environment: Docker
+
+Note: Some of this information with specific version numbers can be found in [`package.json`](package.json).
+
 ## Project Structure
 
 ```text
