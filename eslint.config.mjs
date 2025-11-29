@@ -25,7 +25,6 @@ const eslintConfig = defineConfig([
   },
   {
     rules: {
-      camelcase: "warn",
       eqeqeq: "warn",
       "no-array-constructor": "warn",
       "no-global-assign": "warn",
