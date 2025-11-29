@@ -2,6 +2,13 @@
 
 Senior Design Project
 
+## Prerequisites
+
+- node (v24 recommended)
+- npm
+- docker
+- Visual Studio Code
+
 ## Project Structure
 
 ```text
