@@ -5,11 +5,14 @@ Senior Design Project
 ## Project Structure
 
 ```text
-app        # Next.js app router
-components # Reusable components
-hooks      # Custom React hooks
-lib        # Utility functions
-services   # For backend related functions (e.g. API and database)
+app          # Next.js app router
+components   # Reusable UI components
+hooks        # Custom React hooks
+lib          # Utility functions
+public       # Static files/assets
+services     # For backend related functions (e.g. API and database)
+tests        # Where tests are stored
+.env.example # Showcase of important environment variables
 ```
 
 ## Development Environment
