@@ -16,8 +16,9 @@ Note: Some of this information with specific version numbers can be found in [`p
 
 ```text
 app          # Next.js app router
+└─ api       # Where request handlers are nested (Next.js route.ts files)
 components   # Reusable UI components
-hooks        # Custom React hooks
+hooks        # Reusable custom react hooks
 lib          # Utility functions
 public       # Static files/assets
 services     # For backend related functions (e.g. API and database)
