@@ -15,8 +15,8 @@ model User {
   email      String?  @unique
   createdAt  DateTime @default(now())
   likes      Like[]
-  friends    Friend[] @relation("friends")
-  friendedBy Friend[] @relation("friendedBy")
+  friends    Friend[] @relation("Friends")
+  friendedBy Friend[] @relation("FriendedBy")
 }
 
 model Artist {
@@ -63,9 +63,9 @@ model TrackSource {
 }
 
 model Friend {
-  friend       User     @relation("friends", fields: [friendId], references: [id], onDelete: Cascade)
+  friend       User     @relation("Friends", fields: [friendId], references: [id], onDelete: Cascade)
   friendId     String
-  friendedBy   User     @relation("friendedBy", fields: [friendedById], references: [id], onDelete: Cascade)
+  friendedBy   User     @relation("FriendedBy", fields: [friendedById], references: [id], onDelete: Cascade)
   friendedById String
   createdAt    DateTime @default(now())
 
