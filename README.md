@@ -4,21 +4,7 @@ Senior Design Project
 
 ## Development Environment Set Up
 
-Create a file called `.env` in the root directory of the project.
-
-If you are getting type errors, make sure to run `npx next typegen` and `npx prisma generate` to ensure all the necessary types have been generated.
-
-### Database Set Up
-
-1. Use the exact `POSTGRES*` and `DATABASE_URL` environment variables from `.env.example` in your `.env` file.
-2. Run the command `npx prisma generate`.
-3. Run the command `docker compose up db` to start a local PostgresSQL database.
-
-Note: To use the actual production database hosted by Supabase, set the `POSTGRES*` variables and the `DATABASE_URL` to our secret values.
-
-### API
-
-Ask team members what values `SPOTIFY_CLIENT_SECRET` and `SPOTIFY_CLIENT_ID` should be assigned in your `.env` file, as the correct values are needed to connect to the API.
+Create a file called `.env` in the root directory of the project, and make sure to include the items showcased in [`.env.example`](.env.example). Ask team members what values secret items like `POSTGRES_PASSWORD` and `SPOTIFY_CLIENT_SECRET` should be assigned in your local `.env` file.
 
 ## Project Plan Links
 
