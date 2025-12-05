@@ -15,8 +15,8 @@ model User {
   email      String?  @unique
   createdAt  DateTime @default(now())
   likes      Like[]
-  following  Follow[] @relation("following")
-  followedBy Follow[] @relation("followedBy")
+  friends    Friend[] @relation("friends")
+  friendedBy Friend[] @relation("friendedBy")
 }
 
 model Artist {
@@ -62,14 +62,14 @@ model TrackSource {
   @@unique([trackId, provider])
 }
 
-model Follow {
-  following    User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
-  followingId  String
-  followedBy   User     @relation("followedBy", fields: [followedById], references: [id], onDelete: Cascade)
-  followedById String
+model Friend {
+  friend       User     @relation("friends", fields: [friendId], references: [id], onDelete: Cascade)
+  friendId     String
+  friendedBy   User     @relation("friendedBy", fields: [friendedById], references: [id], onDelete: Cascade)
+  friendedById String
   createdAt    DateTime @default(now())
 
-  @@id([followingId, followedById])
+  @@id([friendId, friendedById])
 }
 
 model Like {
