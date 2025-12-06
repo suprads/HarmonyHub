@@ -61,6 +61,9 @@ Ask team members what values `SPOTIFY_CLIENT_SECRET` and `SPOTIFY_CLIENT_ID` sho
 
 If you are getting type errors, make sure to run `npm install`, `npx next typegen`, and `npx prisma generate` to ensure all the necessary types have been created.
 
+## Architecture Diagram
+![HarmonyHub Architecture](https://github.com/suprads/HarmonyHub/blob/main/docs/HarmonyHub_Architecture.png)
+
 ## Project Plan Links
 
 GitHub Projects: <https://github.com/users/suprads/projects/2>
