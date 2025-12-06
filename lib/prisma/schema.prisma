@@ -10,13 +10,15 @@ generator client {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  handle     String   @unique
-  email      String?  @unique
-  createdAt  DateTime @default(now())
-  likes      Like[]
-  friends    Friend[] @relation("Friends")
-  friendedBy Friend[] @relation("FriendedBy")
+  id                     String          @id @default(uuid())
+  handle                 String          @unique
+  email                  String?         @unique
+  createdAt              DateTime        @default(now())
+  likes                  Like[]
+  friends                Friend[]        @relation("Friends")
+  friendedBy             Friend[]        @relation("FriendedBy")
+  friendRequestsReceived FriendRequest[] @relation("FriendRequestsReceived")
+  friendRequestsSent     FriendRequest[] @relation("FriendRequestsSent")
 }
 
 model Artist {
@@ -70,6 +72,16 @@ model Friend {
   createdAt    DateTime @default(now())
 
   @@id([friendId, friendedById])
+}
+
+model FriendRequest {
+  receiver   User     @relation("FriendRequestsReceived", fields: [receiverId], references: [id])
+  receiverId String
+  sender     User     @relation("FriendRequestsSent", fields: [senderId], references: [id])
+  senderId   String
+  createdAt  DateTime @default(now())
+
+  @@id([senderId, receiverId])
 }
 
 model Like {
