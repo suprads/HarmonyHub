@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
@@ -8,13 +9,15 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  handle    String    @unique
-  email     String?   @unique
-  createdAt DateTime  @default(now())
-  followers Follow[]  @relation("followee")
-  following Follow[]  @relation("follower")
-  likes     Like[]
+  id                     String          @id @default(uuid())
+  handle                 String          @unique
+  email                  String?         @unique
+  createdAt              DateTime        @default(now())
+  friends                Friend[]        @relation("Friends")
+  friendedBy             Friend[]        @relation("FriendedBy")
+  likes                  Like[]
+  friendRequestsReceived FriendRequest[] @relation("FriendRequestsReceived")
+  friendRequestsSent     FriendRequest[] @relation("FriendRequestsSent")
   accounts  Account[]
 }
 
@@ -75,14 +78,24 @@ model TrackSource {
   @@unique([trackId, provider])
 }
 
-model Follow {
-  followerId String
-  followeeId String
-  createdAt  DateTime @default(now())
-  followee   User     @relation("followee", fields: [followeeId], references: [id], onDelete: Cascade)
-  follower   User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+model Friend {
+  friend       User     @relation("Friends", fields: [friendId], references: [id], onDelete: Cascade)
+  friendId     String
+  friendedBy   User     @relation("FriendedBy", fields: [friendedById], references: [id], onDelete: Cascade)
+  friendedById String
+  createdAt    DateTime @default(now())
 
-  @@id([followerId, followeeId])
+  @@id([friendId, friendedById])
+}
+
+model FriendRequest {
+  receiver   User     @relation("FriendRequestsReceived", fields: [receiverId], references: [id])
+  receiverId String
+  sender     User     @relation("FriendRequestsSent", fields: [senderId], references: [id])
+  senderId   String
+  createdAt  DateTime @default(now())
+
+  @@id([senderId, receiverId])
 }
 
 model Like {

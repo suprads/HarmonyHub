@@ -2,6 +2,7 @@
   "name": "harmony-hub",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
@@ -40,6 +41,7 @@
     "prettier": "3.6.2",
     "prisma": "^7.0.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
