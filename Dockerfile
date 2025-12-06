@@ -13,7 +13,7 @@ WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
-RUN npx prisma generate
+RUN npx prisma generate --schema=./lib/prisma/schema.prisma
 RUN npm run build
 
 # Runner
