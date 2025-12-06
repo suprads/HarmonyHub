@@ -1,21 +1,35 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
-generator client {
-  provider   = "prisma-client-js"
-  engineType = "library"
+datasource db {
+  provider = "postgresql"
 }
 
 model User {
-  id        String   @id @default(uuid())
-  handle    String   @unique
-  email     String?  @unique
-  createdAt DateTime @default(now())
+  id        String    @id @default(uuid())
+  handle    String    @unique
+  email     String?   @unique
+  createdAt DateTime  @default(now())
+  followers Follow[]  @relation("followee")
+  following Follow[]  @relation("follower")
   likes     Like[]
-  following Follow[] @relation("follower")
-  followers Follow[] @relation("followee")
+  accounts  Account[]
+}
+
+model Account {
+  id                BigInt       @id @default(autoincrement())
+  userId            String
+  provider          AuthProvider
+  providerAccountId String
+  passwordHash      String?
+  createdAt         DateTime     @default(now())
+  lastLoginAt       DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
 
 model Artist {
@@ -39,12 +53,12 @@ model Track {
   durationMs Int?
   explicit   Boolean       @default(false)
   createdAt  DateTime      @default(now())
-  artist     Artist        @relation(fields: [artistId], references: [id])
   artistId   BigInt
-  album      Album?        @relation(fields: [albumId], references: [id])
   albumId    BigInt?
-  sources    TrackSource[]
   likes      Like[]
+  album      Album?        @relation(fields: [albumId], references: [id])
+  artist     Artist        @relation(fields: [artistId], references: [id])
+  sources    TrackSource[]
 
   @@unique([title, artistId, albumId])
 }
@@ -54,29 +68,29 @@ model TrackSource {
   provider        Provider
   providerTrackId String
   raw             Json?
-  track           Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
   trackId         BigInt
+  track           Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerTrackId])
   @@unique([trackId, provider])
 }
 
 model Follow {
-  follower   User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
   followerId String
-  followee   User     @relation("followee", fields: [followeeId], references: [id], onDelete: Cascade)
   followeeId String
   createdAt  DateTime @default(now())
+  followee   User     @relation("followee", fields: [followeeId], references: [id], onDelete: Cascade)
+  follower   User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
 
   @@id([followerId, followeeId])
 }
 
 model Like {
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
   trackId   BigInt
   createdAt DateTime @default(now())
+  track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, trackId])
 }
@@ -86,4 +100,11 @@ enum Provider {
   APPLE
   YTMUSIC
   SOUNDCLOUD
+}
+
+enum AuthProvider {
+  LOCAL
+  SPOTIFY
+  GOOGLE
+  APPLE
 }
