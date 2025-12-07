@@ -50,6 +50,7 @@ tests        # Where tests are stored
 1. Use the exact `POSTGRES*` and `DATABASE_URL` environment variables from `.env.example` in your `.env` file.
 2. Run the command `npx prisma generate`.
 3. Run the command `docker compose up db` to start a local PostgresSQL database.
+4. To add test data to the your database, run `npx prisma db seed`
 
 Note: To use the actual production database hosted by Neon, set the `POSTGRES*` variables and the `DATABASE_URL` to our secret values.
 
@@ -62,6 +63,7 @@ Ask team members what values `SPOTIFY_CLIENT_SECRET` and `SPOTIFY_CLIENT_ID` sho
 If you are getting type errors, make sure to run `npm install`, `npx next typegen`, and `npx prisma generate` to ensure all the necessary types have been created.
 
 ## Architecture Diagram
+
 ![HarmonyHub Architecture](https://github.com/suprads/HarmonyHub/blob/main/docs/HarmonyHub_Architecture.png)
 
 ## Project Plan Links
