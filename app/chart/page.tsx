@@ -18,16 +18,17 @@ export default async function ChartPage(props: PageProps<"/chart">) {
     spotifyCode ?? "",
     REDIRECT_URI,
   );
-  const topTracks = await SpotifyAPI.getTopItems(tokenResponse.access_token, {
-    type: "tracks",
+  const topTracks = await SpotifyAPI.getTopTracks(tokenResponse.access_token, {
     timeRange: "long_term",
     limit: 5,
   });
-  const topArtists = await SpotifyAPI.getTopItems(tokenResponse.access_token, {
-    type: "artists",
-    timeRange: "long_term",
-    limit: 5,
-  });
+  const topArtists = await SpotifyAPI.getTopArtists(
+    tokenResponse.access_token,
+    {
+      timeRange: "long_term",
+      limit: 5,
+    },
+  );
 
   return (
     <div className={styles.page}>
@@ -63,7 +64,7 @@ export default async function ChartPage(props: PageProps<"/chart">) {
                     <div>
                       <div style={{ fontWeight: 600 }}>{track.name}</div>
                       <div style={{ fontSize: 12, color: "#666" }}>
-                        {track.artists.map((a: any) => a.name).join(", ")}
+                        {track.artists.map((a) => a.name).join(", ")}
                       </div>
                     </div>
                   </div>

@@ -30,7 +30,35 @@ type TopTrackRequest = Paging & {
   timeRange?: "short_term" | "medium_term" | "long_term";
 };
 
-type TopTrackResponse = {
+type Image = {
+  url: string;
+  height: number | null;
+  width: number | null;
+};
+
+export type Track = {
+  album: {
+    name: string;
+    images: Image[];
+    release_date: string;
+  };
+  artists: Pick<Artist, "external_urls" | "id" | "name">[];
+  explicit: boolean;
+  external_urls: { spotify: string };
+  id: string;
+  name: string;
+};
+
+export type Artist = {
+  external_urls: { spotify: string };
+  genres: string[];
+  id: string;
+  images: Image[];
+  name: string;
+  popularity: number;
+};
+
+export type TopTrackResponse = {
   href: string;
   limit: number;
   next: string | null;
@@ -38,7 +66,7 @@ type TopTrackResponse = {
   previous: string | null;
   total: number;
   /** A set of artists or tracks. */
-  items: any[];
+  items: Track[] | Artist[];
 };
 
 type AuthenticationError = {
@@ -170,4 +198,34 @@ export async function getTopItems(
   }
 
   return json;
+}
+
+/**
+ * Shortcut for getting the top tracks with proper typing.
+ * @see getTopItems
+ */
+export async function getTopTracks(
+  accessToken: string,
+  topTrackRequest: Omit<TopTrackRequest, "type">,
+) {
+  const topTracks = await getTopItems(accessToken, {
+    ...topTrackRequest,
+    type: "tracks",
+  });
+  return topTracks as TopTrackResponse & { items: Track[] };
+}
+
+/**
+ * Shortcut for getting the top artists with proper typing.
+ * @see getTopItems
+ */
+export async function getTopArtists(
+  accessToken: string,
+  topTrackRequest: Omit<TopTrackRequest, "type">,
+) {
+  const topArtists = await getTopItems(accessToken, {
+    ...topTrackRequest,
+    type: "artists",
+  });
+  return topArtists as TopTrackResponse & { items: Artist[] };
 }
