@@ -6,7 +6,11 @@ import { redirect } from "next/navigation";
  * A valid redirect URI for the Spotify API. These should match the valid URIs
  * in our app information registered in Spotify.
  */
-type RedirectUri = "http://127.0.0.1:3000" | "http://127.0.0.1:3000/chart";
+export type RedirectUri =
+  | "http://127.0.0.1:3000"
+  | "http://127.0.0.1:3000/chart"
+  | "http://127.0.0.1:3000/settings/services"
+  | "http://127.0.0.1:3000/api/spotify";
 
 type AccessTokenResponse = {
   access_token: string;
@@ -135,7 +139,7 @@ export async function getAccessToken(
 }
 
 /**
- * Used to refesh the access token when it expires.
+ * Used to refresh the access token when it expires.
  * @returns JSON response from requesting a refresh. If a new refresh_token
  * isn't included, keep using the existing token.
  * @throws Error if something went wrong with the authentication request.

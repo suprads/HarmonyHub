@@ -1,18 +1,15 @@
 import styles from "./chart.module.css";
 import * as SpotifyAPI from "@/services/spotify";
+import { cookies } from "next/headers";
 import Image from "next/image";
 
-const REDIRECT_URI = "http://127.0.0.1:3000/chart";
+const REDIRECT_URI = "http://127.0.0.1:3000/api/spotify";
 
 // Note: Need to build project for PageProps<"/chart"> to not show as error.
 // See https://nextjs.org/docs/15/app/getting-started/layouts-and-pages#route-props-helpers
-export default async function ChartPage(props: PageProps<"/chart">) {
-  const { code: spotifyCode }: { code?: string } = await props.searchParams;
-
-  if (!spotifyCode) {
-    console.log("Redirecting to Spotify to authorize user.");
-    SpotifyAPI.authorizeUser(REDIRECT_URI);
-  }
+export default async function ChartPage() {
+  const cookieStore = await cookies();
+  const spotifyCode = cookieStore.get("spotify_code")?.value;
 
   const tokenResponse = await SpotifyAPI.getAccessToken(
     spotifyCode ?? "",
