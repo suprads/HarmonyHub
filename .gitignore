@@ -48,6 +48,9 @@ next-env.d.ts
 /playwright/.cache/
 /playwright/.auth/
 
+# Prisma
+generated/prisma
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
