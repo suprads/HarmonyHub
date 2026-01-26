@@ -12,18 +12,25 @@ const REDIRECT_URI = "http://127.0.0.1:3000/api/spotify";
 export default async function ChartPage() {
   const cookieStore = await cookies();
   const spotifyCode = cookieStore.get("spotify_code")?.value;
+  const userId = "user_id"; // retrieve from session/auth in real implementation - will need to change later
 
   const tokenResponse = await SpotifyAPI.getAccessToken(
     spotifyCode ?? "",
     REDIRECT_URI,
   );
 
-  const userId = "user_id"; // retrieve from session/auth in real implementation - will need to change later
-
   const topTracks = await SpotifyAPI.getTopTracks(tokenResponse.access_token, {
     timeRange: "long_term",
     limit: 20,
   });
+
+  const topArtists = await SpotifyAPI.getTopArtists(
+    tokenResponse.access_token,
+    {
+      timeRange: "long_term",
+      limit: 5,
+    },
+  );
 
   for (const track of topTracks.items ?? []) {
     const spotifyTrackId = track.id;
@@ -117,14 +124,6 @@ export default async function ChartPage() {
     },
     take: 5,
   });
-
-  const topArtists = await SpotifyAPI.getTopArtists(
-    tokenResponse.access_token,
-    {
-      timeRange: "long_term",
-      limit: 5,
-    },
-  );
 
   return (
     <div className={styles.page}>
