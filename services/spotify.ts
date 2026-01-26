@@ -47,6 +47,7 @@ export type Track = {
     release_date: string;
   };
   artists: Pick<Artist, "external_urls" | "id" | "name">[];
+  duration_ms: number;
   explicit: boolean;
   external_urls: { spotify: string };
   id: string;
