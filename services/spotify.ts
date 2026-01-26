@@ -216,7 +216,7 @@ export async function getTopTracks(
     ...topTrackRequest,
     type: "tracks",
   });
-  return topTracks as TopTrackResponse & { items: Track[] };
+  return topTracks as Omit<TopTrackResponse, "items"> & { items: Track[] };
 }
 
 /**
@@ -231,5 +231,5 @@ export async function getTopArtists(
     ...topTrackRequest,
     type: "artists",
   });
-  return topArtists as TopTrackResponse & { items: Artist[] };
+  return topArtists as Omit<TopTrackResponse, "items"> & { items: Artist[] };
 }

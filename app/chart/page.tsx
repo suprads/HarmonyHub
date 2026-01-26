@@ -25,7 +25,7 @@ export default async function ChartPage() {
     limit: 20,
   });
 
-  for (const track of data.items ?? []) {
+  for (const track of topTracks.items ?? []) {
     const spotifyTrackId = track.id;
     if (!spotifyTrackId) continue;
 
