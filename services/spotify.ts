@@ -63,7 +63,7 @@ export type Artist = {
   popularity: number;
 };
 
-export type TopTrackResponse = {
+export type TopItemsResponse = {
   href: string;
   limit: number;
   next: string | null;
@@ -72,6 +72,14 @@ export type TopTrackResponse = {
   total: number;
   /** A set of artists or tracks. */
   items: Track[] | Artist[];
+};
+
+export type TopTracksResponse = Omit<TopItemsResponse, "items"> & {
+  items: Track[];
+};
+
+export type TopArtistsResponse = Omit<TopItemsResponse, "items"> & {
+  items: Artist[];
 };
 
 type AuthenticationError = {
@@ -185,7 +193,7 @@ export async function getTopItems(
     limit = 20,
     offset = 0,
   }: TopTrackRequest,
-): Promise<TopTrackResponse> {
+): Promise<TopItemsResponse> {
   const response = await fetch(
     `https://api.spotify.com/v1/me/top/${type}?time_range=${timeRange}&limit=${limit}&offset=${offset}`,
     {
@@ -217,7 +225,7 @@ export async function getTopTracks(
     ...topTrackRequest,
     type: "tracks",
   });
-  return topTracks as Omit<TopTrackResponse, "items"> & { items: Track[] };
+  return topTracks as TopTracksResponse;
 }
 
 /**
@@ -232,5 +240,5 @@ export async function getTopArtists(
     ...topTrackRequest,
     type: "artists",
   });
-  return topArtists as Omit<TopTrackResponse, "items"> & { items: Artist[] };
+  return topArtists as TopArtistsResponse;
 }
