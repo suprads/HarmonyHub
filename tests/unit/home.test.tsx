@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import Page from "@/app/page";
+import HomePage from "@/app/page";
 
-describe("Page", () => {
+describe("Home Page", () => {
   it("renders a main element", () => {
-    render(<Page />);
+    render(<HomePage />);
 
     const main = screen.getByRole("main");
 
