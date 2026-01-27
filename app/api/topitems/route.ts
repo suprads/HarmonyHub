@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getTopItems } from "@/services/spotify";
+import { getTopItems, TopTrackResponse } from "@/services/spotify";
 import { Provider } from "@prisma/client";
-
-type SpotifyTopTracksResponse = any;
 
 export async function POST(req: Request) {
   try {
@@ -16,22 +14,26 @@ export async function POST(req: Request) {
       );
     }
 
-    // Fetch user top tracks from Spotify
-    const data: SpotifyTopTracksResponse = await getTopItems(accessToken, {
-      type: "tracks",
-      timeRange: "medium_term",
-      limit: 20,
-      offset: 0,
-    });
+    let data: TopTrackResponse | undefined;
 
-    if (!data || data.error) {
-      return NextResponse.json(
-        { error: data?.error?.message || "Spotify API error" },
-        { status: 502 },
-      );
+    try {
+      // Fetch user top tracks from Spotify
+      data = await getTopItems(accessToken, {
+        type: "tracks",
+        timeRange: "medium_term",
+        limit: 20,
+        offset: 0,
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        return NextResponse.json(
+          { error: err?.message ?? "Spotify API error" },
+          { status: 502 },
+        );
+      }
     }
 
-    const items = data.items ?? [];
+    const items = data?.items ?? [];
     if (items.length === 0) {
       return NextResponse.json({ ingested: 0 });
     }
@@ -148,11 +150,13 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ ingested: ingestedCount }, { status: 200 });
-  } catch (err: any) {
+  } catch (err) {
     console.error(err);
-    return NextResponse.json(
-      { error: err?.message || "Internal server error" },
-      { status: 500 },
-    );
+    if (err instanceof Error) {
+      return NextResponse.json(
+        { error: err?.message || "Internal server error" },
+        { status: 500 },
+      );
+    }
   }
 }
