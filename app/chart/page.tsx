@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { Provider } from "@/generated/prisma/enums";
+import Link from "next/link";
 
 const REDIRECT_URI = "http://127.0.0.1:3000/api/spotify";
 
@@ -13,6 +14,19 @@ export default async function ChartPage() {
   const cookieStore = await cookies();
   const spotifyCode = cookieStore.get("spotify_code")?.value;
   const userId = "user_id"; // retrieve from session/auth in real implementation - will need to change later
+
+  if (!spotifyCode) {
+    return (
+      <div className={styles.page}>
+        <main className={styles.main}>
+          <p>
+            No charts to display. Please connect to at least one streaming
+            service {<Link href="/settings/services">here</Link>}.
+          </p>
+        </main>
+      </div>
+    );
+  }
 
   const tokenResponse = await SpotifyAPI.getAccessToken(
     spotifyCode ?? "",
