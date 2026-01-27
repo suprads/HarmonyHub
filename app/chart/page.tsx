@@ -3,7 +3,7 @@ import * as SpotifyAPI from "@/services/spotify";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
-import { Provider } from "@prisma/client";
+import { Provider } from "@/generated/prisma/enums";
 
 const REDIRECT_URI = "http://127.0.0.1:3000/api/spotify";
 
