@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getTopItems, TopTrackResponse } from "@/services/spotify";
+import { getTopTracks, TopTracksResponse } from "@/services/spotify";
 import { Provider } from "@prisma/client";
 
 export async function POST(req: Request) {
@@ -14,12 +14,11 @@ export async function POST(req: Request) {
       );
     }
 
-    let data: TopTrackResponse | undefined;
+    let data: TopTracksResponse | undefined;
 
     try {
       // Fetch user top tracks from Spotify
-      data = await getTopItems(accessToken, {
-        type: "tracks",
+      data = await getTopTracks(accessToken, {
         timeRange: "medium_term",
         limit: 20,
         offset: 0,
