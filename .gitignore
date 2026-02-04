@@ -41,11 +41,24 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# make
-
 # Playwright
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Prisma
+generated/prisma
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.vs

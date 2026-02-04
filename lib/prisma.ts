@@ -1,20 +1,19 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../generated/prisma/client";
 
-declare global {
-  var prisma: PrismaClient | undefined;
-}
+const connectionString = `${process.env.DATABASE_URL}`;
+// Optionally, you can log the loaded environment variables for debugging
+// console.log(`The connection URL is ${connectionString}`);
 
-export const prisma =
-  global.prisma ??
-  new PrismaClient({
-    log:
-      process.env.NODE_ENV === "development"
-        ? ["query", "warn", "error"]
-        : ["error"],
-  });
+const globalForPrisma = global as unknown as {
+  prisma: PrismaClient;
+};
 
-if (process.env.NODE_ENV !== "production") {
-  global.prisma = prisma;
-}
+const adapter = new PrismaPg({ connectionString });
 
-export default prisma;
+// Global usage meant to ensure only one instance of the client exists
+const prisma = globalForPrisma.prisma || new PrismaClient({ adapter });
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+export { prisma };
