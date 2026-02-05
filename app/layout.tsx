@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/shadcn-studio/blocks/navbar-component-01/navbar-component-01";
+import Footer from "@/components/shadcn-studio/blocks/footer-component-01/footer-component-01";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Navbar navigationData={navigationData} />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

@@ -2,5 +2,11 @@ import Image from "next/image";
 import styles from "./page.module.css";
 
 export default function Page() {
-  return <p>Friends Page</p>;
+  return (
+    <div className={styles.page}>
+      <main>
+        <h1>Friends Page</h1>
+      </main>
+    </div>
+  );
 }

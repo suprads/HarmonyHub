@@ -36,7 +36,7 @@ export default function RatingPage() {
   }
 
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
       <div className="divRatingPage">
         <h1 className={styles.ratingHeader}>Rate a Song or Album</h1>
 
@@ -63,6 +63,6 @@ export default function RatingPage() {
 
         {message && <p className="mt-4">{message}</p>}
       </div>
-    </main>
+    </div>
   );
 }
