@@ -1,5 +1,4 @@
 import { MenuIcon, SearchIcon } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,8 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import Logo from "@/components/shadcn-studio/logo";
+import Link from "next/link";
 
 type NavigationItem = {
   title: string;
@@ -21,21 +20,21 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
     <header className="navbar-header">
       <div className="navbar-container">
         <div className="navbar-links">
-          <a href="/chart" className="navbar-link">
+          <Link href="/chart" className="navbar-link">
             Chart
-          </a>
-          <a href="/ratings" className="navbar-link">
+          </Link>
+          <Link href="/ratings" className="navbar-link">
             Ratings
-          </a>
-          <a href="/">
+          </Link>
+          <Link href="/">
             <Logo className="navbar-logo" />
-          </a>
-          <a href="/friends" className="navbar-link">
+          </Link>
+          <Link href="/friends" className="navbar-link">
             Friends
-          </a>
-          <a href="/settings" className="navbar-link">
+          </Link>
+          <Link href="/settings" className="navbar-link">
             Settings
-          </a>
+          </Link>
         </div>
 
         <div className="navbar-actions">
@@ -54,7 +53,7 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
               <DropdownMenuGroup>
                 {navigationData.map((item, index) => (
                   <DropdownMenuItem key={index}>
-                    <a href={item.href}>{item.title}</a>
+                    <Link href={item.href}>{item.title}</Link>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuGroup>
