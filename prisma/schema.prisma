@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
   previewFeatures = ["fullTextSearchPostgres"]
 }
 
@@ -9,30 +9,78 @@ datasource db {
 }
 
 model User {
-  id                     String          @id @default(uuid())
+  id                     String          @id //@default(uuid())
   handle                 String          @unique
-  email                  String?         @unique
+  email                  String //@unique
   createdAt              DateTime        @default(now())
   friends                Friend[]        @relation("Friends")
   friendedBy             Friend[]        @relation("FriendedBy")
   likes                  Like[]
   friendRequestsReceived FriendRequest[] @relation("FriendRequestsReceived")
   friendRequestsSent     FriendRequest[] @relation("FriendRequestsSent")
-  accounts  Account[]
+  /// User's chosen display name.
+  name                   String
+  emailVerified          Boolean         @default(false)
+  image                  String?
+  updatedAt              DateTime        @updatedAt
+  sessions               Session[]
+  accounts               Account[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
 }
 
 model Account {
-  id                BigInt       @id @default(autoincrement())
-  userId            String
-  provider          AuthProvider
-  providerAccountId String
-  passwordHash      String?
-  createdAt         DateTime     @default(now())
-  lastLoginAt       DateTime?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                    String       @id //BigInt @id @default(autoincrement())
+  userId                String
+  provider              AuthProvider
+  providerAccountId     String
+  passwordHash          String?
+  createdAt             DateTime     @default(now())
+  lastLoginAt           DateTime?
+  user                  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  updatedAt             DateTime     @updatedAt
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
 
 model Artist {
