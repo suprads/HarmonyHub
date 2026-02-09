@@ -10,21 +10,21 @@ datasource db {
 
 model User {
   id                     String          @id //@default(uuid())
-  username               String?         @unique
   email                  String          @unique
+  emailVerified          Boolean         @default(false)
+  /// User's chosen display name.
+  name                   String
+  username               String?         @unique
+  image                  String?
   createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  sessions               Session[]
+  accounts               Account[]
   friends                Friend[]        @relation("Friends")
   friendedBy             Friend[]        @relation("FriendedBy")
   likes                  Like[]
   friendRequestsReceived FriendRequest[] @relation("FriendRequestsReceived")
   friendRequestsSent     FriendRequest[] @relation("FriendRequestsSent")
-  /// User's chosen display name.
-  name                   String
-  emailVerified          Boolean         @default(false)
-  image                  String?
-  updatedAt              DateTime        @updatedAt
-  sessions               Session[]
-  accounts               Account[]
 
   @@map("user")
 }
@@ -45,26 +45,26 @@ model Session {
 }
 
 model Account {
-  id                    String       @id //BigInt @id @default(autoincrement())
+  id                    String    @id //BigInt @id @default(autoincrement())
   userId                String
-  provider              AuthProvider
-  providerAccountId     String
-  passwordHash          String?
-  createdAt             DateTime     @default(now())
-  lastLoginAt           DateTime?
-  user                  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// The ID of the account as provided by the SSO or equal to userId for credential accounts
   accountId             String
   providerId            String
+  password              String?
   accessToken           String?
   refreshToken          String?
   idToken               String?
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
-  password              String?
-  updatedAt             DateTime     @updatedAt
+  // provider              AuthProvider
+  // providerAccountId     String
+  lastLoginAt           DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
+  // @@unique([provider, providerAccountId])
   @@index([userId])
   @@map("account")
 }
