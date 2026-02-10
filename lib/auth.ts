@@ -12,4 +12,8 @@ export const auth = betterAuth({
     enabled: true,
   },
   plugins: [nextCookies()], // make sure this is the last plugin in the array
+  user: { modelName: "User" },
+  session: { modelName: "Session" },
+  account: { modelName: "Account" },
+  verification: { modelName: "Verification" },
 });
