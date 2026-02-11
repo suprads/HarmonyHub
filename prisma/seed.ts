@@ -1,54 +1,52 @@
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+const users = [
+  {
+    name: "Sun Lover",
+    email: "sunlover63@example.com",
+    password: "password123",
+  },
+  {
+    name: "John Doe",
+    email: "john345@example.com",
+    password: "password",
+  },
+  {
+    name: "Pixel Pioneer",
+    email: "pixelpioneer@example.com",
+    password: "pixelpassword",
+  },
+  {
+    name: "Guitar Hero",
+    email: "guitar_hero21@example.com",
+    password: "heroboy2",
+  },
+];
+
 async function main() {
-  const sunLover = await prisma.user.upsert({
-    where: { handle: "SunLover63" },
-    update: {},
-    create: {
-      email: "sunlover63@example.com",
-      handle: "SunLover63",
-    },
-  });
-  const john = await prisma.user.upsert({
-    where: { handle: "John345" },
-    update: {},
-    create: {
-      email: "john345@example.com",
-      handle: "John345",
-    },
-  });
-  const pixel = await prisma.user.upsert({
-    where: { handle: "PixelPioneer" },
-    update: {},
-    create: {
-      email: "pixelpioneer@example.com",
-      handle: "PixelPioneer",
-    },
-  });
-  const guitarHero = await prisma.user.upsert({
-    where: { handle: "guitar_hero21" },
-    update: {},
-    create: {
-      email: "guitar_hero21@example.com",
-      handle: "guitar_hero21",
-    },
-  });
-  const coffeeCoder = await prisma.user.upsert({
-    where: { handle: "coffeeCoder" },
-    update: {},
-    create: {
-      email: "coffeecoder@example.com",
-      handle: "coffeeCoder",
-    },
-  });
-  console.log({ sunLover, john, pixel, guitarHero, coffeeCoder });
+  for (const user of users) {
+    const userExists = await prisma.user.findFirst({
+      where: {
+        email: user.email,
+      },
+    });
+
+    if (!userExists) {
+      await auth.api.signUpEmail({
+        body: user,
+      });
+    } else {
+      console.log(`User with email ${user.email} already exists.`);
+    }
+  }
 }
 
 try {
   await main();
   await prisma.$disconnect();
-} catch (e) {
-  console.error(e);
+} catch (error) {
+  console.error(error);
   await prisma.$disconnect();
   process.exit(1);
 }
