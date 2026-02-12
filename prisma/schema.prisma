@@ -1,3 +1,5 @@
+// Some of the schema here is managed/created by Better Auth.
+
 generator client {
   provider        = "prisma-client"
   output          = "../generated/prisma"
@@ -30,6 +32,7 @@ model User {
 model Session {
   id        String   @id
   expiresAt DateTime
+  /// The session token, which is also used as the session cookie.
   token     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
