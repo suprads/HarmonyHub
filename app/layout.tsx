@@ -34,6 +34,7 @@ export default function RootLayout({
             <Link href="/ratings">Ratings</Link>
             <Link href="/chart">Chart</Link>
             <Link href="/settings">Settings</Link>
+            <Link href="/login">Login</Link>
           </div>
         </nav>
         {children}

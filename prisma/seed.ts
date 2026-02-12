@@ -3,6 +3,11 @@ import { prisma } from "@/lib/prisma";
 
 const users = [
   {
+    name: "Name",
+    email: "email@example.com",
+    password: "password",
+  },
+  {
     name: "Sun Lover",
     email: "sunlover63@example.com",
     password: "password123",
@@ -10,7 +15,7 @@ const users = [
   {
     name: "John Doe",
     email: "john345@example.com",
-    password: "password",
+    password: "johnnyDoo4",
   },
   {
     name: "Pixel Pioneer",
