@@ -6,26 +6,31 @@ const users = [
     name: "Name",
     email: "email@example.com",
     password: "password",
+    handle: "example",
   },
   {
     name: "Sun Lover",
     email: "sunlover63@example.com",
     password: "password123",
+    handle: "sunlover63",
   },
   {
     name: "John Doe",
     email: "john345@example.com",
     password: "johnnyDoo4",
+    handle: "john345",
   },
   {
     name: "Pixel Pioneer",
     email: "pixelpioneer@example.com",
     password: "pixelpassword",
+    handle: "pixelpioneer",
   },
   {
     name: "Guitar Hero",
     email: "guitar_hero21@example.com",
     password: "heroboy2",
+    handle: "guitar_hero21np",
   },
 ];
 

@@ -1,4 +1,4 @@
-// Some of the schema here is managed/created by Better Auth.
+// Some of the schema here is managed/created by Better Auth and its plugins.
 
 generator client {
   provider        = "prisma-client"
@@ -16,7 +16,7 @@ model User {
   emailVerified          Boolean         @default(false)
   /// User's chosen display name.
   name                   String
-  username               String?         @unique
+  handle                 String          @unique
   image                  String?
   createdAt              DateTime        @default(now())
   updatedAt              DateTime        @updatedAt
@@ -27,6 +27,8 @@ model User {
   likes                  Like[]
   friendRequestsReceived FriendRequest[] @relation("FriendRequestsReceived")
   friendRequestsSent     FriendRequest[] @relation("FriendRequestsSent")
+
+  @@map("User")
 }
 
 model Session {
@@ -42,6 +44,7 @@ model Session {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@map("Session")
 }
 
 model Account {
@@ -66,6 +69,7 @@ model Account {
 
   // @@unique([provider, providerAccountId])
   @@index([userId])
+  @@map("Account")
 }
 
 model Verification {
@@ -77,6 +81,7 @@ model Verification {
   updatedAt  DateTime @updatedAt
 
   @@index([identifier])
+  @@map("Verification")
 }
 
 model Artist {

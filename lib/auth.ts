@@ -3,7 +3,9 @@ import { nextCookies } from "better-auth/next-js";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 
-// Name must be "auth" for better-auth to work properly.
+/**
+ * auth.api methods should be executed on the server.
+ */
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -12,7 +14,18 @@ export const auth = betterAuth({
     enabled: true,
   },
   plugins: [nextCookies()], // make sure this is the last plugin in the array
-  user: { modelName: "User" },
+  /** Per-table configs */
+  user: {
+    modelName: "User",
+    additionalFields: {
+      handle: {
+        type: "string",
+        required: true,
+        input: true,
+        unique: true,
+      },
+    },
+  },
   session: { modelName: "Session" },
   account: { modelName: "Account" },
   verification: { modelName: "Verification" },
