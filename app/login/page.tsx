@@ -35,7 +35,7 @@ export default async function LoginPage() {
 /**
  * @returns An error message if an error occurred.
  */
-async function login(initialState: unknown, formData: FormData) {
+async function login(prevState: unknown, formData: FormData) {
   "use server";
 
   const email = formData.get("email") as string;
