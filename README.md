@@ -5,7 +5,7 @@ Senior Design Project
 ## Tech Stack
 
 - Framework: Next.js
-- Database: PostgreSQL, Prisma ORM, and Neon for database hosting
+- Database: PostgreSQL, Prisma ORM, Better Auth, and Neon for database hosting
 - Testing: Jest and PlayWright
 - Code Quality: ESLint, Prettier, and TypeScript
 - Local Dev Environment: Docker
