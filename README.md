@@ -15,15 +15,16 @@ Note: Some of this information with specific version numbers can be found in [`p
 ## Project Structure
 
 ```text
-app          # Next.js app router
-└─ api       # Where request handlers are nested (Next.js route.ts files)
-components   # Reusable UI components
-hooks        # Reusable custom react hooks
-lib          # Utility functions
-public       # Static files/assets
-services     # For backend related functions (e.g. API and database)
-tests        # Where tests are stored
-.env.example # Showcase of important environment variables
+app           # Next.js app router
+└─ api        # Where request handlers are nested (Next.js route.ts files)
+components    # Reusable UI components
+hooks         # Reusable custom react hooks
+lib           # Utility functions
+public        # Static files/assets
+services      # For backend related functions (e.g. API and database)
+tests         # Where tests are stored
+.env.example  # Showcase of important environment variables
+middleware.ts # Next.js Middleware
 ```
 
 ## Development Environment
@@ -47,10 +48,11 @@ tests        # Where tests are stored
 
 ### Database Set Up
 
-1. Use the exact `POSTGRES*` and `DATABASE_URL` environment variables from `.env.example` in your `.env` file.
-2. Run the command `npx prisma generate`.
-3. Run the command `docker compose up db` to start a local PostgresSQL database.
-4. To add test data to the your database, run `npx prisma db seed`
+1. Use the exact `POSTGRES*`, `DATABASE_URL`, and `BETTER_AUTH_URL` environment variables from `.env.example` in your `.env` file.
+2. Add the `BETTER_AUTH_SECRET` environment variable into your `.env` file and give it our secret value.
+3. Run the command `npx prisma generate`.
+4. Run the command `docker compose up -d db` to start a local PostgresSQL database.
+5. To add test data to your database, run `npx prisma db seed`
 
 Note: To use the actual production database hosted by Neon, set the `POSTGRES*` variables and the `DATABASE_URL` to our secret values.
 
