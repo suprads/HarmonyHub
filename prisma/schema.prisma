@@ -165,9 +165,9 @@ enum Provider {
   SOUNDCLOUD
 }
 
-enum AuthProvider {
-  LOCAL
-  SPOTIFY
-  GOOGLE
-  APPLE
-}
+// enum AuthProvider {
+//   LOCAL
+//   SPOTIFY
+//   GOOGLE
+//   APPLE
+// }
