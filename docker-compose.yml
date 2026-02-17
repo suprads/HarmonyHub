@@ -11,6 +11,8 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL}
       PORT: 3000
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
     ports:
       - "3000:3000"
     restart: unless-stopped
@@ -23,6 +25,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
     volumes:
       - db_data:/var/lib/postgresql/data
     restart: unless-stopped

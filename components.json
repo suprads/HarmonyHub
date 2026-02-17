@@ -4,14 +4,21 @@
   "rsc": true,
   "tsx": true,
   "tailwind": {
+<<<<<<< HEAD
     "config": "tailwind.config.js",
+=======
+    "config": "",
+>>>>>>> origin/UIDesign
     "css": "app/globals.css",
     "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
   "iconLibrary": "lucide",
+<<<<<<< HEAD
   "rtl": false,
+=======
+>>>>>>> origin/UIDesign
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",

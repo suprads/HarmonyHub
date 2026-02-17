@@ -6,6 +6,7 @@
     "ms-azuretools.vscode-containers",
     "orta.vscode-jest",
     "ms-playwright.playwright",
-    "prisma.prisma"
+    "prisma.prisma",
+    "bradlc.vscode-tailwindcss"
   ]
 }
