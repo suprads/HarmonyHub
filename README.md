@@ -15,15 +15,16 @@ Note: Some of this information with specific version numbers can be found in [`p
 ## Project Structure
 
 ```text
-app          # Next.js app router
-└─ api       # Where request handlers are nested (Next.js route.ts files)
-components   # Reusable UI components
-hooks        # Reusable custom react hooks
-lib          # Utility functions
-public       # Static files/assets
-services     # For backend related functions (e.g. API and database)
-tests        # Where tests are stored
-.env.example # Showcase of important environment variables
+app             # Next.js app router
+└─ api          # Where request handlers are nested (Next.js route.ts files)
+components      # Reusable UI components
+hooks           # Reusable custom react hooks
+lib             # Utility functions
+public          # Static files/assets
+services        # For backend related functions (e.g. API and database)
+tests           # Where tests are stored
+components.json # Config file for shadcn
+.env.example    # Showcase of important environment variables
 ```
 
 ## Development Environment

@@ -30,7 +30,7 @@ type TopTrackRequest = Paging & {
   timeRange?: "short_term" | "medium_term" | "long_term";
 };
 
-type TopTrackResponse = {
+export type TopTrackResponse = {
   href: string;
   limit: number;
   next: string | null;
