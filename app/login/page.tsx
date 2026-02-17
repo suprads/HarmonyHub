@@ -25,7 +25,12 @@ export default async function LoginPage() {
             </Link>
           </>
         ) : (
-          <LoginForm loginAction={login} />
+          <>
+            <LoginForm loginAction={login} />
+            <p>
+              Need to <Link href="/sign-up">sign up</Link>?
+            </p>
+          </>
         )}
       </main>
     </div>
