@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,6 +8,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import styles from "./page.module.css";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 // export default function Profile() {
 //   const me = {
@@ -197,25 +210,119 @@ export default function Profile() {
     activity: [],
   };
 
+  const [profile, setProfile] = useState({
+    name: me.name,
+    username: me.username,
+    bio: me.bio,
+    avatarUrl: "",
+  });
+
+  const [editOpen, setEditOpen] = useState(false);
+  const [draft, setDraft] = useState(profile);
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <Avatar className={styles.avatar}>
+            {profile.avatarUrl ? (
+              <AvatarImage src={profile.avatarUrl} alt={profile.name} />
+            ) : null}
             <AvatarFallback>NB</AvatarFallback>
           </Avatar>
 
           <div className={styles.info}>
-            <h1 className={styles.name}>Nivi B</h1>
-            <p className={styles.username}>@nivi</p>
-            <p className={styles.bio}>Hiii!!</p>
+            <h1 className={styles.name}>{profile.name}</h1>
+            <p className={styles.username}>{profile.username}</p>
+            <p className={styles.bio}>{profile.bio}</p>
           </div>
         </div>
 
         <div className={styles.headerActions}>
           <Button variant="secondary">Follow</Button>
           <Button variant="secondary">Message</Button>
-          <Button>Edit Profile</Button>
+          {/* <Button>Edit Profile</Button> */}
+          <Dialog
+            open={editOpen}
+            onOpenChange={(open) => {
+              setEditOpen(open);
+              if (open) setDraft(profile); // reset draft when opening
+            }}
+          >
+            <DialogTrigger asChild>
+              <Button>Edit Profile</Button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit Profile</DialogTitle>
+              </DialogHeader>
+
+              <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="avatar">Avatar</Label>
+                  <Input
+                    id="avatar"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const url = URL.createObjectURL(file);
+                      setDraft((d) => ({ ...d, avatarUrl: url }));
+                    }}
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    value={draft.name}
+                    onChange={(e) =>
+                      setDraft((d) => ({ ...d, name: e.target.value }))
+                    }
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="username">Username</Label>
+                  <Input
+                    id="username"
+                    value={draft.username}
+                    onChange={(e) =>
+                      setDraft((d) => ({ ...d, username: e.target.value }))
+                    }
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="bio">Bio</Label>
+                  <Input
+                    id="bio"
+                    value={draft.bio}
+                    onChange={(e) =>
+                      setDraft((d) => ({ ...d, bio: e.target.value }))
+                    }
+                  />
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button variant="secondary" onClick={() => setEditOpen(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    setProfile(draft);
+                    setEditOpen(false);
+                  }}
+                >
+                  Save
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </header>
 
