@@ -6,6 +6,7 @@ Senior Design Project
 
 - Framework: Next.js
 - Database: PostgreSQL, Prisma ORM, and Neon for database hosting
+- UI/Styling: Tailwind CSS and shadcn
 - Testing: Jest and PlayWright
 - Code Quality: ESLint, Prettier, and TypeScript
 - Local Dev Environment: Docker
