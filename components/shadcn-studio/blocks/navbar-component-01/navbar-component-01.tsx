@@ -1,5 +1,6 @@
 import { MenuIcon, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,6 +43,12 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
             <SearchIcon />
             <span className="sr-only">Search</span>
           </Button>
+          <Link href="/profile">
+            <Avatar className="h-9 w-9 cursor-pointer">
+              <AvatarImage src="/profile.jpg" alt="Profile" />
+              <AvatarFallback>NB</AvatarFallback>
+            </Avatar>
+          </Link>
           <DropdownMenu>
             <DropdownMenuTrigger className="md:hidden" asChild>
               <Button variant="outline" size="icon">

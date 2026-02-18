@@ -40,6 +40,10 @@ const navigationData = [
     title: "Settings",
     href: "/settings",
   },
+  {
+    title: "Profile",
+    href: "/profile",
+  },
 ];
 
 export default function RootLayout({

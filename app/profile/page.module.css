@@ -1,0 +1,231 @@
+/* Page base */
+.page {
+  background: white;
+  padding: 32px 48px;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+/* Header container */
+.header {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #eaeaea; /* subtle separation */
+}
+
+/* Left side layout */
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Avatar size */
+.avatar {
+  width: 150px;
+  height: 150px;
+}
+
+/* Text styling */
+.name {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  color: #111;
+}
+
+.username {
+  margin: 6px 0 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.bio {
+  margin: 12px 0 0 0;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Buttons area */
+.headerActions {
+  display: flex;
+  gap: 20px;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 160px));
+  gap: 16px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+
+.statCard {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.statCardContent {
+  padding: 18px;
+}
+
+.statLabel {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.statValue {
+  margin: 6px 0 0 0;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.tabs {
+  margin-top: 6px;
+}
+
+.tabsList {
+  display: inline-flex;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.tabTrigger {
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.tabContent {
+  margin-top: 18px;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+  .statsRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .overviewGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cardHeader {
+  padding: 18px 18px 0 18px;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cardBody {
+  padding: 16px 18px 18px 18px;
+}
+
+.cardWide {
+  border-radius: 14px;
+}
+
+.cardNarrow {
+  border-radius: 14px;
+}
+
+.fullWidthCard {
+  border-radius: 14px;
+}
+
+.trackList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trackRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.trackRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.trackText {
+  min-width: 0;
+}
+
+.trackTitle {
+  margin: 0;
+  font-weight: 600;
+}
+
+.trackMeta {
+  margin: 2px 0 0 0;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.viewButton {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.artistList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.artistItem {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  padding: 12px 12px;
+}
+
+.artistName {
+  margin: 0;
+  font-weight: 600;
+}
+
+.artistMeta {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.activityRow {
+  min-height: 44px;
+  border: 1px dashed rgba(0, 0, 0, 0.12);
+  border-radius: 10px;
+}
