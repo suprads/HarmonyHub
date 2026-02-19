@@ -30,9 +30,9 @@ export default async function ChartPage(props: PageProps<"/chart">) {
   });
 
   return (
-    <div className={styles.page}>
+    <div className={styles.chartPage}>
       <h1 className={styles.chartHeader}>Your Personalized Charts</h1>
-      <main className={styles.main}>
+      <main className="main">
         <div className={styles.logoContainer}>
           <div className={styles.listColumn}>
             <h3 className={styles.toptracks}>Your Top Tracks</h3>
