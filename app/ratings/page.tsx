@@ -36,8 +36,8 @@ export default function RatingPage() {
   }
 
   return (
-    <div className={styles.page}>
-      <div className="divRatingPage">
+    <div className="page">
+      <div className={styles.divRatingPage}>
         <h1 className={styles.ratingHeader}>Rate a Song or Album</h1>
 
         <form onSubmit={handleSubmit}>
@@ -54,7 +54,7 @@ export default function RatingPage() {
 
           <button
             type="submit"
-            className="submitButton"
+            className={styles.submitButton}
             disabled={rating === 0 || !name}
           >
             Submit Rating

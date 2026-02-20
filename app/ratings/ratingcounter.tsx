@@ -1,4 +1,3 @@
-import Image from "next/image";
 import styles from "./rating.module.css";
 import { useState } from "react";
 
