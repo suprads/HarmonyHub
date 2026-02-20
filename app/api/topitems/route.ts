@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getTopTracks, TopTracksResponse } from "@/services/spotify";
-import { Provider } from "@/generated/prisma/enums";
+import { Provider } from "@/generated/prisma/client";
 
 export async function POST(req: Request) {
   try {
