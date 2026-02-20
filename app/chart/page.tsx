@@ -37,7 +37,7 @@ export default async function ChartPage(props: PageProps<"/chart">) {
       <main className="main">
         <div className="flex flex-row gap-8 items-start w-full justify-center max-[800px]:flex-col max-[800px]:items-center">
           <div className={styles.listColumn}>
-            <h3 className={styles.toptracks}>Your Top Tracks</h3>
+            <h3 className={styles.topTracks}>Your Top Tracks</h3>
             <ol style={{ paddingLeft: 0, listStyle: "none" }}>
               {topTracks.items.map((track, i) => (
                 <ChartItem
@@ -52,7 +52,7 @@ export default async function ChartPage(props: PageProps<"/chart">) {
           </div>
 
           <div className={styles.listColumn} style={{ marginTop: 0 }}>
-            <h3 className={styles.topartists}>Your Top Artists</h3>
+            <h3 className={styles.topArtists}>Your Top Artists</h3>
             <ol style={{ paddingLeft: 0, listStyle: "none" }}>
               {topArtists.items.map((artist, i) => (
                 <ChartItem
