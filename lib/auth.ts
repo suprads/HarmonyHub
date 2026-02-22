@@ -26,6 +26,15 @@ export const auth = betterAuth({
       },
     },
   },
+  /*
+   * Settings for social providers.
+   */
+  socialProviders: {
+    spotify: {
+      clientId: process.env.SPOTIFY_CLIENT_ID as string,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
+    },
+  },
   session: { modelName: "Session" },
   account: { modelName: "Account" },
   verification: { modelName: "Verification" },
