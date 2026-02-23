@@ -17,7 +17,6 @@ export default function LoginForm({ loginAction }: LoginFormProps) {
   const spotifySignIn = async () => {
     await authClient.signIn.social({
       provider: "spotify",
-      callbackURL: "http://localhost:3000/api/auth/callback/spotify",
     });
   };
 

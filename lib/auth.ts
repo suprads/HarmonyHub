@@ -33,7 +33,16 @@ export const auth = betterAuth({
     spotify: {
       clientId: process.env.SPOTIFY_CLIENT_ID as string,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
+      redirectURI: "http://127.0.0.1:3000/api/auth/callback/spotify",
     },
+  },
+  trustedOrigins: ["http://localhost:3000", "http://127.0.0.1:3000"],
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true,
+    },
+    useSecureCookies: true,
   },
   session: { modelName: "Session" },
   account: { modelName: "Account" },
