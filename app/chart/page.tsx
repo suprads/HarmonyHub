@@ -1,50 +1,60 @@
 import styles from "./chart.module.css";
 import * as SpotifyAPI from "@/services/spotify";
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { Provider } from "@/generated/prisma/enums";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 
-const REDIRECT_URI = "http://127.0.0.1:3000/api/spotify";
-
-// Note: Need to build project for PageProps<"/chart"> to not show as error.
-// See https://nextjs.org/docs/15/app/getting-started/layouts-and-pages#route-props-helpers
 export default async function ChartPage() {
-  const cookieStore = await cookies();
-  const spotifyCode = cookieStore.get("spotify_code")?.value;
-  const userId = "user_id"; // retrieve from session/auth in real implementation - will need to change later
+  const reqHeaders = await headers();
+  const session = await auth.api.getSession({
+    headers: reqHeaders,
+  });
 
-  if (!spotifyCode) {
+  if (!session) redirect("/login");
+
+  const userId = session.user.id;
+  const spotifyAccount = await prisma.account.findFirst({
+    where: {
+      userId: userId,
+      providerId: "spotify",
+    },
+  });
+
+  if (!spotifyAccount) {
     return (
       <div className={styles.page}>
         <main className={styles.main}>
           <p>
             No charts to display. Please connect to at least one streaming
-            service {<Link href="/settings/services">here</Link>}.
+            service <Link href="/settings/services">here</Link>.
           </p>
         </main>
       </div>
     );
   }
 
-  const tokenResponse = await SpotifyAPI.getAccessToken(
-    spotifyCode ?? "",
-    REDIRECT_URI,
-  );
-
-  const topTracks = await SpotifyAPI.getTopTracks(tokenResponse.access_token, {
-    timeRange: "long_term",
-    limit: 20,
+  const tokenResponse = await auth.api.getAccessToken({
+    body: {
+      providerId: "spotify",
+      accountId: spotifyAccount.id,
+      userId: userId,
+    },
+    headers: reqHeaders,
   });
 
-  const topArtists = await SpotifyAPI.getTopArtists(
-    tokenResponse.access_token,
-    {
-      timeRange: "long_term",
-      limit: 5,
-    },
-  );
+  const topTracks = await SpotifyAPI.getTopTracks(tokenResponse.accessToken, {
+    timeRange: "long_term",
+    limit: 5,
+  });
+
+  const topArtists = await SpotifyAPI.getTopArtists(tokenResponse.accessToken, {
+    timeRange: "long_term",
+    limit: 5,
+  });
 
   for (const track of topTracks.items ?? []) {
     const spotifyTrackId = track.id;

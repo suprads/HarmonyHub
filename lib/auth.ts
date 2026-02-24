@@ -10,8 +10,15 @@ const authOptions: BetterAuthOptions = {
   emailAndPassword: {
     enabled: true,
   },
+  socialProviders: {
+    spotify: {
+      clientId: process.env.SPOTIFY_CLIENT_ID as string,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
+      redirectURI: "http://127.0.0.1:3000/api/auth/callback/spotify",
+    },
+  },
   plugins: [nextCookies()], // make sure this is the last plugin in the array
-  /** Per-table configs */
+  /* Per-table configs */
   user: {
     modelName: "User",
     additionalFields: {
@@ -24,7 +31,15 @@ const authOptions: BetterAuthOptions = {
     },
   },
   session: { modelName: "Session" },
-  account: { modelName: "Account" },
+  account: {
+    modelName: "Account",
+    accountLinking: {
+      allowDifferentEmails: true,
+      trustedProviders: ["spotify"],
+    },
+    // TODO Should figure out how to make Spotify account linking work without this.
+    skipStateCookieCheck: true,
+  },
   verification: { modelName: "Verification" },
 };
 

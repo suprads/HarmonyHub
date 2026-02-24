@@ -1,20 +1,35 @@
-import { cookies } from "next/headers";
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 /**
  * Page where you can manage the services (e.g. Spotify) linked to your account.
  */
 export default async function ServicesPage() {
-  const cookieStore = await cookies();
-  const spotifyCode = cookieStore.get("spotify_code")?.value;
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) redirect("/login");
+
+  const spotifyAccount = await prisma.account.findFirst({
+    where: {
+      providerId: "spotify",
+      userId: session.user.id,
+    },
+  });
 
   return (
     <div>
-      <h1>Services</h1>
+      <header>
+        <h1>Services</h1>
+      </header>
       <main>
         <p>
-          {<Link href="/settings/services/spotify">Spotify</Link>} (
-          {spotifyCode ? "Linked" : "Not linked"})
+          <Link href="/settings/services/spotify">Spotify</Link> (
+          {spotifyAccount ? "Linked" : "Not linked"})
         </p>
       </main>
     </div>
