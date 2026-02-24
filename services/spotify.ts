@@ -9,8 +9,7 @@ import { redirect } from "next/navigation";
 export type RedirectUri =
   | "http://127.0.0.1:3000"
   | "http://127.0.0.1:3000/chart"
-  | "http://127.0.0.1:3000/settings/services"
-  | "http://127.0.0.1:3000/api/spotify";
+  | "http://127.0.0.1:3000/settings/services";
 
 type AccessTokenResponse = {
   access_token: string;
