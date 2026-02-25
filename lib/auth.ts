@@ -37,8 +37,6 @@ const authOptions: BetterAuthOptions = {
       allowDifferentEmails: true,
       trustedProviders: ["spotify"],
     },
-    // TODO Should figure out how to make Spotify account linking work without this.
-    skipStateCookieCheck: true,
   },
   verification: { modelName: "Verification" },
 };
