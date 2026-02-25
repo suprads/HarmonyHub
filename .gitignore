@@ -50,6 +50,7 @@ next-env.d.ts
 
 # Prisma
 generated/prisma
+prisma/migrations/migration_lock.toml
 
 # Editor directories and files
 .vscode/*
