@@ -3,7 +3,6 @@ import * as SpotifyAPI from "@/services/spotify";
 import { headers } from "next/headers";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
-import { Provider } from "@/generated/prisma/enums";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -54,99 +53,6 @@ export default async function ChartPage() {
   const topArtists = await SpotifyAPI.getTopArtists(tokenResponse.accessToken, {
     timeRange: "long_term",
     limit: 5,
-  });
-
-  for (const track of topTracks.items ?? []) {
-    const spotifyTrackId = track.id;
-    if (!spotifyTrackId) continue;
-
-    const existingSource = await prisma.trackSource.findUnique({
-      where: {
-        provider_providerTrackId: {
-          provider: Provider.SPOTIFY,
-          providerTrackId: spotifyTrackId,
-        },
-      },
-      include: { track: true },
-    });
-
-    let dbTrackId: bigint;
-
-    if (existingSource) {
-      await prisma.track.update({
-        where: { id: existingSource.trackId },
-        data: {
-          title: track.name,
-          durationMs: track.duration_ms,
-          explicit: track.explicit ?? false,
-        },
-      });
-      dbTrackId = existingSource.trackId;
-    } else {
-      const primaryArtist = track.artists?.[0];
-      const artistName = primaryArtist?.name || "Unknown Artist";
-
-      const artist = await prisma.artist.upsert({
-        where: { name: artistName },
-        update: {},
-        create: { name: artistName },
-      });
-
-      const albumData = track.album;
-      const albumTitle = albumData?.name || "Unknown Album";
-
-      const releaseDateStr = albumData?.release_date;
-      let releaseDate: Date | null = null;
-      if (releaseDateStr) {
-        const parts = releaseDateStr.split("-");
-        if (parts.length === 1) releaseDate = new Date(Number(parts[0]), 0);
-        else if (parts.length === 2)
-          releaseDate = new Date(Number(parts[0]), Number(parts[1]) - 1);
-        else releaseDate = new Date(releaseDateStr);
-      }
-
-      const album = await prisma.album.create({
-        data: { title: albumTitle, releaseDate },
-      });
-
-      const createdTrack = await prisma.track.create({
-        data: {
-          title: track.name,
-          durationMs: track.duration_ms,
-          explicit: track.explicit ?? false,
-          artistId: artist.id,
-          albumId: album.id,
-        },
-      });
-
-      dbTrackId = createdTrack.id;
-
-      await prisma.trackSource.create({
-        data: {
-          provider: Provider.SPOTIFY,
-          providerTrackId: spotifyTrackId,
-          raw: track,
-          trackId: dbTrackId,
-        },
-      });
-    }
-
-    await prisma.like.upsert({
-      where: { userId_trackId: { userId, trackId: dbTrackId } },
-      update: {},
-      create: { userId, trackId: dbTrackId },
-    });
-  }
-
-  // Read from DB
-  const likedTracks = await prisma.like.findMany({
-    where: { userId },
-    include: {
-      track: {
-        include: { artist: true, album: true },
-      },
-    },
-    take: 5,
   });
 
   return (
