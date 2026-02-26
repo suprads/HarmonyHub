@@ -27,7 +27,7 @@ export default function Profile() {
     followers: 1240,
     following: 318,
     playlists: 22,
-    topArtists: ["Ariana Grande", "Chase Atlantic", "x", "y"],
+    topArtists: ["B", "A", "x", "y"],
     topTracks: [
       { title: "Track One", artist: "Artist A" },
       { title: "Track Two", artist: "Artist B" },
@@ -68,7 +68,6 @@ export default function Profile() {
         <div className={styles.headerActions}>
           <Button variant="secondary">Follow</Button>
           <Button variant="secondary">Message</Button>
-          {/* <Button>Edit Profile</Button> */}
           <Dialog
             open={editOpen}
             onOpenChange={(open) => {
@@ -155,8 +154,6 @@ export default function Profile() {
 
       <Separator />
 
-      {/* Stats */}
-      {/* Stats */}
       <div className={styles.statsRow}>
         <Card className={styles.statCard}>
           <CardContent className={styles.statCardContent}>
@@ -180,7 +177,6 @@ export default function Profile() {
         </Card>
       </div>
 
-      {/* Tabs */}
       <Tabs defaultValue="overview" className={styles.tabs}>
         <TabsList className={styles.tabsList}>
           <TabsTrigger className={styles.tabTrigger} value="overview">
@@ -199,7 +195,6 @@ export default function Profile() {
 
         <TabsContent value="overview" className={styles.tabContent}>
           <div className={styles.overviewGrid}>
-            {/* Top Tracks (wide) */}
             <Card className={styles.cardWide}>
               <CardHeader className={styles.cardHeader}>
                 <CardTitle className={styles.cardTitle}>Top Tracks</CardTitle>
@@ -227,7 +222,6 @@ export default function Profile() {
               </CardContent>
             </Card>
 
-            {/* Top Artists (narrow) */}
             <Card className={styles.cardNarrow}>
               <CardHeader className={styles.cardHeader}>
                 <CardTitle className={styles.cardTitle}>Top Artists</CardTitle>
@@ -246,7 +240,6 @@ export default function Profile() {
             </Card>
           </div>
 
-          {/* Recent Activity (full width) */}
           <Card className={styles.fullWidthCard}>
             <CardHeader className={styles.cardHeader}>
               <CardTitle className={styles.cardTitle}>
@@ -257,9 +250,7 @@ export default function Profile() {
             <CardContent className={styles.cardBody}>
               <div className={styles.activityList}>
                 {me.activity.map((x, i) => (
-                  <div key={i} className={styles.activityRow}>
-                    {/* build your activity row later */}
-                  </div>
+                  <div key={i} className={styles.activityRow}></div>
                 ))}
               </div>
             </CardContent>
@@ -271,9 +262,7 @@ export default function Profile() {
             <CardHeader className={styles.cardHeader}>
               <CardTitle className={styles.cardTitle}>Playlists</CardTitle>
             </CardHeader>
-            <CardContent className={styles.cardBody}>
-              Add your playlist grid here.
-            </CardContent>
+            <CardContent className={styles.cardBody}>playlists</CardContent>
           </Card>
         </TabsContent>
 
@@ -283,7 +272,7 @@ export default function Profile() {
               <CardTitle className={styles.cardTitle}>Ratings</CardTitle>
             </CardHeader>
             <CardContent className={styles.cardBody}>
-              Add ratings + reviews here.
+              ratings + reviews
             </CardContent>
           </Card>
         </TabsContent>
@@ -303,6 +292,7 @@ export default function Profile() {
   );
 }
 
+// BODY content is placeholder for now
 // TO DO
 // 1. edit/view follower - my profile, follow - others profile, message
 // <div className={styles.headerActions}>
@@ -321,7 +311,7 @@ export default function Profile() {
 // 3. avatar - file validation (type/size), upload to storage,save returned URL
 // 4. nest profiles - /profile/:username
 // 5. charts in profile page
-// 6. Follow/Unfollow behavior
+// 6. Follow/Unfollow behavior -optional
 // 7. Counters (Followers / Following / Playlists)
 // 8. message - later
 // 9. success toast after edit or follow
