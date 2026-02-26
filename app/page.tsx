@@ -1,10 +1,8 @@
-import styles from "./page.module.css";
-
 export default function HomePage() {
   return (
-    <div className={styles.page}>
+    <div className="page">
       <main>
-        <h2>Home Page</h2>
+        <h1>Home Page</h1>
       </main>
     </div>
   );
