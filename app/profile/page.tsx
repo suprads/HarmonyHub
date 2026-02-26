@@ -295,18 +295,6 @@ export default function Profile() {
 // BODY content is placeholder for now
 // TO DO
 // 1. edit/view follower - my profile, follow - others profile, message
-// <div className={styles.headerActions}>
-//   {isMe ? (
-//     <Button onClick={() => setEditOpen(true)}>Edit Profile</Button>
-//   ) : (
-//     <>
-//       <Button variant="secondary" onClick={onFollowToggle}>
-//         {isFollowing ? "Following" : "Follow"}
-//       </Button>
-//       <Button variant="secondary" onClick={onMessage}>Message</Button>
-//     </>
-//   )}
-// </div>
 // 2. following/followers list
 // 3. avatar - file validation (type/size), upload to storage,save returned URL
 // 4. nest profiles - /profile/:username
