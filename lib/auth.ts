@@ -10,6 +10,13 @@ const authOptions: BetterAuthOptions = {
   emailAndPassword: {
     enabled: true,
   },
+  socialProviders: {
+    spotify: {
+      clientId: process.env.SPOTIFY_CLIENT_ID as string,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
+      redirectURI: "http://127.0.0.1:3000/api/auth/callback/spotify",
+    },
+  },
   plugins: [nextCookies()], // make sure this is the last plugin in the array
   /** Per-table configs */
   user: {
@@ -22,24 +29,6 @@ const authOptions: BetterAuthOptions = {
         unique: true,
       },
     },
-  },
-  /*
-   * Settings for social providers.
-   */
-  socialProviders: {
-    spotify: {
-      clientId: process.env.SPOTIFY_CLIENT_ID as string,
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
-      redirectURI: "http://127.0.0.1:3000/api/auth/callback/spotify",
-    },
-  },
-  trustedOrigins: ["http://127.0.0.1:3000"],
-  advanced: {
-    defaultCookieAttributes: {
-      sameSite: "none",
-      secure: true,
-    },
-    useSecureCookies: true,
   },
   session: { modelName: "Session" },
   account: { modelName: "Account" },
