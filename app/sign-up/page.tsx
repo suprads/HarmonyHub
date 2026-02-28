@@ -1,4 +1,3 @@
-import styles from "./page.module.css";
 import { auth } from "@/lib/auth";
 import SignUpForm from "./sign-up-form";
 import { headers } from "next/headers";
@@ -7,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export default function SignUpPage() {
   return (
-    <div className={styles.page}>
+    <div>
       <main>
         <header>
           <h1>Sign Up</h1>
