@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Spinner } from "./ui/spinner";
 import { authClient } from "@/lib/auth-client";
+import { useActionState } from "react";
 
 /**
  * @url https://ui.shadcn.com/blocks/login
@@ -36,10 +36,7 @@ export function LoginForm({
     formData: FormData,
   ) => Promise<{ message: string } | undefined>;
 }) {
-  const [error, formAction, pending] = React.useActionState(
-    loginAction,
-    undefined,
-  );
+  const [error, formAction, pending] = useActionState(loginAction, undefined);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
