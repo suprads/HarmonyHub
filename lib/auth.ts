@@ -14,6 +14,11 @@ const authOptions: BetterAuthOptions = {
     spotify: {
       clientId: process.env.SPOTIFY_CLIENT_ID as string,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
+      mapProfileToUser: (profile) => {
+        return {
+          handle: profile.display_name, // maps Spotify's display_name to your handle field
+        };
+      },
       redirectURI: "http://127.0.0.1:3000/api/auth/callback/spotify",
     },
   },
@@ -24,14 +29,20 @@ const authOptions: BetterAuthOptions = {
     additionalFields: {
       handle: {
         type: "string",
-        required: true,
+        required: false,
         input: true,
         unique: true,
       },
     },
   },
   session: { modelName: "Session" },
-  account: { modelName: "Account" },
+  account: {
+    modelName: "Account",
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["spotify", "credential"],
+    },
+  },
   verification: { modelName: "Verification" },
 };
 

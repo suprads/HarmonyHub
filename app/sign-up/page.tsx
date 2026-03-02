@@ -24,19 +24,28 @@ export default function SignUpPage() {
 async function signUp(prevState: unknown, formData: FormData) {
   "use server";
 
+  type signUpBody = {
+    email: string;
+    password: string;
+    name: string;
+    handle: string;
+  };
+
   const email = formData.get("email") as string;
   const handle = formData.get("handle") as string;
   const password = formData.get("password") as string;
+  const name = formData.get("name") as string;
+
   let signUpSuccess = false;
 
   try {
     await auth.api.signUpEmail({
       body: {
-        email,
-        name: "",
-        handle,
-        password,
-      },
+        email: email,
+        name: name,
+        password: password,
+        handle: handle,
+      } as signUpBody,
       headers: await headers(),
     });
     signUpSuccess = true;

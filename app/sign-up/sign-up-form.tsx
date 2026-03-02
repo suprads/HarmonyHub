@@ -15,11 +15,14 @@ export default function SignUpForm({ signUpAction }: SignUpFormProps) {
   return (
     <div>
       <form action={formAction}>
-        <label htmlFor="email">Email:</label>
-        <input type="email" name="email" required />
+        <label htmlFor="name">Name:</label>
+        <input name="name" required />
 
         <label htmlFor="handle">Username:</label>
         <input name="handle" required />
+
+        <label htmlFor="email">Email:</label>
+        <input type="email" name="email" required />
 
         <label htmlFor="password">Password:</label>
         <input type="password" name="password" required />

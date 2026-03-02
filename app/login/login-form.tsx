@@ -1,6 +1,5 @@
 "use client";
 
-import { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { useActionState } from "react";
 
