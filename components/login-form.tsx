@@ -19,8 +19,8 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Spinner } from "./ui/spinner";
-import { authClient } from "@/lib/auth-client";
 import { useActionState } from "react";
+import { spotifySignIn } from "@/services/auth/client";
 
 /**
  * @url https://ui.shadcn.com/blocks/login
@@ -96,16 +96,4 @@ export function LoginForm({
       </Card>
     </div>
   );
-}
-
-/**
- * Allows you to sign in or sign up with Spotify
- */
-async function spotifySignIn() {
-  const result = await authClient.signIn.social({
-    provider: "spotify",
-  });
-  if (result.error) {
-    console.error("Spotify sign-in error:", result.error);
-  }
 }

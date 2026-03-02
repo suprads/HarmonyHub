@@ -17,6 +17,7 @@ model User {
   emailVerified          Boolean         @default(false)
   /// User's chosen display name.
   name                   String
+  /// A unique name to associate with the user's profile.
   handle                 String          @unique
   image                  String?
   createdAt              DateTime        @default(now())

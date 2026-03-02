@@ -20,6 +20,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Spinner } from "./ui/spinner";
 import { useActionState } from "react";
+import { spotifySignIn } from "@/services/auth/client";
 
 /**
  * @url https://ui.shadcn.com/blocks/signup
@@ -57,6 +58,9 @@ export function SignupForm({
                   placeholder="John Smith"
                   required
                 />
+                <FieldDescription>
+                  This name will be displayed on your profile.
+                </FieldDescription>
               </Field>
               <Field data-disabled={pending}>
                 <FieldLabel htmlFor="handle">Username</FieldLabel>
@@ -67,6 +71,9 @@ export function SignupForm({
                   placeholder="username123"
                   required
                 />
+                <FieldDescription>
+                  Enter a unique ID to associate with your profile.
+                </FieldDescription>
               </Field>
               <Field data-disabled={pending}>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -101,9 +108,14 @@ export function SignupForm({
                   <Button type="submit" disabled={pending}>
                     {pending && <Spinner />} Create Account
                   </Button>
-                  {/* <Button variant="outline" type="button" disabled={pending}>
+                  <Button
+                    variant="outline"
+                    type="button"
+                    disabled={pending}
+                    onClick={spotifySignIn}
+                  >
                     Sign up with Spotify
-                  </Button> */}
+                  </Button>
                   <FieldDescription className="px-6 text-center">
                     Already have an account? <Link href="/login">Sign in</Link>
                   </FieldDescription>
