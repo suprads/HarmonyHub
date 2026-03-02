@@ -22,14 +22,6 @@ export default function SignUpPage() {
 async function signUp(prevState: unknown, formData: FormData) {
   "use server";
 
-  // Define the expected shape of the sign-up request body (prevent TypeScript errors))
-  type signUpBody = {
-    email: string;
-    password: string;
-    name: string;
-    handle: string;
-  };
-
   const email = formData.get("email") as string;
   const handle = formData.get("handle") as string;
   const password = formData.get("password") as string;
@@ -44,7 +36,7 @@ async function signUp(prevState: unknown, formData: FormData) {
         name: name,
         password: password,
         handle: handle,
-      } as signUpBody,
+      },
       headers: await headers(),
     });
     signUpSuccess = true;
