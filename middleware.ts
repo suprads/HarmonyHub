@@ -16,5 +16,14 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   // Used to specify the routes the middleware applies to
-  matcher: ["/chart", "/logout", "/ratings", "/settings", "/friends"],
+  matcher: [
+    "/chart",
+    "/logout",
+    "/ratings",
+    "/settings",
+    "/settings/:path*",
+    "/friends",
+    "/api/spotify",
+    "/api/topitems",
+  ],
 };

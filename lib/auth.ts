@@ -28,7 +28,7 @@ export const auth = betterAuth({
     },
   },
   plugins: [nextCookies()], // make sure this is the last plugin in the array
-  /** Per-table configs */
+  /* Per-table configs */
   user: {
     modelName: "User",
     additionalFields: {
@@ -45,6 +45,7 @@ export const auth = betterAuth({
     modelName: "Account",
     accountLinking: {
       enabled: true,
+      // allowDifferentEmails: true,
       trustedProviders: ["spotify", "credential"],
     },
   },
