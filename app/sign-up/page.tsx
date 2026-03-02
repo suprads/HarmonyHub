@@ -1,18 +1,16 @@
-import styles from "./page.module.css";
 import { auth } from "@/lib/auth";
-import SignUpForm from "./sign-up-form";
+import { SignupForm } from "@/components/signup-form";
 import { headers } from "next/headers";
 import { APIError } from "better-auth";
 import { redirect } from "next/navigation";
 
 export default function SignUpPage() {
   return (
-    <div className={styles.page}>
-      <main>
-        <header>
-          <h1>Sign Up</h1>
-        </header>
-        <SignUpForm signUpAction={signUp} />
+    <div className="font-sans flex items-center justify-items-center sm:p-20">
+      <main className="flex flex-col items-center justify-items-center w-full">
+        <div className="w-full max-w-sm">
+          <SignupForm signupAction={signUp} />
+        </div>
       </main>
     </div>
   );

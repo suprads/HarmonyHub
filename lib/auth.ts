@@ -1,9 +1,12 @@
-import { betterAuth, BetterAuthOptions } from "better-auth";
+import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 
-const authOptions: BetterAuthOptions = {
+/**
+ * auth.api methods should be executed on the server.
+ */
+export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
@@ -46,9 +49,4 @@ const authOptions: BetterAuthOptions = {
     },
   },
   verification: { modelName: "Verification" },
-};
-
-/**
- * auth.api methods should be executed on the server.
- */
-export const auth = betterAuth(authOptions);
+});
