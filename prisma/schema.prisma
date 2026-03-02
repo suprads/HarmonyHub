@@ -16,7 +16,8 @@ model User {
   email                  String          @unique
   emailVerified          Boolean         @default(false)
   /// User's chosen display name.
-  name                   String
+  firstName              String
+  lastName               String
   handle                 String          @unique
   image                  String?
   createdAt              DateTime        @default(now())
