@@ -16,7 +16,9 @@ const authOptions: BetterAuthOptions = {
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
       mapProfileToUser: (profile) => {
         return {
-          handle: profile.display_name, // maps Spotify's display_name to your handle field
+          // Map Spotify profile fields to your User model fields
+          handle: profile.display_name,
+          image: profile.images?.[0]?.url,
         };
       },
       redirectURI: "http://127.0.0.1:3000/api/auth/callback/spotify",

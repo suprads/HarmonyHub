@@ -13,6 +13,7 @@ type LoginFormProps = {
 export default function LoginForm({ loginAction }: LoginFormProps) {
   const [error, formAction, pending] = useActionState(loginAction, undefined);
 
+  // Allow you to sign in or sign up with Spotify
   const spotifySignIn = async () => {
     await authClient.signIn.social({
       provider: "spotify",
