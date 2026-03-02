@@ -17,9 +17,9 @@ export const auth = betterAuth({
     spotify: {
       clientId: process.env.SPOTIFY_CLIENT_ID as string,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
+      // Maps Spotify profile fields to the User model fields.
       mapProfileToUser: (profile) => {
         return {
-          // Map Spotify profile fields to your User model fields
           handle: profile.display_name,
           image: profile.images?.[0]?.url,
         };
