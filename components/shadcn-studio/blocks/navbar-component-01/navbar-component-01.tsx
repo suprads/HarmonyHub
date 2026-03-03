@@ -36,6 +36,9 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
           <Link href="/settings" className="navbar-link">
             Settings
           </Link>
+          <Link href="/login" className="navbar-link">
+            Login
+          </Link>
         </div>
 
         <div className="navbar-actions">

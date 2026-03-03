@@ -1,111 +1,87 @@
 import styles from "./chart.module.css";
 import * as SpotifyAPI from "@/services/spotify";
-import Image from "next/image";
+import ChartItem from "./chart-item";
+import { headers } from "next/headers";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import Link from "next/link";
+import { verifySession } from "@/services/auth/server";
 
-const REDIRECT_URI = "http://127.0.0.1:3000/chart";
+export default async function ChartPage() {
+  const session = await verifySession();
 
-// Note: Need to build project for PageProps<"/chart"> to not show as error.
-// See https://nextjs.org/docs/15/app/getting-started/layouts-and-pages#route-props-helpers
-export default async function ChartPage(props: PageProps<"/chart">) {
-  const { code: spotifyCode }: { code?: string } = await props.searchParams;
+  const spotifyAccount = await prisma.account.findFirst({
+    where: {
+      userId: session.user.id,
+      providerId: "spotify",
+    },
+  });
 
-  if (!spotifyCode) {
-    console.log("Redirecting to Spotify to authorize user.");
-    SpotifyAPI.authorizeUser(REDIRECT_URI);
+  if (!spotifyAccount) {
+    return (
+      <div className="page">
+        <main className="main">
+          <p>
+            No charts to display. Please connect to at least one streaming
+            service <Link href="/settings/services">here</Link>.
+          </p>
+        </main>
+      </div>
+    );
   }
 
-  const tokenResponse = await SpotifyAPI.getAccessToken(
-    spotifyCode ?? "",
-    REDIRECT_URI,
-  );
-  const topTracks = await SpotifyAPI.getTopItems(tokenResponse.access_token, {
-    type: "tracks",
+  const tokenResponse = await auth.api.getAccessToken({
+    body: {
+      providerId: "spotify",
+      accountId: spotifyAccount.accountId,
+      userId: session.user.id,
+    },
+    headers: await headers(),
+  });
+
+  const topTracks = await SpotifyAPI.getTopTracks(tokenResponse.accessToken, {
     timeRange: "long_term",
     limit: 5,
   });
-  const topArtists = await SpotifyAPI.getTopItems(tokenResponse.access_token, {
-    type: "artists",
+
+  const topArtists = await SpotifyAPI.getTopArtists(tokenResponse.accessToken, {
     timeRange: "long_term",
     limit: 5,
   });
 
   return (
-    <div className={styles.page}>
-      <h1 className={styles.chartHeader}>Your Personalized Charts</h1>
-      <main className={styles.main}>
-        <div className={styles.logoContainer}>
+    <div className={styles.chartPage}>
+      <h1 className="text-4xl font-bold m-0 p-[auto]">
+        Your Personalized Charts
+      </h1>
+      <main className="main">
+        <div className="flex flex-row gap-8 items-start w-full justify-center max-[800px]:flex-col max-[800px]:items-center">
           <div className={styles.listColumn}>
-            <h3 className={styles.toptracks}>Your Top Tracks</h3>
+            <h3 className={styles.topTracks}>Your Top Tracks</h3>
             <ol style={{ paddingLeft: 0, listStyle: "none" }}>
               {topTracks.items.map((track, i) => (
-                <li key={track.id} style={{ marginBottom: 12 }}>
-                  <div
-                    style={{ display: "flex", gap: 12, alignItems: "center" }}
-                  >
-                    <div
-                      style={{
-                        width: 28,
-                        textAlign: "center",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {i + 1}
-                    </div>
-                    {track.album.images[2]?.url && (
-                      <Image
-                        src={track.album.images[2].url}
-                        alt={track.name}
-                        width={64}
-                        height={64}
-                        style={{ borderRadius: 6 }}
-                      />
-                    )}
-                    <div>
-                      <div style={{ fontWeight: 600 }}>{track.name}</div>
-                      <div style={{ fontSize: 12, color: "#666" }}>
-                        {track.artists.map((a: any) => a.name).join(", ")}
-                      </div>
-                    </div>
-                  </div>
-                </li>
+                <ChartItem
+                  key={track.id}
+                  itemNumber={i + 1}
+                  imgUrl={track.album.images[2]?.url}
+                  name={track.name}
+                  subtitle={track.artists.map((a) => a.name).join(", ")}
+                />
               ))}
             </ol>
           </div>
 
           <div className={styles.listColumn} style={{ marginTop: 0 }}>
-            <h3 className={styles.topartists}>Your Top Artists</h3>
+            <h3 className={styles.topArtists}>Your Top Artists</h3>
             <ol style={{ paddingLeft: 0, listStyle: "none" }}>
               {topArtists.items.map((artist, i) => (
-                <li key={artist.id} style={{ marginBottom: 12 }}>
-                  <div
-                    style={{ display: "flex", gap: 12, alignItems: "center" }}
-                  >
-                    <div
-                      style={{
-                        width: 28,
-                        textAlign: "center",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {i + 1}
-                    </div>
-                    {artist.images[2]?.url && (
-                      <Image
-                        src={artist.images[2].url}
-                        alt={artist.name}
-                        width={64}
-                        height={64}
-                        style={{ borderRadius: 6 }}
-                      />
-                    )}
-                    <div>
-                      <div style={{ fontWeight: 600 }}>{artist.name}</div>
-                      <div style={{ fontSize: 12, color: "#666" }}>
-                        {artist.genres.slice(0, 3).join(", ")}
-                      </div>
-                    </div>
-                  </div>
-                </li>
+                <ChartItem
+                  key={artist.id}
+                  itemNumber={i + 1}
+                  imgUrl={artist.images[2]?.url}
+                  name={artist.name}
+                  subtitle={artist.genres.slice(0, 3).join(", ")}
+                />
               ))}
             </ol>
           </div>
