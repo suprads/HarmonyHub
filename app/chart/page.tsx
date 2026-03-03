@@ -39,7 +39,7 @@ export default async function ChartPage() {
   const tokenResponse = await auth.api.getAccessToken({
     body: {
       providerId: "spotify",
-      accountId: spotifyAccount.id,
+      accountId: spotifyAccount.accountId,
       userId: userId,
     },
     headers: reqHeaders,
