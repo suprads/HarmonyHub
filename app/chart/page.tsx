@@ -4,21 +4,15 @@ import ChartItem from "./chart-item";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { verifySession } from "@/services/auth/server";
 
 export default async function ChartPage() {
-  const reqHeaders = await headers();
-  const session = await auth.api.getSession({
-    headers: reqHeaders,
-  });
+  const session = await verifySession();
 
-  if (!session) redirect("/login");
-
-  const userId = session.user.id;
   const spotifyAccount = await prisma.account.findFirst({
     where: {
-      userId: userId,
+      userId: session.user.id,
       providerId: "spotify",
     },
   });
@@ -40,9 +34,9 @@ export default async function ChartPage() {
     body: {
       providerId: "spotify",
       accountId: spotifyAccount.accountId,
-      userId: userId,
+      userId: session.user.id,
     },
-    headers: reqHeaders,
+    headers: await headers(),
   });
 
   const topTracks = await SpotifyAPI.getTopTracks(tokenResponse.accessToken, {

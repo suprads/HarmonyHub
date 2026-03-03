@@ -3,8 +3,12 @@ import { SignupForm } from "@/components/signup-form";
 import { headers } from "next/headers";
 import { APIError } from "better-auth";
 import { redirect } from "next/navigation";
+import { getSession } from "@/services/auth/server";
 
-export default function SignUpPage() {
+export default async function SignUpPage() {
+  const session = await getSession();
+  if (session) redirect("/login");
+
   return (
     <div className="font-sans flex items-center justify-items-center sm:p-20">
       <main className="flex flex-col items-center justify-items-center w-full">

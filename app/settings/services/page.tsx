@@ -1,18 +1,12 @@
 import { prisma } from "@/lib/prisma";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { LinkServiceButton, UnlinkServiceButton } from "./service-buttons";
+import { verifySession } from "@/services/auth/server";
 
 /**
  * Page where you can manage the services (e.g. Spotify) linked to your account.
  */
 export default async function ServicesPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) redirect("/login");
+  const session = await verifySession();
 
   const spotifyAccount = await prisma.account.findFirst({
     where: {

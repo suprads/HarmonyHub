@@ -6,11 +6,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
+import { getSession } from "@/services/auth/server";
 
 export default async function LoginPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   return (
     <div className="font-sans flex items-center justify-items-center sm:p-20">
