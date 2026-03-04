@@ -29,7 +29,7 @@ export default function ProfileHeader() {
   };
 
   const [editOpen, setEditOpen] = useState(false);
-  const [draft, setDraft] = useState(user);
+  const [draft, setDraft] = useState({ name: user.name, handle: user.handle });
 
   return (
     <header className={styles.header}>
@@ -68,7 +68,7 @@ export default function ProfileHeader() {
               </DialogHeader>
 
               <div className="grid gap-4">
-                <div className="grid gap-2">
+                {/* <div className="grid gap-2">
                   <Label htmlFor="avatar">Avatar</Label>
                   <Input
                     id="avatar"
@@ -82,7 +82,7 @@ export default function ProfileHeader() {
                       setDraft((d) => ({ ...d, avatarUrl: url }));
                     }}
                   />
-                </div>
+                </div> */}
 
                 <div className="grid gap-2">
                   <Label htmlFor="name">Name</Label>
