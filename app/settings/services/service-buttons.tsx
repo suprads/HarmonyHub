@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
 
@@ -13,7 +14,7 @@ export function LinkServiceButton({
   scopes,
 }: LinkServiceButtonProps) {
   return (
-    <button
+    <Button
       onClick={async () => {
         const linkResult = await authClient.linkSocial({
           provider: provider,
@@ -30,7 +31,7 @@ export function LinkServiceButton({
       }}
     >
       Link
-    </button>
+    </Button>
   );
 }
 
@@ -40,7 +41,7 @@ type UnlinkServiceButtonProps = {
 
 export function UnlinkServiceButton({ provider }: UnlinkServiceButtonProps) {
   return (
-    <button
+    <Button
       onClick={async () => {
         const unlinkResult = await authClient.unlinkAccount({
           providerId: provider,
@@ -54,6 +55,6 @@ export function UnlinkServiceButton({ provider }: UnlinkServiceButtonProps) {
       }}
     >
       Unlink
-    </button>
+    </Button>
   );
 }
