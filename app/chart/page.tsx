@@ -1,30 +1,50 @@
 import styles from "./chart.module.css";
 import * as SpotifyAPI from "@/services/spotify";
 import ChartItem from "./chart-item";
+import { headers } from "next/headers";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import Link from "next/link";
+import { verifySession } from "@/services/auth/server";
 
-const REDIRECT_URI = "http://127.0.0.1:3000/chart";
+export default async function ChartPage() {
+  const session = await verifySession();
 
-// Note: Need to build project for PageProps<"/chart"> to not show as error.
-// See https://nextjs.org/docs/15/app/getting-started/layouts-and-pages#route-props-helpers
-export default async function ChartPage(props: PageProps<"/chart">) {
-  const { code: spotifyCode }: { code?: string } = await props.searchParams;
+  const spotifyAccount = await prisma.account.findFirst({
+    where: {
+      userId: session.user.id,
+      providerId: "spotify",
+    },
+  });
 
-  if (!spotifyCode) {
-    console.log("Redirecting to Spotify to authorize user.");
-    SpotifyAPI.authorizeUser(REDIRECT_URI);
+  if (!spotifyAccount) {
+    return (
+      <div className="page">
+        <main className="main">
+          <p>
+            No charts to display. Please connect to at least one streaming
+            service <Link href="/settings/services">here</Link>.
+          </p>
+        </main>
+      </div>
+    );
   }
 
-  const tokenResponse = await SpotifyAPI.getAccessToken(
-    spotifyCode ?? "",
-    REDIRECT_URI,
-  );
-  const topTracks = await SpotifyAPI.getTopItems(tokenResponse.access_token, {
-    type: "tracks",
+  const tokenResponse = await auth.api.getAccessToken({
+    body: {
+      providerId: "spotify",
+      accountId: spotifyAccount.accountId,
+      userId: session.user.id,
+    },
+    headers: await headers(),
+  });
+
+  const topTracks = await SpotifyAPI.getTopTracks(tokenResponse.accessToken, {
     timeRange: "long_term",
     limit: 5,
   });
-  const topArtists = await SpotifyAPI.getTopItems(tokenResponse.access_token, {
-    type: "artists",
+
+  const topArtists = await SpotifyAPI.getTopArtists(tokenResponse.accessToken, {
     timeRange: "long_term",
     limit: 5,
   });
@@ -45,7 +65,7 @@ export default async function ChartPage(props: PageProps<"/chart">) {
                   itemNumber={i + 1}
                   imgUrl={track.album.images[2]?.url}
                   name={track.name}
-                  subtitle={track.artists.map((a: any) => a.name).join(", ")}
+                  subtitle={track.artists.map((a) => a.name).join(", ")}
                 />
               ))}
             </ol>
