@@ -1,16 +1,21 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { sendFriendRequest } from "@/services/db/friend";
+import { createNotification } from "@/services/db/notification";
+
+const EXAMPLE_EMAIL = "email@example.com";
+const SUN_LOVER_EMAIL = "sunlover63@example.com";
 
 const users = [
   {
     name: "Name",
-    email: "email@example.com",
+    email: EXAMPLE_EMAIL,
     password: "password",
     handle: "example",
   },
   {
     name: "Sun Lover",
-    email: "sunlover63@example.com",
+    email: SUN_LOVER_EMAIL,
     password: "password123",
     handle: "sunlover63",
   },
@@ -37,9 +42,8 @@ const users = [
 async function main() {
   for (const user of users) {
     const userExists = await prisma.user.findFirst({
-      where: {
-        email: user.email,
-      },
+      select: { id: true },
+      where: { email: user.email },
     });
 
     if (!userExists) {
@@ -49,6 +53,20 @@ async function main() {
     } else {
       console.log(`User with email ${user.email} already exists.`);
     }
+  }
+
+  const exampleUser = await prisma.user.findUniqueOrThrow({
+    select: { id: true },
+    where: { email: EXAMPLE_EMAIL },
+  });
+  const sunLover = await prisma.user.findUniqueOrThrow({
+    select: { id: true },
+    where: { email: SUN_LOVER_EMAIL },
+  });
+
+  const friendReq = await sendFriendRequest(sunLover.id, exampleUser.id);
+  if (friendReq) {
+    await createNotification("FRIEND_REQUEST", [sunLover.id, exampleUser.id]);
   }
 }
 

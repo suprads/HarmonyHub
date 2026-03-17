@@ -2,7 +2,8 @@
 /// <reference lib="ES2017" />
 /// <reference lib="webworker" />
 
-// See https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API.
+// See https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API
+// for more info on service workers.
 
 (() => {
   const self = /** @type {ServiceWorkerGlobalScope} */ (
@@ -30,6 +31,8 @@
     console.log("Notification click received.");
     event.notification.close();
     // TODO Remember to change link in service worker as needed
-    event.waitUntil(self.clients.openWindow("http://127.0.0.1:3000"));
+    event.waitUntil(
+      self.clients.openWindow("http://127.0.0.1:3000/notifications"),
+    );
   });
 })();

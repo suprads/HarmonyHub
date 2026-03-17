@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import {
   subscribeUser,
   unsubscribeUser,
-  sendNotification,
+  sendPushNotification,
 } from "@/services/db/notification";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,7 +71,11 @@ export default function PushNotificationManager({
     const message = formData.get("message") as string | null;
 
     if (subscription && message) {
-      const result = await sendNotification("Test Message", message, sessionId);
+      const result = await sendPushNotification(
+        "Test Message",
+        message,
+        sessionId,
+      );
       console.log(result);
     }
   }

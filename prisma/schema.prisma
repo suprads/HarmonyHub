@@ -29,6 +29,7 @@ model User {
   likes                  Like[]
   friendRequestsReceived FriendRequest[] @relation("FriendRequestsReceived")
   friendRequestsSent     FriendRequest[] @relation("FriendRequestsSent")
+  notifications          Notification[]
   settings               Settings?
 
   @@map("User")
@@ -142,9 +143,9 @@ model Friend {
 }
 
 model FriendRequest {
-  receiver   User     @relation("FriendRequestsReceived", fields: [receiverId], references: [id])
+  receiver   User     @relation("FriendRequestsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId String
-  sender     User     @relation("FriendRequestsSent", fields: [senderId], references: [id])
+  sender     User     @relation("FriendRequestsSent", fields: [senderId], references: [id], onDelete: Cascade)
   senderId   String
   createdAt  DateTime @default(now())
 
@@ -161,10 +162,10 @@ model Like {
   @@id([userId, trackId])
 }
 
-/// Data needed to send push subscriptions server-side.
+/// Data needed for a user to receive push notifications.
 model PushSubscription {
   id             BigInt    @id @default(autoincrement())
-  session        Session   @relation(fields: [sessionId], references: [id])
+  session        Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId      String    @unique
   endpoint       String
   expirationTime DateTime?
@@ -173,10 +174,10 @@ model PushSubscription {
 }
 
 model Settings {
-  id           BigInt                @id @default(autoincrement())
-  user         User                  @relation(fields: [userId], references: [id])
-  userId       String                @unique
-  notification NotificationSettings?
+  id                   BigInt                @id @default(autoincrement())
+  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String                @unique
+  notificationSettings NotificationSettings?
 }
 
 model NotificationSettings {
@@ -186,11 +187,27 @@ model NotificationSettings {
   friendRequests Boolean  @default(true)
 }
 
+model Notification {
+  id        BigInt           @id @default(autoincrement())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String           @unique
+  read      Boolean          @default(false)
+  type      NotificationType
+  /// ID of related data from another table. Table to get from should be based on the notification type. Should separate composite IDs with a underscore.
+  infoId    String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
 enum Provider {
   SPOTIFY
   APPLE
   YTMUSIC
   SOUNDCLOUD
+}
+
+enum NotificationType {
+  FRIEND_REQUEST
 }
 
 // enum AuthProvider {

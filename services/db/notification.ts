@@ -2,6 +2,7 @@
 
 import webpush from "web-push";
 import { prisma } from "@/lib/prisma";
+import type { NotificationType } from "@/generated/prisma/enums";
 
 if (
   !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
@@ -59,7 +60,7 @@ export async function unsubscribeUser(sessionId: string) {
   return { success: true };
 }
 
-export async function sendNotification(
+export async function sendPushNotification(
   title: string,
   message: string,
   sessionId: string,
@@ -92,8 +93,87 @@ export async function sendNotification(
     return { success: true };
   } catch (error) {
     if (error instanceof webpush.WebPushError) {
-      console.error("Error sending push notification:", error);
+      console.error("Error sending push notification:", error.message);
     }
     return { success: false, error: "Failed to send notification" };
+  }
+}
+
+/**
+ * Used to generate a message included with a notification.
+ */
+export async function genNotificationMsg(
+  type: NotificationType,
+  infoId: string,
+) {
+  if (type === "FRIEND_REQUEST") {
+    const [senderId, receiverId] = infoId.split("_");
+    const friendRequest = await prisma.friendRequest.findUnique({
+      where: { senderId_receiverId: { senderId, receiverId } },
+    });
+    if (friendRequest) {
+      const sender = await prisma.user.findUnique({
+        select: { handle: true },
+        where: { id: senderId },
+      });
+      return `You received a friend request from ${sender?.handle}`;
+    } else {
+      console.error(
+        `Error finding friend request: friend request with id ${infoId} doesn't exist.`,
+      );
+    }
+  }
+}
+
+/**
+ * Creates a notification in the database. Sends a push notification to the
+ * related user if they are subscribed receive them.
+ * @param id Id in database to reference to get the data from. Composite IDs
+ * should be given as an array. Table referenced depends on type argument
+ * given.
+ */
+export async function createNotification(
+  type: NotificationType,
+  id: string | [string, string],
+) {
+  let userToNotifyId = "";
+  const infoId = typeof id !== "string" ? `${id[0]}_${id[1]}` : id;
+
+  if (type === "FRIEND_REQUEST" && typeof id !== "string") {
+    const receiverId = id[1];
+    userToNotifyId = receiverId;
+
+    await prisma.notification.create({
+      data: {
+        userId: receiverId,
+        infoId: infoId,
+        type: "FRIEND_REQUEST",
+      },
+    });
+  }
+
+  if (userToNotifyId) {
+    // Getting every session the user has
+    const [{ sessions }] = await prisma.user.findMany({
+      select: {
+        sessions: {
+          select: { id: true, pushSubscription: { select: { id: true } } },
+        },
+      },
+      where: { id: userToNotifyId },
+    });
+    if (sessions.length > 0) {
+      const notificationMsg = await genNotificationMsg(type, infoId);
+
+      for (const session of sessions) {
+        if (session.pushSubscription) {
+          await sendPushNotification(
+            "Friend Request",
+            notificationMsg ?? "",
+            session.id,
+          );
+        }
+      }
+    }
   }
 }
