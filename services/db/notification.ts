@@ -10,7 +10,7 @@ if (
 ) {
   console.warn(
     "The vapid keys aren't set as environment variables. These are needed " +
-      "for notifications to work.",
+      "for push notifications to work.",
   );
 }
 

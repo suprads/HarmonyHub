@@ -184,6 +184,7 @@ model NotificationSettings {
   id             BigInt   @id @default(autoincrement())
   settings       Settings @relation(fields: [settingsId], references: [id])
   settingsId     BigInt   @unique
+  enabled        Boolean  @default(true)
   friendRequests Boolean  @default(true)
 }
 
