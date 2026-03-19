@@ -1,13 +1,10 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
-import {
-  subscribeUser,
-  unsubscribeUser,
-  sendPushNotification,
-} from "@/services/db/notification";
+import { useEffect, useState } from "react";
+import { subscribeUser, unsubscribeUser } from "@/services/db/notification";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Field, FieldContent, FieldLabel } from "@/components/ui/field";
 
 export default function PushNotificationManager({
   sessionId,
@@ -64,53 +61,33 @@ export default function PushNotificationManager({
     }
   }
 
-  async function sendTestNotification(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
-    const message = formData.get("message") as string | null;
-
-    if (subscription && message) {
-      const result = await sendPushNotification(
-        "Test Message",
-        message,
-        sessionId,
-      );
-      console.log(result);
-    }
-  }
-
   if (!isSupported) {
-    return (
-      <div>
-        <p>Push notifications are not supported in this browser.</p>
-      </div>
-    );
+    console.log("Push notifications aren't supported in this browser.");
+    return null;
   }
 
   return (
-    <div>
-      {subscription ? (
-        <>
-          <p>You are subscribed to push notifications.</p>
-          <Button onClick={unsubscribeFromPush}>Unsubscribe</Button>
-          {process.env.NODE_ENV === "development" && (
-            <form onSubmit={sendTestNotification}>
-              <Input
-                type="text"
-                name="message"
-                placeholder="Enter notification message"
-              />
-              <Button type="submit">Send Test</Button>
-            </form>
-          )}
-        </>
-      ) : (
-        <>
-          <p>You are not subscribed to push notifications in this browser.</p>
-          <Button onClick={subscribeToPush}>Subscribe</Button>
-        </>
-      )}
+    <div className="w-full max-w-sm">
+      <Card>
+        <CardContent>
+          <Field className="max-w-sm">
+            <FieldContent>
+              <FieldLabel htmlFor="push-subscription">
+                {subscription
+                  ? "Unsubscribe from push notifications"
+                  : "Subscribe to push notifications"}
+              </FieldLabel>
+            </FieldContent>
+            <Button
+              id="push-subscription"
+              name="push-subscription"
+              onClick={subscription ? unsubscribeFromPush : subscribeToPush}
+            >
+              {subscription ? "Unsubscribe" : "Subscribe "}
+            </Button>
+          </Field>
+        </CardContent>
+      </Card>
     </div>
   );
 }

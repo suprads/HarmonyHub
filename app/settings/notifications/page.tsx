@@ -1,9 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/services/auth/server";
 import SettingsForm from "./settings-form";
+import PushNotificationManager from "./push-notification-manager";
 
 export default async function NotificationSettingsPage() {
-  const { user } = await verifySession();
+  const { session, user } = await verifySession();
 
   const notificationSettings = (
     await prisma.settings.findUnique({
@@ -20,6 +21,7 @@ export default async function NotificationSettingsPage() {
         ) : (
           <p>There was a problem retrieving your notification settings.</p>
         )}
+        <PushNotificationManager sessionId={session.id} />
       </main>
     </div>
   );

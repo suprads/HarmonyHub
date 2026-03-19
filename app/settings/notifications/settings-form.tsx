@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Field,
   FieldContent,
@@ -23,6 +24,9 @@ type SettingsFormProps = {
   ) => Promise<{ message: string } | undefined>;
 };
 
+/**
+ * Used to manage notification settings.
+ */
 export default function SettingsForm({
   settings,
   saveAction,
@@ -31,30 +35,36 @@ export default function SettingsForm({
   const [error, formAction, pending] = useActionState(saveAction, undefined);
 
   return (
-    <form action={formAction} className="w-full max-w-sm">
-      <FieldGroup>
-        <SettingsField
-          checked={enabled}
-          onCheckedChange={(checked) => setEnabled(checked)}
-          disabled={pending}
-          inputId="enabled"
-          label="Enable notifications"
-        />
-        <FieldSeparator />
-        <SettingsField
-          disabled={pending || !enabled}
-          defaultChecked={settings.friendRequests}
-          inputId="friend-requests"
-          label="Received friend requests"
-        />
-        <Field>
-          <Button type="submit" disabled={pending}>
-            {pending && <Spinner />} Save Changes
-          </Button>
-        </Field>
-        {error?.message && <FieldError>{error?.message}</FieldError>}
-      </FieldGroup>
-    </form>
+    <div className="w-full max-w-sm">
+      <Card>
+        <CardContent>
+          <form action={formAction}>
+            <FieldGroup>
+              <SettingsField
+                checked={enabled}
+                onCheckedChange={(checked) => setEnabled(checked)}
+                disabled={pending}
+                inputId="enabled"
+                label="Enable notifications"
+              />
+              <FieldSeparator />
+              <SettingsField
+                disabled={pending || !enabled}
+                defaultChecked={settings.friendRequests}
+                inputId="friend-requests"
+                label="Received friend requests"
+              />
+              <Field>
+                <Button type="submit" disabled={pending}>
+                  {pending && <Spinner />} Save Changes
+                </Button>
+              </Field>
+              {error?.message && <FieldError>{error?.message}</FieldError>}
+            </FieldGroup>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
