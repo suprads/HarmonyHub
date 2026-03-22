@@ -5,14 +5,15 @@ import { Separator } from "@/components/ui/separator";
 import styles from "./page.module.css";
 import ProfileHeader from "./profile-header";
 import { verifySession } from "@/services/auth/server";
+import StatCard from "./stat-card";
+import { getNumOfFriends } from "@/services/db/friend";
 
 export default async function ProfilePage() {
-  await verifySession();
+  const { user } = await verifySession();
+  const friendsNum = await getNumOfFriends(user.id);
 
   const me = {
     // bio: "Hiii!!",
-    followers: 1240,
-    following: 318,
     playlists: 22,
     topArtists: ["B", "A", "x", "y"],
     topTracks: [
@@ -31,26 +32,11 @@ export default async function ProfilePage() {
       <Separator />
 
       <div className={styles.statsRow}>
-        <Card className={styles.statCard}>
-          <CardContent className={styles.statCardContent}>
-            <p className={styles.statLabel}>Followers</p>
-            <p className={styles.statValue}>{me.followers}</p>
-          </CardContent>
-        </Card>
-
-        <Card className={styles.statCard}>
-          <CardContent className={styles.statCardContent}>
-            <p className={styles.statLabel}>Following</p>
-            <p className={styles.statValue}>{me.following}</p>
-          </CardContent>
-        </Card>
-
-        <Card className={styles.statCard}>
-          <CardContent className={styles.statCardContent}>
-            <p className={styles.statLabel}>Playlists</p>
-            <p className={styles.statValue}>{me.playlists}</p>
-          </CardContent>
-        </Card>
+        <StatCard
+          label="Friends"
+          displayValue={friendsNum?.toString() ?? "Error"}
+        />
+        <StatCard label="Playlists" displayValue={me.playlists.toString()} />
       </div>
 
       <Tabs defaultValue="overview" className={styles.tabs}>
