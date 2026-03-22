@@ -17,10 +17,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import { Spinner } from "@/components/ui/spinner";
 
-//type ProfileHeaderProps = {};
-
 export default function ProfileHeader() {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session, isPending, isRefetching } = authClient.useSession();
 
   const user = {
     name: session?.user.name,
@@ -37,7 +35,7 @@ export default function ProfileHeader() {
         <Avatar className={styles.avatar}>
           <AvatarImage src={user.image ?? undefined} alt={user.name} />
           <AvatarFallback>
-            {isPending ? <Spinner /> : user.name?.at(0)}
+            {isPending || isRefetching ? <Spinner /> : user.name?.at(0)}
           </AvatarFallback>
         </Avatar>
 
