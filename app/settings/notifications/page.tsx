@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/services/auth/server";
 import SettingsForm from "./settings-form";
 import PushNotificationManager from "./push-notification-manager";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default async function NotificationSettingsPage() {
   const { session, user } = await verifySession();
@@ -16,12 +17,18 @@ export default async function NotificationSettingsPage() {
   return (
     <div className="font-sans flex flex-col items-center justify-items-center gap-6 sm:p-20">
       <main className="flex flex-col items-center w-full">
-        {notificationSettings ? (
-          <SettingsForm settings={notificationSettings} saveAction={save} />
-        ) : (
-          <p>There was a problem retrieving your notification settings.</p>
-        )}
-        <PushNotificationManager sessionId={session.id} />
+        <div className="w-full max-w-sm">
+          {notificationSettings ? (
+            <SettingsForm settings={notificationSettings} saveAction={save} />
+          ) : (
+            <Card>
+              <CardContent />
+              <p>There was a problem retrieving your notification settings.</p>
+              <CardContent />
+            </Card>
+          )}
+          <PushNotificationManager sessionId={session.id} />
+        </div>
       </main>
     </div>
   );

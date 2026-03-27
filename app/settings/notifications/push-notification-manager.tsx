@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { subscribeUser, unsubscribeUser } from "@/services/db/notification";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Field, FieldContent, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldLabel,
+} from "@/components/ui/field";
 
 export default function PushNotificationManager({
   sessionId,
@@ -67,28 +72,30 @@ export default function PushNotificationManager({
   }
 
   return (
-    <div className="w-full max-w-sm">
-      <Card>
-        <CardContent>
-          <Field className="max-w-sm">
-            <FieldContent>
-              <FieldLabel htmlFor="push-subscription">
-                {subscription
-                  ? "Unsubscribe from push notifications"
-                  : "Subscribe to push notifications"}
-              </FieldLabel>
-            </FieldContent>
-            <Button
-              id="push-subscription"
-              name="push-subscription"
-              onClick={subscription ? unsubscribeFromPush : subscribeToPush}
-            >
-              {subscription ? "Unsubscribe" : "Subscribe "}
-            </Button>
-          </Field>
-        </CardContent>
-      </Card>
-    </div>
+    <Card>
+      <CardContent>
+        <Field className="max-w-sm">
+          <FieldContent>
+            <FieldLabel htmlFor="push-subscription">
+              {subscription
+                ? "Unsubscribe from push notifications"
+                : "Subscribe to push notifications"}
+            </FieldLabel>
+            <FieldDescription>
+              This won&apos;t have an effect if notifications are disabled in
+              your browser&apos;s or phone&apos;s settings.
+            </FieldDescription>
+          </FieldContent>
+          <Button
+            id="push-subscription"
+            name="push-subscription"
+            onClick={subscription ? unsubscribeFromPush : subscribeToPush}
+          >
+            {subscription ? "Unsubscribe" : "Subscribe "}
+          </Button>
+        </Field>
+      </CardContent>
+    </Card>
   );
 }
 

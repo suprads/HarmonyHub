@@ -27,7 +27,7 @@ export default function NotificationTableRow({
   // const [deleted, setDeleted] = useState(false);
 
   return (
-    <TableRow className="cursor-pointer">
+    <TableRow>
       <TableCell>
         {!readNotification && (
           <Circle

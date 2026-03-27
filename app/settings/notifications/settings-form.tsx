@@ -35,36 +35,34 @@ export default function SettingsForm({
   const [error, formAction, pending] = useActionState(saveAction, undefined);
 
   return (
-    <div className="w-full max-w-sm">
-      <Card>
-        <CardContent>
-          <form action={formAction}>
-            <FieldGroup>
-              <SettingsField
-                checked={enabled}
-                onCheckedChange={(checked) => setEnabled(checked)}
-                disabled={pending}
-                inputId="enabled"
-                label="Enable notifications"
-              />
-              <FieldSeparator />
-              <SettingsField
-                disabled={pending || !enabled}
-                defaultChecked={settings.friendRequests}
-                inputId="friend-requests"
-                label="Received friend requests"
-              />
-              <Field>
-                <Button type="submit" disabled={pending}>
-                  {pending && <Spinner />} Save Changes
-                </Button>
-              </Field>
-              {error?.message && <FieldError>{error?.message}</FieldError>}
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <Card>
+      <CardContent>
+        <form action={formAction}>
+          <FieldGroup>
+            <SettingsField
+              checked={enabled}
+              onCheckedChange={(checked) => setEnabled(checked)}
+              disabled={pending}
+              inputId="enabled"
+              label="Enable notifications"
+            />
+            <FieldSeparator />
+            <SettingsField
+              disabled={pending || !enabled}
+              defaultChecked={settings.friendRequests}
+              inputId="friend-requests"
+              label="Received friend requests"
+            />
+            <Field>
+              <Button type="submit" disabled={pending}>
+                {pending && <Spinner />} Save Changes
+              </Button>
+            </Field>
+            {error?.message && <FieldError>{error?.message}</FieldError>}
+          </FieldGroup>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
 
