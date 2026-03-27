@@ -5,7 +5,7 @@ Senior Design Project
 ## Tech Stack
 
 - Framework: Next.js
-- Database: PostgreSQL, Prisma ORM, and Neon for database hosting
+- Database: PostgreSQL, Prisma ORM, Better Auth, and Neon for database hosting
 - UI/Styling: Tailwind CSS and shadcn
 - Testing: Jest and PlayWright
 - Code Quality: ESLint, Prettier, and TypeScript
@@ -24,8 +24,9 @@ lib             # Utility functions
 public          # Static files/assets
 services        # For backend related functions (e.g. API and database)
 tests           # Where tests are stored
-components.json # Config file for shadcn
 .env.example    # Showcase of important environment variables
+components.json # Config file for shadcn
+middleware.ts   # Next.js Middleware
 ```
 
 ## Development Environment
@@ -45,14 +46,15 @@ components.json # Config file for shadcn
 4. Run `npm install`.
 5. Create a file called `.env` in the root directory of the project.
 6. Run `npm run dev` to start the app.
-7. Open the app by going to `localhost:3000`.
+7. Open the app by going to `127.0.0.1:3000`.
 
 ### Database Set Up
 
-1. Use the exact `POSTGRES*` and `DATABASE_URL` environment variables from `.env.example` in your `.env` file.
-2. Run the command `npx prisma generate`.
-3. Run the command `docker compose up db` to start a local PostgresSQL database.
-4. To add test data to the your database, run `npx prisma db seed`
+1. Use the exact `POSTGRES*`, `DATABASE_URL`, and `BETTER_AUTH_URL` environment variables from `.env.example` in your `.env` file.
+2. Add the `BETTER_AUTH_SECRET` environment variable into your `.env` file and give it our secret value.
+3. Run the command `npx prisma generate`.
+4. Run the command `docker compose up -d db` to start a local PostgresSQL database.
+5. To add test data to your database, run `npx prisma db seed`
 
 Note: To use the actual production database hosted by Neon, set the `POSTGRES*` variables and the `DATABASE_URL` to our secret values.
 
