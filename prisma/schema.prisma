@@ -198,6 +198,8 @@ model Notification {
   infoId    String
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
+
+  @@unique([type, infoId])
 }
 
 enum Provider {
