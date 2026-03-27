@@ -1,4 +1,4 @@
-import { MenuIcon, SearchIcon } from "lucide-react";
+import { BellIcon, MenuIcon, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -41,6 +41,11 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
         </div>
 
         <div className="navbar-actions">
+          <Link href="/notifications">
+            <Button variant="ghost" size="icon">
+              <BellIcon />
+            </Button>
+          </Link>
           <Button variant="ghost" size="icon">
             <SearchIcon />
             <span className="sr-only">Search</span>

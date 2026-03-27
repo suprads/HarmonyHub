@@ -1,3 +1,5 @@
+"use server";
+
 import { prisma } from "@/lib/prisma";
 
 /**
@@ -78,19 +80,20 @@ export async function acceptFriendRequest(
   senderId: string,
   receiverId: string,
 ) {
-  const friendRequest = await prisma.friendRequest.findFirst({
-    where: { senderId, receiverId },
+  const friendRequest = await prisma.friendRequest.findUnique({
+    where: { senderId_receiverId: { senderId, receiverId } },
   });
 
   if (friendRequest) {
     const friendResult = await friendUser(senderId, receiverId);
 
     // Delete the friend request once the two users are friends
-    if (friendResult)
-      prisma.friendRequest.delete({
+    if (friendResult) {
+      await prisma.friendRequest.delete({
         where: {
           senderId_receiverId: { senderId, receiverId },
         },
       });
+    }
   }
 }
