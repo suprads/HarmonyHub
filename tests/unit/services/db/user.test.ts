@@ -2,13 +2,17 @@ import { searchForUser } from "@/services/db/user";
 import { prismaMock } from "@/jest.setup";
 
 test(`finds user bob from search "bo"`, async () => {
-  const createdAt = new Date();
+  const stubDate = new Date();
   const users = [
     {
       id: "1",
       handle: "Bob",
+      name: "Bob",
       email: "bob@example.com",
-      createdAt: createdAt,
+      emailVerified: false,
+      createdAt: stubDate,
+      updatedAt: stubDate,
+      image: null,
     },
   ];
 
@@ -18,8 +22,12 @@ test(`finds user bob from search "bo"`, async () => {
     {
       id: "1",
       handle: "Bob",
+      name: "Bob",
       email: "bob@example.com",
-      createdAt: createdAt,
+      emailVerified: false,
+      createdAt: stubDate,
+      updatedAt: stubDate,
+      image: null,
     },
   ]);
 });
