@@ -25,18 +25,18 @@ const navigationData = [
     title: "Chart",
     href: "/chart",
   },
+  // {
+  //   title: "Ratings",
+  //   href: "/ratings",
+  // },
   {
-    title: "Ratings",
-    href: "/ratings",
+    title: "Friends",
+    href: "/friends",
   },
   {
     title: "Home",
     href: "/",
     logo: true,
-  },
-  {
-    title: "Friends",
-    href: "/friends",
   },
   {
     title: "Settings",

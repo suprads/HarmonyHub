@@ -41,10 +41,10 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
               <BellIcon />
             </Button>
           </Link>
-          <Button variant="ghost" size="icon">
+          {/* <Button variant="ghost" size="icon">
             <SearchIcon />
             <span className="sr-only">Search</span>
-          </Button>
+          </Button> */}
           <DropdownMenu>
             <DropdownMenuTrigger className="md:hidden" asChild>
               <Button variant="outline" size="icon">
