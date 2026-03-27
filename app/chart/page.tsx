@@ -19,11 +19,15 @@ export default async function ChartPage() {
 
   if (!spotifyAccount) {
     return (
-      <div className="page">
+      <div className={styles.chartPage}>
         <main className="main">
           <p>
             No charts to display. Please connect to at least one streaming
-            service <Link href="/settings/services">here</Link>.
+            service{" "}
+            <Link className="underline" href="/settings/services">
+              here
+            </Link>
+            .
           </p>
         </main>
       </div>
