@@ -20,8 +20,8 @@ export const auth = betterAuth({
       // Maps Spotify profile fields to the User model fields.
       mapProfileToUser: (profile) => {
         return {
-          handle: profile.display_name,
-          image: profile.images?.[0]?.url,
+          name: profile.display_name,
+          image: profile.images.at(0)?.url,
         };
       },
       redirectURI: "http://127.0.0.1:3000/api/auth/callback/spotify",
