@@ -46,7 +46,7 @@ middleware.ts   # Next.js Middleware
 4. Run `npm install`.
 5. Create a file called `.env` in the root directory of the project.
 6. Run `npm run dev` to start the app.
-7. Open the app by going to `localhost:3000`.
+7. Open the app by going to `127.0.0.1:3000`.
 
 ### Database Set Up
 

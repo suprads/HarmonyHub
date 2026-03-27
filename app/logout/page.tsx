@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function LogoutPage() {
-  const session = await verifySession();
+  await verifySession();
 
   const result = await auth.api.signOut({
     headers: await headers(),

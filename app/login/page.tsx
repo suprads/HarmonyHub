@@ -4,7 +4,6 @@ import { headers } from "next/headers";
 import { APIError } from "better-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { getSession } from "@/services/auth/server";
 
@@ -65,9 +64,3 @@ async function login(
   // Refreshes page to display log in info.
   if (signInSuccess) redirect("/login");
 }
-
-const spotifySignIn = async () => {
-  await authClient.signIn.social({
-    provider: "spotify",
-  });
-};
