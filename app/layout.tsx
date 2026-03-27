@@ -32,6 +32,7 @@ const navigationData = [
   {
     title: "Home",
     href: "/",
+    logo: true,
   },
   {
     title: "Friends",
@@ -40,6 +41,10 @@ const navigationData = [
   {
     title: "Settings",
     href: "/settings",
+  },
+  {
+    title: "Login",
+    href: "/login",
   },
 ];
 
