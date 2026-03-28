@@ -94,3 +94,30 @@ export async function acceptFriendRequest(
       });
   }
 }
+
+/**
+ * Gets all friends for a given user.
+ * @param userId The ID of the user whose friends to retrieve.
+ * @returns A list of friends with their details.
+ */
+export async function getFriends(userId: string) {
+  const friends = await prisma.friend.findMany({
+    where: {
+      friendedById: userId,
+    },
+    include: {
+      friend: {
+        select: {
+          id: true,
+          handle: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return friends.map(
+    (f: { friend: { id: string; handle: string; email: string | null } }) =>
+      f.friend,
+  );
+}
