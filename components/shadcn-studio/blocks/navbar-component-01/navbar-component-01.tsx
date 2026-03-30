@@ -1,4 +1,4 @@
-import { MenuIcon, SearchIcon } from "lucide-react";
+import { BellIcon, MenuIcon, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +13,8 @@ import Link from "next/link";
 type NavigationItem = {
   title: string;
   href: string;
+  /** If to display the link as the app logo. */
+  logo?: boolean;
 }[];
 
 const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
@@ -20,28 +22,29 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
     <header className="navbar-header">
       <div className="navbar-container">
         <div className="navbar-links">
-          <Link href="/chart" className="navbar-link">
-            Chart
-          </Link>
-          <Link href="/ratings" className="navbar-link">
-            Ratings
-          </Link>
-          <Link href="/">
-            <Logo className="navbar-logo" />
-          </Link>
-          <Link href="/friends" className="navbar-link">
-            Friends
-          </Link>
-          <Link href="/settings" className="navbar-link">
-            Settings
-          </Link>
+          {navigationData.map((item, index) =>
+            item.logo ? (
+              <Link key={index} href={item.href}>
+                <Logo className="navbar-logo" />
+              </Link>
+            ) : (
+              <Link key={index} href={item.href} className="navbar-link">
+                {item.title}
+              </Link>
+            ),
+          )}
         </div>
 
         <div className="navbar-actions">
-          <Button variant="ghost" size="icon">
+          <Link href="/notifications">
+            <Button variant="ghost" size="icon">
+              <BellIcon />
+            </Button>
+          </Link>
+          {/* <Button variant="ghost" size="icon">
             <SearchIcon />
             <span className="sr-only">Search</span>
-          </Button>
+          </Button> */}
           <DropdownMenu>
             <DropdownMenuTrigger className="md:hidden" asChild>
               <Button variant="outline" size="icon">
@@ -51,11 +54,13 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuGroup>
-                {navigationData.map((item, index) => (
-                  <DropdownMenuItem key={index}>
-                    <Link href={item.href}>{item.title}</Link>
-                  </DropdownMenuItem>
-                ))}
+                {navigationData.map((item, index) =>
+                  !item.logo ? (
+                    <DropdownMenuItem key={index}>
+                      <Link href={item.href}>{item.title}</Link>
+                    </DropdownMenuItem>
+                  ) : null,
+                )}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>

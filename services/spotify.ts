@@ -1,22 +1,3 @@
-import "server-only";
-import { env } from "process";
-import { redirect } from "next/navigation";
-
-/**
- * A valid redirect URI for the Spotify API. These should match the valid URIs
- * in our app information registered in Spotify.
- */
-type RedirectUri = "http://127.0.0.1:3000" | "http://127.0.0.1:3000/chart";
-
-type AccessTokenResponse = {
-  access_token: string;
-  token_type: "Bearer";
-  /** Time until token expires in seconds. */
-  expires_in: number;
-  scope?: string;
-  refresh_token?: string;
-};
-
 /** For queries that support paging of data. */
 type Paging = {
   /** Number of items per page. */
@@ -37,7 +18,36 @@ type RecentlyPlayedRequest = Paging & {
   after?: number;
 };
 
-export type TopTrackResponse = {
+type Image = {
+  url: string;
+  height: number | null;
+  width: number | null;
+};
+
+export type Track = {
+  album: {
+    name: string;
+    images: Image[];
+    release_date: string;
+  };
+  artists: Pick<Artist, "external_urls" | "id" | "name">[];
+  duration_ms: number;
+  explicit: boolean;
+  external_urls: { spotify: string };
+  id: string;
+  name: string;
+};
+
+export type Artist = {
+  external_urls: { spotify: string };
+  genres: string[];
+  id: string;
+  images: Image[];
+  name: string;
+  popularity: number;
+};
+
+export type TopItemsResponse = {
   href: string;
   limit: number;
   next: string | null;
@@ -45,56 +55,15 @@ export type TopTrackResponse = {
   previous: string | null;
   total: number;
   /** A set of artists or tracks. */
-  items: unknown[];
+  items: Track[] | Artist[];
 };
 
-type SpotifyImage = {
-  url: string;
-  height: number | null;
-  width: number | null;
+export type TopTracksResponse = Omit<TopItemsResponse, "items"> & {
+  items: Track[];
 };
 
-type SpotifyArtist = {
-  id: string;
-  name: string;
-};
-
-type SpotifyTrack = {
-  id: string;
-  name: string;
-  duration_ms: number;
-  explicit: boolean;
-  preview_url: string | null;
-  external_urls: {
-    spotify: string;
-  };
-  artists: SpotifyArtist[];
-  album: {
-    id: string;
-    name: string;
-    images: SpotifyImage[];
-  };
-};
-
-type RecentlyPlayedItem = {
-  track: SpotifyTrack;
-  played_at: string;
-};
-
-export type RecentlyPlayedResponse = {
-  href: string;
-  limit: number;
-  next: string | null;
-  cursors: {
-    after?: string;
-    before?: string;
-  };
-  items: RecentlyPlayedItem[];
-};
-
-type AuthenticationError = {
-  error: string;
-  error_description: string;
+export type TopArtistsResponse = Omit<TopItemsResponse, "items"> & {
+  items: Artist[];
 };
 
 /** Returned by Spotify for errors relating to API calls */
@@ -203,7 +172,7 @@ export async function getTopItems(
     limit = 20,
     offset = 0,
   }: TopTrackRequest,
-): Promise<TopTrackResponse> {
+) {
   const response = await fetch(
     `https://api.spotify.com/v1/me/top/${type}?time_range=${timeRange}&limit=${limit}&offset=${offset}`,
     {
@@ -220,7 +189,37 @@ export async function getTopItems(
     throw new Error(apiError.error.message);
   }
 
-  return json;
+  return json as TopItemsResponse;
+}
+
+/**
+ * Shortcut for getting the top tracks with proper typing.
+ * @see getTopItems
+ */
+export async function getTopTracks(
+  accessToken: string,
+  topTrackRequest: Omit<TopTrackRequest, "type">,
+) {
+  const topTracks = await getTopItems(accessToken, {
+    ...topTrackRequest,
+    type: "tracks",
+  });
+  return topTracks as TopTracksResponse;
+}
+
+/**
+ * Shortcut for getting the top artists with proper typing.
+ * @see getTopItems
+ */
+export async function getTopArtists(
+  accessToken: string,
+  topTrackRequest: Omit<TopTrackRequest, "type">,
+) {
+  const topArtists = await getTopItems(accessToken, {
+    ...topTrackRequest,
+    type: "artists",
+  });
+  return topArtists as TopArtistsResponse;
 }
 
 /**

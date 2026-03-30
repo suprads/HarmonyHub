@@ -1,4 +1,4 @@
-export default function Page() {
+export default function SettingsPage() {
   return (
     <div className="page">
       <main>
