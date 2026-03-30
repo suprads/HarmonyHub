@@ -30,6 +30,13 @@ type TopTrackRequest = Paging & {
   timeRange?: "short_term" | "medium_term" | "long_term";
 };
 
+type RecentlyPlayedRequest = Paging & {
+  /** Unix timestamp in milliseconds. Return items before this time. */
+  before?: number;
+  /** Unix timestamp in milliseconds. Return items after this time. */
+  after?: number;
+};
+
 export type TopTrackResponse = {
   href: string;
   limit: number;
@@ -38,7 +45,51 @@ export type TopTrackResponse = {
   previous: string | null;
   total: number;
   /** A set of artists or tracks. */
-  items: any[];
+  items: unknown[];
+};
+
+type SpotifyImage = {
+  url: string;
+  height: number | null;
+  width: number | null;
+};
+
+type SpotifyArtist = {
+  id: string;
+  name: string;
+};
+
+type SpotifyTrack = {
+  id: string;
+  name: string;
+  duration_ms: number;
+  explicit: boolean;
+  preview_url: string | null;
+  external_urls: {
+    spotify: string;
+  };
+  artists: SpotifyArtist[];
+  album: {
+    id: string;
+    name: string;
+    images: SpotifyImage[];
+  };
+};
+
+type RecentlyPlayedItem = {
+  track: SpotifyTrack;
+  played_at: string;
+};
+
+export type RecentlyPlayedResponse = {
+  href: string;
+  limit: number;
+  next: string | null;
+  cursors: {
+    after?: string;
+    before?: string;
+  };
+  items: RecentlyPlayedItem[];
 };
 
 type AuthenticationError = {
@@ -66,7 +117,7 @@ export function authorizeUser(redirectURI: RedirectUri) {
     response_type: "code",
     redirect_uri: redirectURI,
     //state,
-    scope: "user-top-read",
+    scope: "user-top-read user-read-recently-played",
     //show_dialog
   });
 
@@ -159,6 +210,47 @@ export async function getTopItems(
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
+    },
+  );
+
+  const json = await response.json();
+
+  if (json.error) {
+    const apiError: SpotifyError = json;
+    throw new Error(apiError.error.message);
+  }
+
+  return json;
+}
+
+/**
+ * Gets the user's recently played tracks from Spotify.
+ * @throws Error if something went wrong when trying to access the API.
+ * @url https://developer.spotify.com/documentation/web-api/reference/get-recently-played
+ */
+export async function getRecentlyPlayedTracks(
+  accessToken: string,
+  { limit = 20, before, after }: RecentlyPlayedRequest = {},
+): Promise<RecentlyPlayedResponse> {
+  const searchParams = new URLSearchParams({
+    limit: String(limit),
+  });
+
+  if (before !== undefined) {
+    searchParams.set("before", String(before));
+  }
+
+  if (after !== undefined) {
+    searchParams.set("after", String(after));
+  }
+
+  const response = await fetch(
+    `https://api.spotify.com/v1/me/player/recently-played?${searchParams.toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      cache: "no-store",
     },
   );
 
