@@ -10,16 +10,18 @@ async function friendUser(userId: string, userToFriendId: string) {
   const alreadyFriend = await isFriend(userId, userToFriendId);
 
   if (!alreadyFriend) {
-    return await prisma.friend.create({
-      data: {
-        friendedById: userId,
-        friendId: userToFriendId,
-      },
+    await prisma.friend.createMany({
+      data: [
+        { friendedById: userId, friendId: userToFriendId },
+        { friendedById: userToFriendId, friendId: userId },
+      ],
     });
+    return { success: true };
   } else {
     console.warn(
       `User with ID ${userId} is already friends with user with ID ${userToFriendId}`,
     );
+    return { success: false };
   }
 }
 
@@ -88,7 +90,7 @@ export async function acceptFriendRequest(
     const friendResult = await friendUser(senderId, receiverId);
 
     // Delete the friend request once the two users are friends
-    if (friendResult) {
+    if (friendResult.success) {
       await prisma.friendRequest.delete({
         where: {
           senderId_receiverId: { senderId, receiverId },
@@ -117,10 +119,8 @@ export async function getFriends(userId: string) {
         },
       },
     },
+    omit: { friendedById: true, friendId: true, createdAt: true },
   });
 
-  return friends.map(
-    (f: { friend: { id: string; handle: string; email: string | null } }) =>
-      f.friend,
-  );
+  return friends.map((f) => f.friend);
 }

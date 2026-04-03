@@ -13,12 +13,12 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import styles from "./friends.module.css";
+import { authClient } from "@/lib/auth-client";
+import { getFriends } from "@/services/db/friend";
+import { redirect } from "next/navigation";
+import { User } from "@/generated/prisma/browser";
 
-interface Friend {
-  id: string;
-  handle: string;
-  email?: string | null;
-}
+interface Friend extends Pick<User, "id" | "handle" | "email"> {}
 
 interface UserSearchResult {
   id: string;
@@ -35,28 +35,36 @@ export default function Page() {
   const [isSearching, setIsSearching] = useState(false);
   const [sendingRequestTo, setSendingRequestTo] = useState<string | null>(null);
 
+  // TODO Need to make base of page a server component and replace this with verifySession for proper loading.
+  const { data: session } = authClient.useSession();
+
+  if (!session) redirect("/login");
+
   useEffect(() => {
-    // TODO: Replace with actual user ID from auth
     const fetchFriends = async () => {
       try {
-        const response = await fetch("/api/friends");
-        if (response.ok) {
-          const data = await response.json();
-          setFriends(data);
-          setFilteredFriends(data);
-        }
+        // TODO: Replace with actual user ID from auth
+        // const response = await fetch("/api/friends");
+        // if (response.ok) {
+        //   const data = await response.json();
+        //   setFriends(data);
+        //   setFilteredFriends(data);
+        // }
+        const data = await getFriends(session.user.id);
+        setFriends(data);
+        setFilteredFriends(data);
       } catch (error) {
         console.error("Failed to fetch friends:", error);
       }
     };
 
     fetchFriends();
-  }, []);
+  }, [session.user.id]);
 
   useEffect(() => {
     if (searchTerm) {
       const filtered = friends.filter((friend) =>
-        friend.handle.toLowerCase().includes(searchTerm.toLowerCase()),
+        friend.handle?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
       setFilteredFriends(filtered);
     } else {
@@ -155,7 +163,7 @@ export default function Page() {
               <div className={styles.friendContent}>
                 <Avatar className={styles.avatar}>
                   <span className={styles.avatarFallback}>
-                    {friend.handle.substring(0, 2).toUpperCase()}
+                    {friend.handle?.substring(0, 2).toUpperCase()}
                   </span>
                 </Avatar>
                 <div className={styles.friendInfo}>

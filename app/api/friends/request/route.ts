@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { sendFriendRequest } from "@/services/db/friend";
+import { verifySession } from "@/services/auth/server";
+import { createNotification } from "@/services/db/notification";
+import { checkNotificationsEnabled } from "@/services/db/settings";
 
 export async function POST(request: Request) {
+  const { user } = await verifySession();
   try {
     const { receiverId } = await request.json();
 
@@ -12,12 +16,21 @@ export async function POST(request: Request) {
       );
     }
 
-    // TODO: Get the actual user ID from session/auth
-    const senderId = "placeholder-user-id";
+    const senderId = user.id;
 
     const result = await sendFriendRequest(senderId, receiverId);
 
     if (result) {
+      const notificationsEnabled = await checkNotificationsEnabled(
+        { userId: receiverId },
+        "friendRequests",
+      );
+      if (notificationsEnabled) {
+        await createNotification("FRIEND_REQUEST", [
+          result.senderId,
+          result.receiverId,
+        ]);
+      }
       return NextResponse.json({
         success: true,
         message: "Friend request sent successfully",
