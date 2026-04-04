@@ -2,6 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests/e2e",
+  testMatch: "**/*.@(spec).?(c|m)[jt]s?(x)",
   fullyParallel: true,
   // Fail the build on CI if you accidentally left test.only in the source code.
   forbidOnly: !!process.env.CI,
@@ -11,7 +12,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: "http://127.0.0.1:3000",
     // Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer.
     trace: "on-first-retry",
   },
@@ -57,7 +58,7 @@ export default defineConfig({
   // Run your local dev server before starting the tests.
   webServer: {
     command: "npm run build && npm run start",
-    url: "http://localhost:3000",
+    url: "http://127.0.0.1:3000",
     reuseExistingServer: !process.env.CI,
   },
 });

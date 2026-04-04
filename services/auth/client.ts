@@ -10,6 +10,6 @@ export async function spotifySignIn() {
   });
 
   if (result.error) {
-    console.error("Spotify sign-in error:", result.error.message);
+    console.error("Spotify sign-in error:", result.error);
   }
 }

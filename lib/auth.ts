@@ -2,6 +2,8 @@ import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
+import { createAuthMiddleware } from "better-auth/api";
+import { createSettings } from "@/services/db/settings";
 
 /**
  * auth.api methods should be executed on the server.
@@ -20,12 +22,22 @@ export const auth = betterAuth({
       // Maps Spotify profile fields to the User model fields.
       mapProfileToUser: (profile) => {
         return {
-          handle: profile.display_name,
-          image: profile.images?.[0]?.url,
+          name: profile.display_name,
+          image: profile.images.at(0)?.url,
         };
       },
       redirectURI: "http://127.0.0.1:3000/api/auth/callback/spotify",
     },
+  },
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path.startsWith("/sign-up")) {
+        const user = ctx.context.newSession?.user;
+        if (user) {
+          await createSettings({ userId: user.id });
+        }
+      }
+    }),
   },
   plugins: [nextCookies()], // make sure this is the last plugin in the array
   /* Per-table configs */
