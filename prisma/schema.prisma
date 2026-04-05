@@ -27,6 +27,7 @@ model User {
   friends                Friend[]        @relation("Friends")
   friendedBy             Friend[]        @relation("FriendedBy")
   likes                  Like[]
+  history                History[]
   friendRequestsReceived FriendRequest[] @relation("FriendRequestsReceived")
   friendRequestsSent     FriendRequest[] @relation("FriendRequestsSent")
   notifications          Notification[]
@@ -115,6 +116,7 @@ model Track {
   explicit   Boolean       @default(false)
   createdAt  DateTime      @default(now())
   likes      Like[]
+  history    History[]
   sources    TrackSource[]
 
   @@unique([title, artistId, albumId])
@@ -158,6 +160,20 @@ model Like {
   track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
   trackId   BigInt
   createdAt DateTime @default(now())
+
+  @@id([userId, trackId])
+}
+
+model History {
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  track     Track     @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  trackId   BigInt
+  /// When the track was played by the user
+  playedAt  DateTime?
+  source    Provider
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@id([userId, trackId])
 }
