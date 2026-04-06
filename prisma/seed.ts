@@ -74,18 +74,7 @@ async function main() {
     ]);
   }
 
-  // The below seeding was initially generated using Github Copilot
-
-  const artist1 = await prisma.artist.upsert({
-    where: { name: "The Beatles" },
-    update: {},
-    create: { name: "The Beatles" },
-  });
-  const artist2 = await prisma.artist.upsert({
-    where: { name: "Adele" },
-    update: {},
-    create: { name: "Adele" },
-  });
+  // The below seeding was initially generated using Github Copilot.
 
   const album1 = await prisma.album.upsert({
     where: { id: 1 },
@@ -108,19 +97,20 @@ async function main() {
 
   const track1 = await prisma.track.upsert({
     where: {
-      title_artistId_albumId: {
-        title: "Come Together",
-        artistId: artist1.id,
+      albumId_releaseDate_title: {
         albumId: album1.id,
+        releaseDate: new Date("1969-09-26"),
+        title: "Come Together",
       },
     },
     update: {},
     create: {
       title: "Come Together",
-      artistId: artist1.id,
       albumId: album1.id,
       durationMs: 259000,
       explicit: false,
+      releaseDate: new Date("1969-09-26"),
+      artists: { create: { name: "The Beatles" } },
       sources: {
         create: {
           provider: "SPOTIFY",
@@ -130,22 +120,22 @@ async function main() {
     },
     include: { sources: true },
   });
-
   const track2 = await prisma.track.upsert({
     where: {
-      title_artistId_albumId: {
-        title: "Someone Like You",
-        artistId: artist2.id,
+      albumId_releaseDate_title: {
         albumId: album2.id,
+        releaseDate: new Date("2011-01-24"),
+        title: "Someone Like You",
       },
     },
     update: {},
     create: {
       title: "Someone Like You",
-      artistId: artist2.id,
       albumId: album2.id,
       durationMs: 285000,
       explicit: false,
+      releaseDate: new Date("2011-01-24"),
+      artists: { create: { name: "Adele" } },
       sources: {
         create: {
           provider: "YTMUSIC",
@@ -170,7 +160,6 @@ async function main() {
       playedAt: new Date(),
     },
   });
-
   await prisma.history.upsert({
     where: {
       userId_trackSourceId: {

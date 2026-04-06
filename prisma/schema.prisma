@@ -26,7 +26,7 @@ model User {
   accounts               Account[]
   friends                Friend[]        @relation("Friends")
   friendedBy             Friend[]        @relation("FriendedBy")
-  likes                  Like[]
+  // likes                  Like[]
   friendRequestsReceived FriendRequest[] @relation("FriendRequestsReceived")
   friendRequestsSent     FriendRequest[] @relation("FriendRequestsSent")
   notifications          Notification[]
@@ -69,7 +69,7 @@ model Account {
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
-  lastLoginAt           DateTime?
+  // lastLoginAt           DateTime?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
@@ -106,19 +106,20 @@ model Album {
 }
 
 model Track {
-  id         BigInt        @id @default(autoincrement())
-  album      Album?        @relation(fields: [albumId], references: [id])
-  albumId    BigInt?
-  artist     Artist        @relation(fields: [artistId], references: [id])
-  artistId   BigInt
-  title      String
-  durationMs Int?
-  explicit   Boolean       @default(false)
-  createdAt  DateTime      @default(now())
-  likes      Like[]
-  sources    TrackSource[]
+  id          BigInt        @id @default(autoincrement())
+  album       Album?        @relation(fields: [albumId], references: [id])
+  albumId     BigInt?
+  title       String
+  genres      String[]
+  releaseDate DateTime?
+  durationMs  Int?
+  explicit    Boolean?
+  createdAt   DateTime      @default(now())
+  // likes      Like[]
+  artists     Artist[]
+  sources     TrackSource[]
 
-  @@unique([title, artistId, albumId])
+  @@unique([albumId, releaseDate, title])
 }
 
 model TrackSource {
@@ -154,15 +155,15 @@ model FriendRequest {
   @@id([senderId, receiverId])
 }
 
-model Like {
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
-  trackId   BigInt
-  createdAt DateTime @default(now())
+// model Like {
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId    String
+//   track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+//   trackId   BigInt
+//   createdAt DateTime @default(now())
 
-  @@id([userId, trackId])
-}
+//   @@id([userId, trackId])
+// }
 
 model History {
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -218,18 +219,11 @@ model Notification {
 
 enum Provider {
   SPOTIFY
-  APPLE
   YTMUSIC
-  SOUNDCLOUD
+  // APPLE
+  // SOUNDCLOUD
 }
 
 enum NotificationType {
   FRIEND_REQUEST
 }
-
-// enum AuthProvider {
-//   LOCAL
-//   SPOTIFY
-//   GOOGLE
-//   APPLE
-// }
