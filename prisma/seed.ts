@@ -111,6 +111,7 @@ async function main() {
       explicit: false,
       releaseDate: new Date("1969-09-26"),
       artists: { create: { name: "The Beatles" } },
+      genres: { create: { name: "rock" } },
       sources: {
         create: {
           provider: "SPOTIFY",
@@ -136,6 +137,7 @@ async function main() {
       explicit: false,
       releaseDate: new Date("2011-01-24"),
       artists: { create: { name: "Adele" } },
+      genres: { create: { name: "pop" } },
       sources: {
         create: {
           provider: "YTMUSIC",

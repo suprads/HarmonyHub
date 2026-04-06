@@ -105,18 +105,26 @@ model Album {
   tracks      Track[]
 }
 
+model Genre {
+  id        BigInt   @id @default(autoincrement())
+  // Should be normalized to lowercase
+  name      String   @unique
+  createdAt DateTime @default(now())
+  tracks    Track[]
+}
+
 model Track {
   id          BigInt        @id @default(autoincrement())
   album       Album?        @relation(fields: [albumId], references: [id])
   albumId     BigInt?
   title       String
-  genres      String[]
   releaseDate DateTime?
   durationMs  Int?
   explicit    Boolean?
   createdAt   DateTime      @default(now())
   // likes      Like[]
   artists     Artist[]
+  genres      Genre[]
   sources     TrackSource[]
 
   @@unique([albumId, releaseDate, title])
