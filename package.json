@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack --hostname 127.0.0.1",
+    "dev-next": "next dev --turbopack --hostname 127.0.0.1",
+    "dev-fastapi": "uvicorn app.api.ytmusic.test:app --reload --port 8000",
+    "dev": "concurrently \"npm run dev-next\" \"npm run dev-fastapi\"",
     "build": "next build --turbopack",
     "start": "next start --hostname 127.0.0.1",
     "lint": "eslint",
