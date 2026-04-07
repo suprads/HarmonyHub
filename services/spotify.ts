@@ -1,3 +1,10 @@
+/** The Spotify API scopes used by our app. */
+export const SCOPES = Object.freeze([
+  "user-top-read",
+  "user-read-email",
+  "user-read-recently-played",
+]);
+
 /** For queries that support paging of data. */
 type Paging = {
   /** Number of items per page. */
