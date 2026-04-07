@@ -143,13 +143,19 @@ export async function createNotification(
     const receiverId = id[1];
     userToNotifyId = receiverId;
 
-    await prisma.notification.create({
-      data: {
-        userId: receiverId,
-        infoId: infoId,
-        type: "FRIEND_REQUEST",
-      },
+    const currentNotification = await prisma.notification.findUnique({
+      where: { type_infoId: { type, infoId } },
     });
+
+    if (!currentNotification) {
+      await prisma.notification.create({
+        data: {
+          userId: receiverId,
+          infoId: infoId,
+          type: "FRIEND_REQUEST",
+        },
+      });
+    }
   }
 
   if (userToNotifyId) {
