@@ -120,7 +120,7 @@ export async function getFriends(userId: string) {
   });
 
   return friends.map(
-    (f: { friend: { id: string; handle: string; email: string | null } }) =>
+    (f: { friend: { id: string; handle: string | null; email: string } }) =>
       f.friend,
   );
 }
