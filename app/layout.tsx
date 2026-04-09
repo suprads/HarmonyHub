@@ -43,6 +43,10 @@ const navigationData = [
     href: "/settings",
   },
   {
+    title: "Profile",
+    href: "/profile",
+  },
+  {
     title: "Login",
     href: "/login",
   },

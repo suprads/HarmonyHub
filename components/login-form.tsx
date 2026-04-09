@@ -21,6 +21,8 @@ import Link from "next/link";
 import { Spinner } from "./ui/spinner";
 import { useActionState } from "react";
 import { spotifySignIn } from "@/services/auth/client";
+import { redirect } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 /**
  * @url https://ui.shadcn.com/blocks/login
@@ -32,11 +34,20 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div"> & {
   loginAction: (
-    prevState: { message: string } | undefined,
+    prevState: { message?: string; success: boolean },
     formData: FormData,
-  ) => Promise<{ message: string } | undefined>;
+  ) => Promise<{ message?: string; success: boolean }>;
 }) {
-  const [error, formAction, pending] = useActionState(loginAction, undefined);
+  const [state, formAction, pending] = useActionState(loginAction, {
+    success: false,
+  });
+  const { refetch } = authClient.useSession();
+
+  if (state.success) {
+    // Done so components using the useSession hook will refresh its data.
+    refetch();
+    redirect("/profile");
+  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -89,7 +100,7 @@ export function LoginForm({
                   <Link href="/sign-up">Sign up</Link>
                 </FieldDescription>
               </Field>
-              {error?.message && <FieldError>{error?.message}</FieldError>}
+              {state?.message && <FieldError>{state?.message}</FieldError>}
             </FieldGroup>
           </form>
         </CardContent>
