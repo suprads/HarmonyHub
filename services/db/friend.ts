@@ -124,3 +124,20 @@ export async function getFriends(userId: string) {
 
   return friends.map((f) => f.friend);
 }
+
+/**
+ * Meant for getting the number of friends an individual user has.
+ * @param userId The id of the user you want to get the amount of friends from.
+ */
+export async function getNumOfFriends(userId: string) {
+  const user = await prisma.user.findUnique({
+    include: {
+      _count: {
+        select: { friends: true },
+      },
+    },
+    where: { id: userId },
+  });
+
+  return user?._count.friends;
+}
