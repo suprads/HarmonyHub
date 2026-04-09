@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,21 +19,28 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+// import { prisma } from "@/lib/prisma";
+// import { verifySession } from "@/services/auth/server";
 
 export default function Profile() {
   const me = {
     name: "Nivi B",
-    username: "@nivi",
-    bio: "Hiii!!",
-    followers: 1240,
+    username: "@nivi.b",
+    bio: "Hi there!",
+    followers: 22,
     following: 318,
     playlists: 22,
-    topArtists: ["B", "A", "x", "y"],
+    topArtists: [
+      "Ariana Grande",
+      "Mac Miller",
+      "Harry Styles",
+      "Olivia Rodrigo",
+    ],
     topTracks: [
-      { title: "Track One", artist: "Artist A" },
-      { title: "Track Two", artist: "Artist B" },
-      { title: "Track Three", artist: "Artist C" },
-      { title: "Track Four", artist: "Artist D" },
+      { title: "The Less I Know The Better", artist: "Tame Impala" },
+      { title: "Sweater Weather", artist: "The Neighbourhood" },
+      { title: "505", artist: "Arctic Monkeys" },
+      { title: "Electric Feel", artist: "MGMT" },
     ],
     activity: [],
   };
@@ -47,6 +55,24 @@ export default function Profile() {
   const [editOpen, setEditOpen] = useState(false);
   const [draft, setDraft] = useState(profile);
 
+  // useEffect(() => {
+  //   async function loadProfile() {
+  //     try {
+  //       const res = await fetch("/api/profile");
+  //       const data = await res.json();
+
+  //       setProfile((prev) => ({
+  //         ...prev,
+  //         ...data,
+  //       }));
+  //     } catch (err) {
+  //       console.error("Failed to load profile", err);
+  //     }
+  //   }
+
+  //   loadProfile();
+  // }, []);
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -55,7 +81,7 @@ export default function Profile() {
             {profile.avatarUrl ? (
               <AvatarImage src={profile.avatarUrl} alt={profile.name} />
             ) : null}
-            <AvatarFallback>NB</AvatarFallback>
+            <AvatarFallback>DS</AvatarFallback>
           </Avatar>
 
           <div className={styles.info}>
@@ -66,7 +92,6 @@ export default function Profile() {
         </div>
 
         <div className={styles.headerActions}>
-          <Button variant="secondary">Follow</Button>
           <Button variant="secondary">Message</Button>
           <Dialog
             open={editOpen}
@@ -146,6 +171,26 @@ export default function Profile() {
                 >
                   Save
                 </Button>
+                {/* <Button
+                  onClick={async () => {
+                    try {
+                      await fetch("/api/profile", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(draft),
+                      });
+
+                      setProfile(draft);
+                      setEditOpen(false);
+                    } catch (err) {
+                      console.error("Failed to save profile", err);
+                    }
+                  }}
+                >
+                  Save
+                </Button> */}
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -157,22 +202,8 @@ export default function Profile() {
       <div className={styles.statsRow}>
         <Card className={styles.statCard}>
           <CardContent className={styles.statCardContent}>
-            <p className={styles.statLabel}>Followers</p>
+            <p className={styles.statLabel}>Friends</p>
             <p className={styles.statValue}>{me.followers}</p>
-          </CardContent>
-        </Card>
-
-        <Card className={styles.statCard}>
-          <CardContent className={styles.statCardContent}>
-            <p className={styles.statLabel}>Following</p>
-            <p className={styles.statValue}>{me.following}</p>
-          </CardContent>
-        </Card>
-
-        <Card className={styles.statCard}>
-          <CardContent className={styles.statCardContent}>
-            <p className={styles.statLabel}>Playlists</p>
-            <p className={styles.statValue}>{me.playlists}</p>
           </CardContent>
         </Card>
       </div>
@@ -182,9 +213,9 @@ export default function Profile() {
           <TabsTrigger className={styles.tabTrigger} value="overview">
             Overview
           </TabsTrigger>
-          <TabsTrigger className={styles.tabTrigger} value="playlists">
+          {/* <TabsTrigger className={styles.tabTrigger} value="playlists">
             Playlists
-          </TabsTrigger>
+          </TabsTrigger> */}
           <TabsTrigger className={styles.tabTrigger} value="ratings">
             Ratings
           </TabsTrigger>
@@ -291,15 +322,3 @@ export default function Profile() {
     </main>
   );
 }
-
-// BODY content is placeholder for now
-// TO DO
-// 1. edit/view follower - my profile, follow - others profile, message
-// 2. following/followers list
-// 3. avatar - file validation (type/size), upload to storage,save returned URL
-// 4. nest profiles - /profile/:username
-// 5. charts in profile page
-// 6. Follow/Unfollow behavior -optional
-// 7. Counters (Followers / Following / Playlists)
-// 8. message - later
-// 9. success toast after edit or follow
