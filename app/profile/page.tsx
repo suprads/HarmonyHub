@@ -1,34 +1,23 @@
-"use client";
-
-import { useState } from "react";
-import { useEffect } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import styles from "./page.module.css";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-// import { prisma } from "@/lib/prisma";
-// import { verifySession } from "@/services/auth/server";
+import ProfileHeader from "./profile-header";
+import { verifySession } from "@/services/auth/server";
+import StatCard from "./stat-card";
+import { getNumOfFriends } from "@/services/db/friend";
 
-export default function Profile() {
+export default async function ProfilePage() {
+  const { user } = await verifySession();
+  const friendsNum = await getNumOfFriends(user.id);
+
   const me = {
     name: "Nivi B",
     username: "@nivi.b",
-    bio: "Hi there!",
     followers: 22,
     following: 318,
+    // bio: "Hiii!!",
     playlists: 22,
     topArtists: [
       "Ariana Grande",
@@ -45,167 +34,18 @@ export default function Profile() {
     activity: [],
   };
 
-  const [profile, setProfile] = useState({
-    name: me.name,
-    username: me.username,
-    bio: me.bio,
-    avatarUrl: "",
-  });
-
-  const [editOpen, setEditOpen] = useState(false);
-  const [draft, setDraft] = useState(profile);
-
-  // useEffect(() => {
-  //   async function loadProfile() {
-  //     try {
-  //       const res = await fetch("/api/profile");
-  //       const data = await res.json();
-
-  //       setProfile((prev) => ({
-  //         ...prev,
-  //         ...data,
-  //       }));
-  //     } catch (err) {
-  //       console.error("Failed to load profile", err);
-  //     }
-  //   }
-
-  //   loadProfile();
-  // }, []);
-
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.headerLeft}>
-          <Avatar className={styles.avatar}>
-            {profile.avatarUrl ? (
-              <AvatarImage src={profile.avatarUrl} alt={profile.name} />
-            ) : null}
-            <AvatarFallback>DS</AvatarFallback>
-          </Avatar>
-
-          <div className={styles.info}>
-            <h1 className={styles.name}>{profile.name}</h1>
-            <p className={styles.username}>{profile.username}</p>
-            <p className={styles.bio}>{profile.bio}</p>
-          </div>
-        </div>
-
-        <div className={styles.headerActions}>
-          <Button variant="secondary">Message</Button>
-          <Dialog
-            open={editOpen}
-            onOpenChange={(open) => {
-              setEditOpen(open);
-              if (open) setDraft(profile);
-            }}
-          >
-            <DialogTrigger asChild>
-              <Button>Edit Profile</Button>
-            </DialogTrigger>
-
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edit Profile</DialogTitle>
-              </DialogHeader>
-
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="avatar">Avatar</Label>
-                  <Input
-                    id="avatar"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      const url = URL.createObjectURL(file);
-                      setDraft((d) => ({ ...d, avatarUrl: url }));
-                    }}
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    value={draft.name}
-                    onChange={(e) =>
-                      setDraft((d) => ({ ...d, name: e.target.value }))
-                    }
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    id="username"
-                    value={draft.username}
-                    onChange={(e) =>
-                      setDraft((d) => ({ ...d, username: e.target.value }))
-                    }
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="bio">Bio</Label>
-                  <Input
-                    id="bio"
-                    value={draft.bio}
-                    onChange={(e) =>
-                      setDraft((d) => ({ ...d, bio: e.target.value }))
-                    }
-                  />
-                </div>
-              </div>
-
-              <DialogFooter>
-                <Button variant="secondary" onClick={() => setEditOpen(false)}>
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() => {
-                    setProfile(draft);
-                    setEditOpen(false);
-                  }}
-                >
-                  Save
-                </Button>
-                {/* <Button
-                  onClick={async () => {
-                    try {
-                      await fetch("/api/profile", {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(draft),
-                      });
-
-                      setProfile(draft);
-                      setEditOpen(false);
-                    } catch (err) {
-                      console.error("Failed to save profile", err);
-                    }
-                  }}
-                >
-                  Save
-                </Button> */}
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </header>
+      <ProfileHeader />
 
       <Separator />
 
       <div className={styles.statsRow}>
-        <Card className={styles.statCard}>
-          <CardContent className={styles.statCardContent}>
-            <p className={styles.statLabel}>Friends</p>
-            <p className={styles.statValue}>{me.followers}</p>
-          </CardContent>
-        </Card>
+        <StatCard
+          label="Friends"
+          displayValue={friendsNum?.toString() ?? "Error"}
+        />
+        <StatCard label="Playlists" displayValue={me.playlists.toString()} />
       </div>
 
       <Tabs defaultValue="overview" className={styles.tabs}>
