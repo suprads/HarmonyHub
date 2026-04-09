@@ -4,6 +4,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 import { createAuthMiddleware } from "better-auth/api";
 import { createSettings } from "@/services/db/settings";
+import * as SpotifyAPI from "@/services/spotify";
 
 /**
  * auth.api methods should be executed on the server.
@@ -27,6 +28,7 @@ export const auth = betterAuth({
         };
       },
       redirectURI: "http://127.0.0.1:3000/api/auth/callback/spotify",
+      scope: [...SpotifyAPI.SCOPES],
     },
   },
   hooks: {

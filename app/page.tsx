@@ -1,23 +1,52 @@
 import * as SpotifyAPI from "@/services/spotify";
+import { headers } from "next/headers";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import Link from "next/link";
+import { verifySession } from "@/services/auth/server";
 
 const REDIRECT_URI = "http://127.0.0.1:3000";
 
 // Note: Need to build project for PageProps<"/"> to not show as error.
 // See https://nextjs.org/docs/15/app/getting-started/layouts-and-pages#route-props-helpers
 export default async function HomePage(props: PageProps<"/">) {
-  const { code: spotifyCode }: { code?: string } = await props.searchParams;
+  const session = await verifySession();
 
-  if (!spotifyCode) {
-    SpotifyAPI.authorizeUser(REDIRECT_URI);
+  const spotifyAccount = await prisma.account.findFirst({
+    where: {
+      userId: session.user.id,
+      providerId: "spotify",
+    },
+  });
+
+  if (!spotifyAccount) {
+    return (
+      <div className="home-page-shell">
+        <main className="main">
+          <p>
+            No tracks to display. Please connect to at least one streaming
+            service{" "}
+            <Link className="underline" href="/settings/services">
+              here
+            </Link>
+            .
+          </p>
+        </main>
+      </div>
+    );
   }
 
-  const tokenResponse = await SpotifyAPI.getAccessToken(
-    spotifyCode ?? "",
-    REDIRECT_URI,
-  );
+  const tokenResponse = await auth.api.getAccessToken({
+    body: {
+      providerId: "spotify",
+      accountId: spotifyAccount.accountId,
+      userId: session.user.id,
+    },
+    headers: await headers(),
+  });
 
   const recentlyPlayed = await SpotifyAPI.getRecentlyPlayedTracks(
-    tokenResponse.access_token,
+    tokenResponse.accessToken,
     {
       limit: 12,
     },

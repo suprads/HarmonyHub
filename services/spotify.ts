@@ -1,3 +1,10 @@
+/** The Spotify API scopes used by our app. */
+export const SCOPES = Object.freeze([
+  "user-top-read",
+  "user-read-email",
+  "user-read-recently-played",
+]);
+
 /** For queries that support paging of data. */
 type Paging = {
   /** Number of items per page. */
@@ -58,6 +65,22 @@ export type TopItemsResponse = {
   items: Track[] | Artist[];
 };
 
+type RecentlyPlayedItem = {
+  track: Track;
+  played_at: string;
+};
+
+export type RecentlyPlayedResponse = {
+  href: string;
+  limit: number;
+  next: string | null;
+  cursors: {
+    after?: string;
+    before?: string;
+  };
+  items: RecentlyPlayedItem[];
+};
+
 export type TopTracksResponse = Omit<TopItemsResponse, "items"> & {
   items: Track[];
 };
@@ -73,91 +96,6 @@ type SpotifyError = {
     message: string;
   };
 };
-
-/**
- * Redirects the user to the Spotify authorization page to give our app access
- * to their account. Should return to the redirect URI with a code search
- * parameter.
- * @param redirectURI The URI that should be returned to after authentication.
- */
-export function authorizeUser(redirectURI: RedirectUri) {
-  const searchParams = new URLSearchParams({
-    client_id: env.SPOTIFY_CLIENT_ID ?? "",
-    response_type: "code",
-    redirect_uri: redirectURI,
-    //state,
-    scope: "user-top-read user-read-recently-played",
-    //show_dialog
-  });
-
-  redirect(`https://accounts.spotify.com/authorize?${searchParams.toString()}`);
-}
-
-/**
- * Retrieves an access token from the Spotify API.
- * @param code The authorization code returned from the Spotify authorization
- * page.
- * @throws Error if something went wrong with the authentication request.
- */
-export async function getAccessToken(
-  code: string,
-  redirectURI: RedirectUri,
-): Promise<AccessTokenResponse> {
-  const encodedKeys = Buffer.from(
-    `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`,
-  ).toString("base64");
-
-  const response = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    body: `grant_type=authorization_code&code=${code}&redirect_uri=${redirectURI}`,
-    headers: {
-      Authorization: `Basic ${encodedKeys}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  });
-
-  const json = await response.json();
-
-  if (json.error) {
-    const authError: AuthenticationError = json;
-    throw new Error(`${authError.error}: ${authError.error_description}}`);
-  }
-
-  return json;
-}
-
-/**
- * Used to refesh the access token when it expires.
- * @returns JSON response from requesting a refresh. If a new refresh_token
- * isn't included, keep using the existing token.
- * @throws Error if something went wrong with the authentication request.
- * @url https://developer.spotify.com/documentation/web-api/tutorials/refreshing-tokens
- */
-export async function refreshAccessToken(
-  refreshToken: string,
-): Promise<AccessTokenResponse> {
-  const encodedKeys = Buffer.from(
-    `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`,
-  ).toString("base64");
-
-  const response = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    body: `grant_type=refresh_token&refresh_token=${refreshToken}`,
-    headers: {
-      Authorization: `Basic ${encodedKeys}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  });
-
-  const json = await response.json();
-
-  if (json.error) {
-    const authError: AuthenticationError = json;
-    throw new Error(`${authError.error}: ${authError.error_description}}`);
-  }
-
-  return json;
-}
 
 /**
  * Gets the user's top tracks or artists from Spotify.

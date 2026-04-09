@@ -6,8 +6,18 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { verifySession } from "@/services/auth/server";
+import TimeRangeButtons from "@/components/time-range-buttons";
 
-export default async function ChartPage() {
+type TimeRange = "short_term" | "medium_term" | "long_term";
+
+export default async function ChartPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ timeRange?: string }>;
+}) {
+  const params = await searchParams;
+  const timeRange = (params.timeRange || "long_term") as TimeRange;
+
   const session = await verifySession();
 
   const spotifyAccount = await prisma.account.findFirst({
@@ -44,12 +54,12 @@ export default async function ChartPage() {
   });
 
   const topTracks = await SpotifyAPI.getTopTracks(tokenResponse.accessToken, {
-    timeRange: "long_term",
+    timeRange,
     limit: 5,
   });
 
   const topArtists = await SpotifyAPI.getTopArtists(tokenResponse.accessToken, {
-    timeRange: "long_term",
+    timeRange,
     limit: 5,
   });
 
@@ -58,6 +68,7 @@ export default async function ChartPage() {
       <h1 className="text-4xl font-bold m-0 p-[auto]">
         Your Personalized Charts
       </h1>
+      <TimeRangeButtons currentTimeRange={timeRange} />
       <main className="main">
         <div className="flex flex-row gap-8 items-start w-full justify-center max-[800px]:flex-col max-[800px]:items-center">
           <div className={styles.listColumn}>
