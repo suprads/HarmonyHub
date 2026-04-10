@@ -101,6 +101,26 @@ export async function acceptFriendRequest(
 }
 
 /**
+ * Will remove an existing friend request without creating a friendship.
+ */
+export async function rejectFriendRequest(
+  senderId: string,
+  receiverId: string,
+) {
+  const friendRequest = await prisma.friendRequest.findUnique({
+    where: { senderId_receiverId: { senderId, receiverId } },
+  });
+
+  if (friendRequest) {
+    await prisma.friendRequest.delete({
+      where: {
+        senderId_receiverId: { senderId, receiverId },
+      },
+    });
+  }
+}
+
+/**
  * Gets all friends for a given user.
  * @param userId The ID of the user whose friends to retrieve.
  * @returns A list of friends with their details.
