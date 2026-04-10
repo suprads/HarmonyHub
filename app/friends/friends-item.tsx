@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Avatar } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -15,11 +16,12 @@ import { Input } from "@/components/ui/input";
 import { User } from "@/generated/prisma/browser";
 import styles from "./friends.module.css";
 
-type Friend = Pick<User, "id" | "handle" | "email">;
+type Friend = Pick<User, "id" | "handle" | "email" | "image">;
 
 interface UserSearchResult {
   id: string;
   handle: string;
+  image?: string | null;
 }
 
 interface FriendsItemProps {
@@ -27,7 +29,7 @@ interface FriendsItemProps {
 }
 
 export default function FriendsItem({ initialFriends }: FriendsItemProps) {
-  const [friends] = useState<Friend[]>(initialFriends);
+  const [friends, setFriends] = useState<Friend[]>(initialFriends);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredFriends, setFilteredFriends] =
     useState<Friend[]>(initialFriends);
@@ -36,6 +38,11 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
   const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [sendingRequestTo, setSendingRequestTo] = useState<string | null>(null);
+  const [removingFriendId, setRemovingFriendId] = useState<string | null>(null);
+  const [friendToRemove, setFriendToRemove] = useState<Friend | null>(null);
+
+  const getAvatarFallback = (handle: string | null | undefined) =>
+    handle?.substring(0, 2).toUpperCase() || "??";
 
   useEffect(() => {
     if (searchTerm) {
@@ -107,6 +114,44 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
     }
   };
 
+  const handleRemoveFriend = async (friendId: string) => {
+    setRemovingFriendId(friendId);
+    try {
+      const response = await fetch("/api/friends/remove", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ friendId }),
+      });
+
+      if (response.ok) {
+        setFriends((prev) => prev.filter((friend) => friend.id !== friendId));
+      } else {
+        const error = await response.json();
+        alert(error.error || "Failed to remove friend");
+      }
+    } catch (error) {
+      console.error("Failed to remove friend:", error);
+      alert("Failed to remove friend");
+    } finally {
+      setRemovingFriendId(null);
+    }
+  };
+
+  const handleOpenRemoveDialog = (friend: Friend) => {
+    setFriendToRemove(friend);
+  };
+
+  const handleConfirmRemoveFriend = async () => {
+    if (!friendToRemove) {
+      return;
+    }
+
+    await handleRemoveFriend(friendToRemove.id);
+    setFriendToRemove(null);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -138,9 +183,13 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
             <Card key={friend.id} className={styles.friendCard}>
               <div className={styles.friendContent}>
                 <Avatar className={styles.avatar}>
-                  <span className={styles.avatarFallback}>
-                    {friend.handle?.substring(0, 2).toUpperCase()}
-                  </span>
+                  <AvatarImage
+                    src={friend.image ?? undefined}
+                    alt={friend.handle ?? "Friend profile picture"}
+                  />
+                  <AvatarFallback className={styles.avatarFallback}>
+                    {getAvatarFallback(friend.handle)}
+                  </AvatarFallback>
                 </Avatar>
                 <div className={styles.friendInfo}>
                   <h3 className={styles.friendHandle}>{friend.handle}</h3>
@@ -148,6 +197,16 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
                     <p className={styles.friendEmail}>{friend.email}</p>
                   )}
                 </div>
+                <Button
+                  variant="destructive"
+                  onClick={() => handleOpenRemoveDialog(friend)}
+                  disabled={removingFriendId === friend.id}
+                  className={styles.removeButton}
+                >
+                  {removingFriendId === friend.id
+                    ? "Removing..."
+                    : "Remove Friend"}
+                </Button>
               </div>
             </Card>
           ))
@@ -188,9 +247,13 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
                   <Card key={user.id} className={styles.userCard}>
                     <div className={styles.userContent}>
                       <Avatar className={styles.userAvatar}>
-                        <span className={styles.avatarFallback}>
-                          {user.handle.substring(0, 2).toUpperCase()}
-                        </span>
+                        <AvatarImage
+                          src={user.image ?? undefined}
+                          alt={user.handle}
+                        />
+                        <AvatarFallback className={styles.avatarFallback}>
+                          {getAvatarFallback(user.handle)}
+                        </AvatarFallback>
                       </Avatar>
                       <div className={styles.userInfo}>
                         <h4 className={styles.userHandle}>{user.handle}</h4>
@@ -215,6 +278,41 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
               )}
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={friendToRemove !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setFriendToRemove(null);
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Remove Friend</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to remove{" "}
+              {friendToRemove?.handle || "this friend"} from your friends list?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setFriendToRemove(null)}
+              disabled={removingFriendId !== null}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmRemoveFriend}
+              disabled={removingFriendId !== null}
+            >
+              {removingFriendId !== null ? "Removing..." : "Remove Friend"}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

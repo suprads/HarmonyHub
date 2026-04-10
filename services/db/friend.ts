@@ -136,6 +136,7 @@ export async function getFriends(userId: string) {
           id: true,
           handle: true,
           email: true,
+          image: true,
         },
       },
     },
@@ -143,6 +144,23 @@ export async function getFriends(userId: string) {
   });
 
   return friends.map((f) => f.friend);
+}
+
+/**
+ * Removes friendship in both directions for two users.
+ * @returns true when a friendship existed and was removed.
+ */
+export async function removeFriend(userId: string, friendId: string) {
+  const result = await prisma.friend.deleteMany({
+    where: {
+      OR: [
+        { friendedById: userId, friendId },
+        { friendedById: friendId, friendId: userId },
+      ],
+    },
+  });
+
+  return result.count > 0;
 }
 
 /**

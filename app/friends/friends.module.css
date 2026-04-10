@@ -88,6 +88,10 @@
   flex: 1;
 }
 
+.removeButton {
+  flex-shrink: 0;
+}
+
 .friendHandle {
   font-size: 1.125rem;
   font-weight: 600;
@@ -219,5 +223,13 @@
 
   .friendsList {
     max-width: 100%;
+  }
+
+  .friendContent {
+    flex-wrap: wrap;
+  }
+
+  .removeButton {
+    width: 100%;
   }
 }
