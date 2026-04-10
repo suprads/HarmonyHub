@@ -23,15 +23,16 @@ export default async function SignUpPage() {
 /**
  * @returns An error message if an error occurred.
  */
-async function signUp(prevState: unknown, formData: FormData) {
+async function signUp(
+  prevState: { message?: string; success: boolean },
+  formData: FormData,
+) {
   "use server";
 
   const email = formData.get("email") as string;
   const handle = formData.get("handle") as string;
   const password = formData.get("password") as string;
   const name = formData.get("name") as string;
-
-  let signUpSuccess = false;
 
   try {
     await auth.api.signUpEmail({
@@ -43,13 +44,11 @@ async function signUp(prevState: unknown, formData: FormData) {
       },
       headers: await headers(),
     });
-    signUpSuccess = true;
   } catch (error) {
     if (error instanceof APIError) {
-      const { message } = error;
-      return { message };
+      console.error(error);
+      return { message: error.message, success: false };
     }
   }
-
-  if (signUpSuccess) redirect("/login");
+  return { success: true };
 }
