@@ -13,9 +13,11 @@ type Paging = {
   offset?: number;
 };
 
+export type TimeRange = "short_term" | "medium_term" | "long_term";
+
 type TopTrackRequest = Paging & {
   type: "artists" | "tracks";
-  timeRange?: "short_term" | "medium_term" | "long_term";
+  timeRange?: TimeRange;
 };
 
 type RecentlyPlayedRequest = {
