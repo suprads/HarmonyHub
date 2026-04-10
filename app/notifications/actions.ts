@@ -7,6 +7,12 @@ import { rejectFriendRequest } from "@/services/db/friend";
 import type { NotificationType } from "@/generated/prisma/enums";
 import type { Notification } from "@/generated/prisma/client";
 
+export async function getNotifications({ userId }: { userId: string }) {
+  return await prisma.notification.findMany({
+    where: { userId },
+  });
+}
+
 export async function changeToRead({
   id,
   read,
@@ -59,8 +65,7 @@ export async function notificationFriendRequestAction(
     await rejectFriendRequest(senderId, receiverId);
   }
 
-  await prisma.notification.update({
-    data: { read: true },
+  await prisma.notification.delete({
     where: { id: notification.id },
   });
 
