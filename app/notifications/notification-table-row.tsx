@@ -2,11 +2,7 @@
 
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Circle, MoreHorizontalIcon } from "lucide-react";
-import {
-  acceptNotificationFriendRequest,
-  changeToRead,
-  rejectNotificationFriendRequest,
-} from "./actions";
+import { notificationFriendRequestAction, changeToRead } from "./actions";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -45,11 +41,10 @@ export default function NotificationTableRow({
     setAccepting(true);
 
     try {
-      const result = await acceptNotificationFriendRequest({
-        id,
-        type,
-        infoId,
-      });
+      const result = await notificationFriendRequestAction(
+        { id, type, infoId },
+        "accept",
+      );
 
       if (!result.success) {
         alert(result.error ?? "Failed to accept friend request.");
@@ -71,11 +66,10 @@ export default function NotificationTableRow({
     setRejecting(true);
 
     try {
-      const result = await rejectNotificationFriendRequest({
-        id,
-        type,
-        infoId,
-      });
+      const result = await notificationFriendRequestAction(
+        { id, type, infoId },
+        "reject",
+      );
 
       if (!result.success) {
         alert(result.error ?? "Failed to reject friend request.");

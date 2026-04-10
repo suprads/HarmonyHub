@@ -8,6 +8,7 @@ export default async function NotificationsPage() {
   const { user } = await verifySession();
 
   const notifications = await prisma.notification.findMany({
+    omit: { updatedAt: true, createdAt: true },
     where: { userId: user.id },
     orderBy: { createdAt: "asc" },
   });

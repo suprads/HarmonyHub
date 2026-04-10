@@ -19,11 +19,16 @@ export async function changeToRead({
   }
 }
 
-export async function acceptNotificationFriendRequest({
-  id,
-  type,
-  infoId,
-}: Pick<Notification, "id" | "infoId"> & { type: NotificationType }) {
+export async function notificationFriendRequestAction(
+  {
+    id,
+    type,
+    infoId,
+  }: Pick<Notification, "id" | "infoId"> & {
+    type: NotificationType;
+  },
+  action: "accept" | "reject",
+) {
   if (type !== "FRIEND_REQUEST") {
     return { success: false, error: "Notification is not a friend request." };
   }
@@ -48,45 +53,12 @@ export async function acceptNotificationFriendRequest({
     return { success: false, error: "Friend request data is invalid." };
   }
 
-  await acceptFriendRequest(senderId, receiverId);
-  await prisma.notification.update({
-    data: { read: true },
-    where: { id: notification.id },
-  });
-
-  return { success: true };
-}
-
-export async function rejectNotificationFriendRequest({
-  id,
-  type,
-  infoId,
-}: Pick<Notification, "id" | "infoId"> & { type: NotificationType }) {
-  if (type !== "FRIEND_REQUEST") {
-    return { success: false, error: "Notification is not a friend request." };
+  if (action === "accept") {
+    await acceptFriendRequest(senderId, receiverId);
+  } else if (action === "reject") {
+    await rejectFriendRequest(senderId, receiverId);
   }
 
-  const { user } = await verifySession();
-  const notification = await prisma.notification.findUnique({
-    where: { id },
-    select: { id: true, userId: true, type: true, infoId: true },
-  });
-
-  if (!notification || notification.userId !== user.id) {
-    return { success: false, error: "Notification not found." };
-  }
-
-  if (notification.type !== type || notification.infoId !== infoId) {
-    return { success: false, error: "Notification data is invalid." };
-  }
-
-  const [senderId, receiverId] = notification.infoId.split("_");
-
-  if (!senderId || !receiverId || receiverId !== user.id) {
-    return { success: false, error: "Friend request data is invalid." };
-  }
-
-  await rejectFriendRequest(senderId, receiverId);
   await prisma.notification.update({
     data: { read: true },
     where: { id: notification.id },
