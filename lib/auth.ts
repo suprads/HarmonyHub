@@ -31,7 +31,7 @@ export const auth = betterAuth({
           image: profile.images.at(0)?.url,
         };
       },
-      redirectURI: "http://127.0.0.1:3000/api/auth/callback/spotify",
+      redirectURI: `http://${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback/spotify`,
       scope: [...SpotifyAPI.SCOPES],
     },
   },
