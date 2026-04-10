@@ -2,11 +2,10 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-
-type TimeRange = "short_term" | "medium_term" | "long_term";
+import * as SpotifyAPI from "@/services/spotify";
 
 interface TimeRangeButtonsProps {
-  currentTimeRange: TimeRange;
+  currentTimeRange: SpotifyAPI.TimeRange;
 }
 
 export default function TimeRangeButtons({
@@ -15,13 +14,13 @@ export default function TimeRangeButtons({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const timeRanges: { value: TimeRange; label: string }[] = [
+  const timeRanges: { value: SpotifyAPI.TimeRange; label: string }[] = [
     { value: "short_term", label: "Last 4 Weeks" },
     { value: "medium_term", label: "Last 6 Months" },
     { value: "long_term", label: "All Time" },
   ];
 
-  const handleTimeRangeChange = (timeRange: TimeRange) => {
+  const handleTimeRangeChange = (timeRange: SpotifyAPI.TimeRange) => {
     const params = new URLSearchParams(searchParams);
     params.set("timeRange", timeRange);
     router.push(`?${params.toString()}`);
