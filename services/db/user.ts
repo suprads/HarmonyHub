@@ -14,6 +14,7 @@ export async function searchForUser(searchTerm: string, numOfResults?: number) {
     select: {
       id: true,
       handle: true,
+      image: true,
     },
     where: {
       handle: {

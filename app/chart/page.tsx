@@ -8,15 +8,13 @@ import Link from "next/link";
 import { verifySession } from "@/services/auth/server";
 import TimeRangeButtons from "@/components/time-range-buttons";
 
-type TimeRange = "short_term" | "medium_term" | "long_term";
-
 export default async function ChartPage({
   searchParams,
 }: {
   searchParams: Promise<{ timeRange?: string }>;
 }) {
   const params = await searchParams;
-  const timeRange = (params.timeRange || "long_term") as TimeRange;
+  const timeRange = (params.timeRange || "long_term") as SpotifyAPI.TimeRange;
 
   const session = await verifySession();
 

@@ -13,12 +13,16 @@ type Paging = {
   offset?: number;
 };
 
+export type TimeRange = "short_term" | "medium_term" | "long_term";
+
 type TopTrackRequest = Paging & {
   type: "artists" | "tracks";
-  timeRange?: "short_term" | "medium_term" | "long_term";
+  timeRange?: TimeRange;
 };
 
-type RecentlyPlayedRequest = Paging & {
+type RecentlyPlayedRequest = {
+  /** Max number of items to return. */
+  limit?: number;
   /** Unix timestamp in milliseconds. Return items before this time. */
   before?: number;
   /** Unix timestamp in milliseconds. Return items after this time. */
@@ -170,15 +174,15 @@ export async function getRecentlyPlayedTracks(
   { limit = 20, before, after }: RecentlyPlayedRequest = {},
 ): Promise<RecentlyPlayedResponse> {
   const searchParams = new URLSearchParams({
-    limit: String(limit),
+    limit: limit.toString(),
   });
 
   if (before !== undefined) {
-    searchParams.set("before", String(before));
+    searchParams.set("before", before.toString());
   }
 
   if (after !== undefined) {
-    searchParams.set("after", String(after));
+    searchParams.set("after", after.toString());
   }
 
   const response = await fetch(

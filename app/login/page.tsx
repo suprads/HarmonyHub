@@ -2,13 +2,12 @@ import { LoginForm } from "@/components/login-form";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { APIError } from "better-auth";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { getSession } from "@/services/auth/server";
+import LogoutButton from "./logout-button";
 
 export default async function LoginPage() {
   const session = await getSession();
+  // if (session) redirect("/profile");
 
   return (
     <div className="font-sans flex items-center justify-items-center sm:p-20">
@@ -16,9 +15,7 @@ export default async function LoginPage() {
         {session ? (
           <>
             <p>{`Logged in as ${session.user.email}`}</p>
-            <Link href="/logout">
-              <Button>Logout</Button>
-            </Link>
+            <LogoutButton />
           </>
         ) : (
           <>
@@ -36,14 +33,13 @@ export default async function LoginPage() {
  * @returns An error message if an error occurred.
  */
 async function login(
-  prevState: { message: string } | undefined,
+  prevState: { message?: string; success: boolean },
   formData: FormData,
 ) {
   "use server";
 
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
-  let signInSuccess = false;
 
   try {
     await auth.api.signInEmail({
@@ -53,14 +49,11 @@ async function login(
       },
       headers: await headers(),
     });
-    signInSuccess = true;
   } catch (error) {
     if (error instanceof APIError) {
-      console.error(error.message);
-      return { message: error.message };
+      console.error(error);
+      return { message: error.message, success: false };
     }
   }
-
-  // Refreshes page to display log in info.
-  if (signInSuccess) redirect("/login");
+  return { success: true };
 }

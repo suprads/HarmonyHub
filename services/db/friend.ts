@@ -10,16 +10,18 @@ async function friendUser(userId: string, userToFriendId: string) {
   const alreadyFriend = await isFriend(userId, userToFriendId);
 
   if (!alreadyFriend) {
-    return await prisma.friend.create({
-      data: {
-        friendedById: userId,
-        friendId: userToFriendId,
-      },
+    await prisma.friend.createMany({
+      data: [
+        { friendedById: userId, friendId: userToFriendId },
+        { friendedById: userToFriendId, friendId: userId },
+      ],
     });
+    return { success: true };
   } else {
     console.warn(
       `User with ID ${userId} is already friends with user with ID ${userToFriendId}`,
     );
+    return { success: false };
   }
 }
 
@@ -88,13 +90,33 @@ export async function acceptFriendRequest(
     const friendResult = await friendUser(senderId, receiverId);
 
     // Delete the friend request once the two users are friends
-    if (friendResult) {
+    if (friendResult.success) {
       await prisma.friendRequest.delete({
         where: {
           senderId_receiverId: { senderId, receiverId },
         },
       });
     }
+  }
+}
+
+/**
+ * Will remove an existing friend request without creating a friendship.
+ */
+export async function rejectFriendRequest(
+  senderId: string,
+  receiverId: string,
+) {
+  const friendRequest = await prisma.friendRequest.findUnique({
+    where: { senderId_receiverId: { senderId, receiverId } },
+  });
+
+  if (friendRequest) {
+    await prisma.friendRequest.delete({
+      where: {
+        senderId_receiverId: { senderId, receiverId },
+      },
+    });
   }
 }
 
@@ -114,13 +136,46 @@ export async function getFriends(userId: string) {
           id: true,
           handle: true,
           email: true,
+          image: true,
         },
       },
     },
+    omit: { friendedById: true, friendId: true, createdAt: true },
   });
 
-  return friends.map(
-    (f: { friend: { id: string; handle: string; email: string | null } }) =>
-      f.friend,
-  );
+  return friends.map((f) => f.friend);
+}
+
+/**
+ * Removes friendship in both directions for two users.
+ * @returns true when a friendship existed and was removed.
+ */
+export async function removeFriend(userId: string, friendId: string) {
+  const result = await prisma.friend.deleteMany({
+    where: {
+      OR: [
+        { friendedById: userId, friendId },
+        { friendedById: friendId, friendId: userId },
+      ],
+    },
+  });
+
+  return result.count > 0;
+}
+
+/**
+ * Meant for getting the number of friends an individual user has.
+ * @param userId The id of the user you want to get the amount of friends from.
+ */
+export async function getNumOfFriends(userId: string) {
+  const user = await prisma.user.findUnique({
+    include: {
+      _count: {
+        select: { friends: true },
+      },
+    },
+    where: { id: userId },
+  });
+
+  return user?._count.friends;
 }
