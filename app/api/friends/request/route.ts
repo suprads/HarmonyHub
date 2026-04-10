@@ -26,10 +26,13 @@ export async function POST(request: Request) {
         "friendRequests",
       );
       if (notificationsEnabled) {
-        await createNotification("FRIEND_REQUEST", [
+        const notification = await createNotification("FRIEND_REQUEST", [
           result.senderId,
           result.receiverId,
         ]);
+        if (!notification) {
+          console.error("Failed to create notification for friend request.");
+        }
       }
       return NextResponse.json({
         success: true,
