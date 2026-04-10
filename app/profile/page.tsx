@@ -11,6 +11,7 @@ import { prisma } from "@/lib/prisma";
 import * as SpotifyAPI from "@/services/spotify";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import Link from "next/link";
 
 export default async function ProfilePage() {
   const { user } = await verifySession();
@@ -97,14 +98,15 @@ export default async function ProfilePage() {
                           {t.artists.map((a) => a.name).join(", ")}
                         </p>
                       </div>
-
-                      <Button
-                        className={styles.viewButton}
-                        variant="ghost"
-                        size="sm"
-                      >
-                        View
-                      </Button>
+                      <Link href={t.external_urls.spotify}>
+                        <Button
+                          className={styles.viewButton}
+                          variant="ghost"
+                          size="sm"
+                        >
+                          View
+                        </Button>
+                      </Link>
                     </div>
                   ))}
                 </div>
