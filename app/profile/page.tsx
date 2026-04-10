@@ -7,32 +7,48 @@ import ProfileHeader from "./profile-header";
 import { verifySession } from "@/services/auth/server";
 import StatCard from "./stat-card";
 import { getNumOfFriends } from "@/services/db/friend";
+import { prisma } from "@/lib/prisma";
+import * as SpotifyAPI from "@/services/spotify";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export default async function ProfilePage() {
   const { user } = await verifySession();
   const friendsNum = await getNumOfFriends(user.id);
 
-  const me = {
-    name: "Nivi B",
-    username: "@nivi.b",
-    followers: 22,
-    following: 318,
-    // bio: "Hiii!!",
-    playlists: 22,
-    topArtists: [
-      "Ariana Grande",
-      "Mac Miller",
-      "Harry Styles",
-      "Olivia Rodrigo",
-    ],
-    topTracks: [
-      { title: "The Less I Know The Better", artist: "Tame Impala" },
-      { title: "Sweater Weather", artist: "The Neighbourhood" },
-      { title: "505", artist: "Arctic Monkeys" },
-      { title: "Electric Feel", artist: "MGMT" },
-    ],
-    activity: [],
-  };
+  const spotifyAccount = await prisma.account.findFirst({
+    where: {
+      userId: user.id,
+      providerId: "spotify",
+    },
+  });
+
+  let tokenResponse:
+    | Awaited<ReturnType<typeof auth.api.getAccessToken>>
+    | undefined;
+  let topTracks: SpotifyAPI.TopTracksResponse | undefined;
+  let topArtists: SpotifyAPI.TopArtistsResponse | undefined;
+
+  if (spotifyAccount) {
+    tokenResponse = await auth.api.getAccessToken({
+      body: {
+        providerId: "spotify",
+        accountId: spotifyAccount.accountId,
+        userId: user.id,
+      },
+      headers: await headers(),
+    });
+
+    topTracks = await SpotifyAPI.getTopTracks(tokenResponse.accessToken, {
+      timeRange: "long_term",
+      limit: 5,
+    });
+
+    topArtists = await SpotifyAPI.getTopArtists(tokenResponse.accessToken, {
+      timeRange: "long_term",
+      limit: 5,
+    });
+  }
 
   return (
     <main className={styles.page}>
@@ -45,7 +61,7 @@ export default async function ProfilePage() {
           label="Friends"
           displayValue={friendsNum?.toString() ?? "Error"}
         />
-        <StatCard label="Playlists" displayValue={me.playlists.toString()} />
+        {/* <StatCard label="Playlists" displayValue={me.playlists.toString()} /> */}
       </div>
 
       <Tabs defaultValue="overview" className={styles.tabs}>
@@ -56,9 +72,9 @@ export default async function ProfilePage() {
           {/* <TabsTrigger className={styles.tabTrigger} value="playlists">
             Playlists
           </TabsTrigger> */}
-          <TabsTrigger className={styles.tabTrigger} value="ratings">
+          {/* <TabsTrigger className={styles.tabTrigger} value="ratings">
             Ratings
-          </TabsTrigger>
+          </TabsTrigger> */}
           <TabsTrigger className={styles.tabTrigger} value="activity">
             Activity
           </TabsTrigger>
@@ -73,11 +89,13 @@ export default async function ProfilePage() {
 
               <CardContent className={styles.cardBody}>
                 <div className={styles.trackList}>
-                  {me.topTracks.map((t) => (
-                    <div key={t.title} className={styles.trackRow}>
+                  {topTracks?.items.map((t) => (
+                    <div key={t.id} className={styles.trackRow}>
                       <div className={styles.trackText}>
-                        <p className={styles.trackTitle}>{t.title}</p>
-                        <p className={styles.trackMeta}>{t.artist}</p>
+                        <p className={styles.trackTitle}>{t.name}</p>
+                        <p className={styles.trackMeta}>
+                          {t.artists.map((a) => a.name).join(", ")}
+                        </p>
                       </div>
 
                       <Button
@@ -100,9 +118,9 @@ export default async function ProfilePage() {
 
               <CardContent className={styles.cardBody}>
                 <div className={styles.artistList}>
-                  {me.topArtists.map((a) => (
-                    <div key={a} className={styles.artistItem}>
-                      <p className={styles.artistName}>{a}</p>
+                  {topArtists?.items.map((a) => (
+                    <div key={a.id} className={styles.artistItem}>
+                      <p className={styles.artistName}>{a.name}</p>
                       <p className={styles.artistMeta}>Artist</p>
                     </div>
                   ))}
@@ -118,13 +136,13 @@ export default async function ProfilePage() {
               </CardTitle>
             </CardHeader>
 
-            <CardContent className={styles.cardBody}>
+            {/* <CardContent className={styles.cardBody}>
               <div className={styles.activityList}>
-                {me.activity.map((x, i) => (
+                {activity.map((x, i) => (
                   <div key={i} className={styles.activityRow}></div>
                 ))}
               </div>
-            </CardContent>
+            </CardContent> */}
           </Card>
         </TabsContent>
 
