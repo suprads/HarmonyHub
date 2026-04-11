@@ -29,16 +29,14 @@ async function friendUser(userId: string, userToFriendId: string) {
  * Checks if two users are friends.
  */
 export async function isFriend(userId1: string, userId2: string) {
-  const followsUser2 = await prisma.friend.findFirst({
+  const followsUser2 = await prisma.friend.findUnique({
     where: {
-      friendedById: userId1,
-      friendId: userId2,
+      friendId_friendedById: { friendedById: userId1, friendId: userId2 },
     },
   });
-  const followsUser1 = await prisma.friend.findFirst({
+  const followsUser1 = await prisma.friend.findUnique({
     where: {
-      friendedById: userId2,
-      friendId: userId1,
+      friendId_friendedById: { friendedById: userId2, friendId: userId1 },
     },
   });
 
@@ -63,11 +61,17 @@ export async function getPendingRequests({
 /**
  * Will create a friend request in the database if the two given users aren't
  * already friends.
+ * @return The created friend request, or undefined if you're already a friend
+ * or the friend request already exists.
  */
 export async function sendFriendRequest(senderId: string, receiverId: string) {
   const alreadyFriend = await isFriend(senderId, receiverId);
+  const currentFriendReq = await prisma.friendRequest.findUnique({
+    omit: { createdAt: true },
+    where: { senderId_receiverId: { senderId, receiverId } },
+  });
 
-  if (!alreadyFriend) {
+  if (!alreadyFriend && !currentFriendReq) {
     return await prisma.friendRequest.create({
       data: { senderId, receiverId },
     });

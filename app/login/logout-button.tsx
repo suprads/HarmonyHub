@@ -2,16 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function LogoutButton() {
+  const router = useRouter();
   return (
     <Button
       onClick={async () => {
         const { error, data } = await authClient.signOut();
 
         if (data?.success) {
-          redirect("/login");
+          router.push("/login");
         } else if (error) {
           console.error("Failed to logout of account:", error);
         } else {

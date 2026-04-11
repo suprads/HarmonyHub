@@ -139,15 +139,6 @@ export default function NotificationTableRow({
             >
               Mark as Read
             </DropdownMenuItem>
-            {/* <DropdownMenuSeparator />
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={() =>
-                deleteNotification({ id }).then(() => setDeleted(true))
-              }
-            >
-              Delete
-            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>
