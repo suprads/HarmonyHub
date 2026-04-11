@@ -3,6 +3,7 @@
 import webpush from "web-push";
 import { prisma } from "@/lib/prisma";
 import type { NotificationType } from "@/generated/prisma/enums";
+import { Notification } from "@/generated/prisma/client";
 
 if (
   !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
@@ -131,11 +132,13 @@ export async function genNotificationMsg(
  * @param id Id in database to reference to get the data from. Composite IDs
  * should be given as an array. Table referenced depends on type argument
  * given.
+ * @returns The newly created notification, or undefined if creating it failed.
  */
 export async function createNotification(
   type: NotificationType,
   id: string | [string, string],
 ) {
+  let newNotification: Notification | undefined;
   let userToNotifyId = "";
   const infoId = typeof id !== "string" ? `${id[0]}_${id[1]}` : id;
 
@@ -144,11 +147,14 @@ export async function createNotification(
     userToNotifyId = receiverId;
 
     const currentNotification = await prisma.notification.findUnique({
-      where: { type_infoId: { type, infoId } },
+      where: {
+        type_infoId: { type: "FRIEND_REQUEST", infoId },
+        userId: receiverId,
+      },
     });
 
     if (!currentNotification) {
-      await prisma.notification.create({
+      newNotification = await prisma.notification.create({
         data: {
           userId: receiverId,
           infoId: infoId,
@@ -182,4 +188,5 @@ export async function createNotification(
       }
     }
   }
+  return newNotification;
 }
