@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { Spinner } from "./ui/spinner";
 import { useActionState } from "react";
 import { linkYouTubeAccount } from "@/services/db/youtube";
+import { useRouter } from "next/navigation";
 
 /**
  * @url https://ui.shadcn.com/blocks/signup
@@ -31,15 +32,40 @@ export function YouTubeLinkForm({
 }: React.ComponentProps<"div"> & {
   userId: string;
 }) {
+  const router = useRouter();
+
   async function handleSubmit(
     prevState: { message: string } | null,
     formData: FormData,
   ) {
     try {
-      const cookie = formData.get("Cookie") as string;
-      const authorization = formData.get("Authorization") as string;
+      const headerRequest = formData.get("headerRequest") as string;
+      const parsedHeaderRequest = JSON.parse(headerRequest);
+
+      if (!parsedHeaderRequest?.requestHeaders?.headers) {
+        throw new Error(
+          "Invalid header request. Please enter a valid JSON string.",
+        );
+      }
+
+      const headers: { name: string; value: string }[] =
+        parsedHeaderRequest.requestHeaders.headers;
+
+      const cookie = headers.find(
+        (h) => h.name.toLowerCase() === "cookie",
+      )?.value;
+      const authorization = headers.find(
+        (h) => h.name.toLowerCase() === "authorization",
+      )?.value;
+
+      if (!cookie || !authorization) {
+        throw new Error(
+          "Missing required headers. Please ensure both Cookie and Authorization headers are included.",
+        );
+      }
 
       await linkYouTubeAccount(userId, cookie, authorization);
+      router.refresh();
       return { message: "YouTube account linked successfully!" };
     } catch (error) {
       return {
@@ -54,7 +80,7 @@ export function YouTubeLinkForm({
   const [error, formAction, pending] = useActionState(handleSubmit, null);
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-6 w-full", className)} {...props}>
       <Card {...props}>
         <CardHeader>
           <CardTitle>Link YouTube Account</CardTitle>
@@ -66,32 +92,18 @@ export function YouTubeLinkForm({
           <form action={formAction}>
             <FieldGroup>
               <Field data-disabled={pending}>
-                <FieldLabel htmlFor="Cookie">Cookie</FieldLabel>
+                <FieldLabel htmlFor="headerRequest">Header Request</FieldLabel>
                 <Input
-                  id="Cookie"
-                  name="Cookie"
+                  id="headerRequest"
+                  name="headerRequest"
                   type="text"
-                  placeholder="Cookie header"
+                  placeholder="Header request"
                   required
                 />
                 <FieldDescription>
-                  Enter the Cookie header from a request to music.youtube.com.
-                  Found in the Network tab of your browser&apos developer tools.
-                </FieldDescription>
-              </Field>
-              <Field data-disabled={pending}>
-                <FieldLabel htmlFor="Authorization">Authorization</FieldLabel>
-                <Input
-                  id="Authorization"
-                  name="Authorization"
-                  type="text"
-                  placeholder="SAPISIDHASH ..."
-                  required
-                />
-                <FieldDescription>
-                  Enter the Authorization header from a request to
+                  Enter the whole header request from a request to
                   music.youtube.com. Found in the Network tab of your
-                  browser&apos developer tools.
+                  browser&apos;s developer tools.
                 </FieldDescription>
               </Field>
               <FieldGroup>

@@ -16,16 +16,11 @@ export default async function ServicesPage() {
     },
   });
 
-  const youtubeMusicAccount = await prisma.account.findFirst({
+  const youtubeMusicAccount = await prisma.youtubeMusicAccount.findFirst({
     where: {
-      providerId: "YTMUSIC",
       userId: session.user.id,
     },
   });
-
-  console.log("Spotify Account:", spotifyAccount);
-  console.log("YouTube Music Account:", youtubeMusicAccount);
-  console.log("Session User ID:", session.user.id);
 
   return (
     <div className="font-sans flex flex-col items-center justify-items-center gap-6 sm:p-20">
@@ -41,7 +36,7 @@ export default async function ServicesPage() {
             action={spotifyAccount ? "unlink" : "link"}
           />
         </div>
-        <div className="flex flex-row gap-6">
+        <div className="flex flex-row gap-6 w-full">
           <YouTubeServiceDisplay
             userId={session.user.id}
             isLinked={!youtubeMusicAccount ? false : true}

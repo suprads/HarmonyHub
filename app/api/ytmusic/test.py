@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header
 from pydantic import BaseModel
 from ytmusicapi import YTMusic
 import json
@@ -76,7 +75,21 @@ def extract_track_info(track: dict) -> dict:
 app = FastAPI()
  
 @app.get("/health")
-async def health_check():
+async def health_check(
+    x_cookie: str = Header(...),
+    x_authorization: str = Header(...),
+):
+    headers = AuthHeaders(
+        cookie=x_cookie,
+        authorization=x_authorization,
+    )
+    yt = create_ytmusic_client(headers)
+
+    try:
+        yt.get_library_songs(limit=1)
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=f"Auth failed: {str(e)}")
+
     return {"status": "ok", "service": "ytmusic"}
  
  
