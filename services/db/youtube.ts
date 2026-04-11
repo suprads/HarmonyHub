@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
+import { encrypt } from "@/lib/encryption";
 
 /**
  * Represents an account linked to a user, such as a Spotify or YouTube Music account.
@@ -44,8 +44,8 @@ export async function linkYouTubeAccount(
     update: { cookie, authorization },
     create: {
       userId,
-      cookie,
-      authorization,
+      cookie: encrypt(cookie),
+      authorization: encrypt(authorization),
     },
   });
 
