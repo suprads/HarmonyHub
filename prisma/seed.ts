@@ -46,6 +46,26 @@ const guitarUser = {
 
 const users = [exampleUser, sunLoverUser, johnUser, pixelUser, guitarUser];
 
+async function seedFriend(friendId: string, friendedById: string) {
+  return await prisma.$transaction([
+    prisma.friend.upsert({
+      where: { friendId_friendedById: { friendId, friendedById } },
+      update: {},
+      create: { friendId, friendedById },
+    }),
+    prisma.friend.upsert({
+      where: {
+        friendId_friendedById: {
+          friendId: friendedById,
+          friendedById: friendId,
+        },
+      },
+      update: {},
+      create: { friendId: friendedById, friendedById: friendId },
+    }),
+  ]);
+}
+
 async function seedAlbum(title: string, releaseDate: Date, id?: number) {
   return await prisma.album.upsert({
     where: { id },
@@ -53,6 +73,14 @@ async function seedAlbum(title: string, releaseDate: Date, id?: number) {
     create: { id, title, releaseDate },
   });
 }
+
+// async function seedArtist(name: string) {
+//   return await prisma.artist.upsert({
+//     where: { name },
+//     update: {},
+//     create: { name },
+//   });
+// }
 
 async function seedGenre(name: string) {
   return await prisma.genre.upsert({
@@ -82,6 +110,7 @@ async function seedTrack(
   explicit?: boolean,
   sources: { provider: Provider; providerTrackId: string }[] = [],
   genres: string[] = [],
+  artists: string[] = [],
 ) {
   return await prisma.track.upsert({
     where: {
@@ -98,7 +127,12 @@ async function seedTrack(
       durationMs,
       explicit,
       releaseDate,
-      artists: { create: { name: "The Beatles" } },
+      artists: {
+        connectOrCreate: artists.map((name) => ({
+          create: { name },
+          where: { name },
+        })),
+      },
       genres: {
         connectOrCreate: genres.map((name) => ({
           create: { name },
@@ -152,6 +186,10 @@ async function main() {
     ]);
   }
 
+  await seedFriend(exampleUser.id, johnUser.id);
+  await seedFriend(exampleUser.id, pixelUser.id);
+  await seedFriend(exampleUser.id, guitarUser.id);
+
   // Data used in seeds below was initially generated using Github Copilot.
 
   const album1 = await seedAlbum("Abbey Road", new Date("1969-09-26"), 1);
@@ -162,7 +200,7 @@ async function main() {
   const genrePop = await seedGenre("pop");
   const genreJazz = await seedGenre("jazz");
 
-  const track1 = await seedTrack(
+  const trackComeTogether = await seedTrack(
     "Come Together",
     album1.id,
     new Date("1969-09-26"),
@@ -170,8 +208,9 @@ async function main() {
     false,
     [{ provider: "SPOTIFY", providerTrackId: "spotify_track_1" }],
     [genreRock.name],
+    ["The Beatles"],
   );
-  const track2 = await seedTrack(
+  const trackSomeLike = await seedTrack(
     "Someone Like You",
     album2.id,
     new Date("2011-01-24"),
@@ -179,6 +218,7 @@ async function main() {
     false,
     [{ provider: "YTMUSIC", providerTrackId: "ytmusic_track_2" }],
     [genrePop.name],
+    ["Adele"],
   );
   const trackTest = await seedTrack(
     "Test Track",
@@ -188,16 +228,20 @@ async function main() {
     false,
     [{ provider: "SPOTIFY", providerTrackId: "spotify_test_track" }],
     [genrePop.name, genreJazz.name],
+    ["Test Artist"],
   );
 
   await seedHistory(
     exampleUser.id,
-    track1.sources[0].id,
+    trackComeTogether.sources[0].id,
     new Date("2012-01-01"),
   );
-  await seedHistory(exampleUser.id, track2.sources[0].id);
+  await seedHistory(exampleUser.id, trackSomeLike.sources[0].id);
   await seedHistory(exampleUser.id, trackTest.sources[0].id);
-  await seedHistory(sunLoverUser.id, track1.sources[0].id);
+  await seedHistory(sunLoverUser.id, trackComeTogether.sources[0].id);
+  await seedHistory(johnUser.id, trackComeTogether.sources[0].id);
+  await seedHistory(guitarUser.id, trackComeTogether.sources[0].id);
+  await seedHistory(pixelUser.id, trackSomeLike.sources[0].id);
 }
 
 try {
