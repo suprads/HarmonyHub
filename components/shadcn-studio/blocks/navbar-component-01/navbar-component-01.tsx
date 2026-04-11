@@ -1,3 +1,5 @@
+"use client";
+
 import { BellIcon, MenuIcon, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +11,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Logo from "@/components/shadcn-studio/logo";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Spinner } from "@/components/ui/spinner";
 
 type NavigationItem = {
   title: string;
@@ -18,6 +23,8 @@ type NavigationItem = {
 }[];
 
 const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
+  const { data: session, isPending, isRefetching } = authClient.useSession();
+
   return (
     <header className="navbar-header">
       <div className="navbar-container">
@@ -45,6 +52,23 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
             <SearchIcon />
             <span className="sr-only">Search</span>
           </Button> */}
+          {session && (
+            <Link href="/profile">
+              <Avatar className="h-9 w-9 cursor-pointer">
+                <AvatarImage
+                  src={session.user.image ?? undefined}
+                  alt={session.user.name}
+                />
+                <AvatarFallback>
+                  {isPending || isRefetching ? (
+                    <Spinner />
+                  ) : (
+                    session.user.name.at(0)
+                  )}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger className="md:hidden" asChild>
               <Button variant="outline" size="icon">
