@@ -45,20 +45,58 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+
+  /* --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent-foreground: oklch(0.205 0 0); */
+
+  --background: #232946;
+  --foreground: #d4d8f0;
+
+  --card: #ffffff;
+  --card-foreground: #232946;
+
+  --primary: #adedcf;
+  --primary-foreground: #232946;
+
+  --accent: #ed9784;
+  --accent-foreground: #232946;
+
+  --muted: #c3c7e6;
+  --muted-foreground: #232946;
+
+  --border: #b8c1ec;
+
+  /* LIGHT MODE */
+
+  /* --background: #d4d8f0;
+  --foreground: #232946;
+
+  --card: #ffffff;
+  --card-foreground: #232946;
+
+  --primary: #adedcf; 
+  --primary-foreground: #232946;
+
+  --accent: #ed9784; 
+  --accent-foreground: #232946;
+
+  --muted: #c3c7e6;
+  --muted-foreground: #232946;
+
+  --border: #b8c1ec; */
+
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
@@ -135,9 +173,12 @@
 }
 
 .navbar-links {
-  @apply text-muted-foreground flex flex-1 items-center gap-8 font-medium md:justify-center lg:gap-16;
+  @apply text-foreground flex flex-1 items-center gap-8 font-medium md:justify-center lg:gap-16;
 }
-
+/* 
+.navbar-links {
+  @apply text-muted-foreground flex flex-1 items-center gap-8 font-medium md:justify-center lg:gap-16;
+} */
 .navbar-link {
   @apply hover:text-primary max-md:hidden;
 }

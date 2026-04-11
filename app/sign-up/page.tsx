@@ -4,15 +4,16 @@ import { headers } from "next/headers";
 import { APIError } from "better-auth";
 import { redirect } from "next/navigation";
 import { getSession } from "@/services/auth/server";
-
 export default async function SignUpPage() {
   const session = await getSession();
   if (session) redirect("/login");
 
   return (
-    <div className="font-sans flex items-center justify-items-center sm:p-20">
+    // <div className="font-sans flex items-center justify-items-center sm:p-20">
+    <div className="font-sans flex items-center justify-items-center sm:p-20 bg-background text-foreground min-h-screen">
       <main className="flex flex-col items-center justify-items-center w-full">
-        <div className="w-full max-w-sm">
+        {/* <div className="w-full max-w-sm"> */}
+        <div className="w-full max-w-sm bg-card text-card-foreground border border-border rounded-xl p-6 shadow-sm">
           <SignupForm signupAction={signUp} />
         </div>
       </main>

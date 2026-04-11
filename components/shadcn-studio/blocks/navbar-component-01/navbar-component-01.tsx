@@ -14,6 +14,7 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Spinner } from "@/components/ui/spinner";
+import { ThemeToggle } from "@/app/themeToggle";
 
 type NavigationItem = {
   title: string;
@@ -52,6 +53,8 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
             <SearchIcon />
             <span className="sr-only">Search</span>
           </Button> */}
+
+          <ThemeToggle />
           {session && (
             <Link href="/profile">
               <Avatar className="h-9 w-9 cursor-pointer">
