@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/services/auth/server";
 import ServiceDisplay from "./service-display";
+import * as SpotifyAPI from "@/services/spotify";
 
 /**
  * Page where you can manage the services (e.g. Spotify) linked to your account.
@@ -25,7 +26,7 @@ export default async function ServicesPage() {
           <ServiceDisplay
             title="Spotify"
             provider="spotify"
-            scopes={["user-top-read", "user-read-email"]}
+            scopes={[...SpotifyAPI.SCOPES]}
             action={spotifyAccount ? "unlink" : "link"}
           />
         </div>

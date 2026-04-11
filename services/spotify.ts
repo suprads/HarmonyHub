@@ -1,3 +1,10 @@
+/** The Spotify API scopes used by our app. */
+export const SCOPES = Object.freeze([
+  "user-top-read",
+  "user-read-email",
+  "user-read-recently-played",
+]);
+
 /** For queries that support paging of data. */
 type Paging = {
   /** Number of items per page. */
@@ -6,9 +13,20 @@ type Paging = {
   offset?: number;
 };
 
+export type TimeRange = "short_term" | "medium_term" | "long_term";
+
 type TopTrackRequest = Paging & {
   type: "artists" | "tracks";
-  timeRange?: "short_term" | "medium_term" | "long_term";
+  timeRange?: TimeRange;
+};
+
+type RecentlyPlayedRequest = {
+  /** Max number of items to return. */
+  limit?: number;
+  /** Unix timestamp in milliseconds. Return items before this time. */
+  before?: number;
+  /** Unix timestamp in milliseconds. Return items after this time. */
+  after?: number;
 };
 
 type Image = {
@@ -49,6 +67,22 @@ export type TopItemsResponse = {
   total: number;
   /** A set of artists or tracks. */
   items: Track[] | Artist[];
+};
+
+type RecentlyPlayedItem = {
+  track: Track;
+  played_at: string;
+};
+
+export type RecentlyPlayedResponse = {
+  href: string;
+  limit: number;
+  next: string | null;
+  cursors: {
+    after?: string;
+    before?: string;
+  };
+  items: RecentlyPlayedItem[];
 };
 
 export type TopTracksResponse = Omit<TopItemsResponse, "items"> & {
@@ -128,4 +162,45 @@ export async function getTopArtists(
     type: "artists",
   });
   return topArtists as TopArtistsResponse;
+}
+
+/**
+ * Gets the user's recently played tracks from Spotify.
+ * @throws Error if something went wrong when trying to access the API.
+ * @url https://developer.spotify.com/documentation/web-api/reference/get-recently-played
+ */
+export async function getRecentlyPlayedTracks(
+  accessToken: string,
+  { limit = 20, before, after }: RecentlyPlayedRequest = {},
+): Promise<RecentlyPlayedResponse> {
+  const searchParams = new URLSearchParams({
+    limit: limit.toString(),
+  });
+
+  if (before !== undefined) {
+    searchParams.set("before", before.toString());
+  }
+
+  if (after !== undefined) {
+    searchParams.set("after", after.toString());
+  }
+
+  const response = await fetch(
+    `https://api.spotify.com/v1/me/player/recently-played?${searchParams.toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      cache: "no-store",
+    },
+  );
+
+  const json = await response.json();
+
+  if (json.error) {
+    const apiError: SpotifyError = json;
+    throw new Error(apiError.error.message);
+  }
+
+  return json;
 }

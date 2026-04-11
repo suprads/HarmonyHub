@@ -51,7 +51,7 @@ async function login(
     });
   } catch (error) {
     if (error instanceof APIError) {
-      console.error(error.message);
+      console.error(error);
       return { message: error.message, success: false };
     }
   }

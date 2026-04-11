@@ -8,6 +8,7 @@ export default async function NotificationsPage() {
   const { user } = await verifySession();
 
   const notifications = await prisma.notification.findMany({
+    omit: { updatedAt: true, createdAt: true },
     where: { userId: user.id },
     orderBy: { createdAt: "asc" },
   });
@@ -22,7 +23,13 @@ export default async function NotificationsPage() {
           <Table>
             <TableBody>
               {notifications.map((n) => (
-                <NotificationTableRow key={n.id} id={n.id} read={n.read}>
+                <NotificationTableRow
+                  key={n.id}
+                  id={n.id}
+                  read={n.read}
+                  type={n.type}
+                  infoId={n.infoId}
+                >
                   <TableCell>{genNotificationMsg(n.type, n.infoId)}</TableCell>
                 </NotificationTableRow>
               ))}
