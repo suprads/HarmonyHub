@@ -21,6 +21,8 @@ import { cn } from "@/lib/utils";
 import { Spinner } from "./ui/spinner";
 import { useActionState } from "react";
 import { spotifySignIn } from "@/services/auth/client";
+import { authClient } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
 
 /**
  * @url https://ui.shadcn.com/blocks/signup
@@ -31,11 +33,20 @@ export function SignupForm({
   ...props
 }: React.ComponentProps<"div"> & {
   signupAction: (
-    prevState: { message: string } | undefined,
+    prevState: { message?: string; success: boolean },
     formData: FormData,
-  ) => Promise<{ message: string } | undefined>;
+  ) => Promise<{ message?: string; success: boolean }>;
 }) {
-  const [error, formAction, pending] = useActionState(signupAction, undefined);
+  const [state, formAction, pending] = useActionState(signupAction, {
+    success: false,
+  });
+  const { refetch } = authClient.useSession();
+
+  if (state.success) {
+    // Done so components using the useSession hook will refresh its data.
+    refetch();
+    redirect("/profile");
+  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -120,7 +131,7 @@ export function SignupForm({
                     Already have an account? <Link href="/login">Sign in</Link>
                   </FieldDescription>
                 </Field>
-                {error?.message && <FieldError>{error?.message}</FieldError>}
+                {state?.message && <FieldError>{state?.message}</FieldError>}
               </FieldGroup>
             </FieldGroup>
           </form>

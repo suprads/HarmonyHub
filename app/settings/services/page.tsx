@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/services/auth/server";
 import ServiceDisplay from "./service-display";
+import * as SpotifyAPI from "@/services/spotify";
 import YouTubeServiceDisplay from "./youtube-service-display";
 
 /**
@@ -32,7 +33,7 @@ export default async function ServicesPage() {
           <ServiceDisplay
             title="Spotify"
             provider="spotify"
-            scopes={["user-top-read", "user-read-email"]}
+            scopes={[...SpotifyAPI.SCOPES]}
             action={spotifyAccount ? "unlink" : "link"}
           />
         </div>
