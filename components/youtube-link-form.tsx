@@ -83,7 +83,7 @@ export function YouTubeLinkForm({
     <div className={cn("flex flex-col gap-6 w-full", className)} {...props}>
       <Card {...props}>
         <CardHeader>
-          <CardTitle>Link YouTube Account</CardTitle>
+          <CardTitle className="text-center">YouTube Music</CardTitle>
           <CardDescription>
             Enter your information below to link your YouTube account
           </CardDescription>

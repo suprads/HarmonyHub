@@ -26,13 +26,14 @@ export default function YouTubeServiceDisplay({
       </CardHeader>
       <CardContent>
         <Button
+          className="w-full"
           onClick={async () => {
             await unlinkYouTubeAccount(userId);
 
             router.refresh();
           }}
         >
-          Unlink
+          Unlink YouTube Account
         </Button>
       </CardContent>
     </Card>
