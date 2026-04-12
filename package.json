@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev-next": "next dev --turbopack --hostname 127.0.0.1",
-    "dev-fastapi": "uvicorn app.api.ytmusic.test:app --reload --port 8000",
+    "dev-fastapi": "uvicorn app.api.ytmusic.YTImport:app --reload --port 8000",
     "dev": "concurrently \"npm run dev-next\" \"npm run dev-fastapi\"",
     "build": "next build --turbopack",
     "start": "next start --hostname 127.0.0.1",
@@ -22,6 +22,8 @@
     "class-variance-authority": "^0.7.1",
     "client-only": "^0.0.1",
     "clsx": "^2.1.1",
+    "concurrently": "^9.2.1",
+    "fast-api": "^0.4.0",
     "lucide-react": "^0.563.0",
     "next": "15.5.4",
     "pg": "^8.18.0",
@@ -30,6 +32,7 @@
     "react-dom": "19.1.0",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.4.0",
+    "uvicorn": "^0.0.1-security",
     "web-push": "^3.6.7"
   },
   "devDependencies": {
