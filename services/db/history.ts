@@ -2,12 +2,6 @@
 
 import { prisma } from "@/lib/prisma";
 
-export async function countHistory(userId: string) {
-  return await prisma.history.count({
-    where: { userId },
-  });
-}
-
 /**
  * @param genres If you only want the count for specific genres. Will return
  * count corresponding to every existing genre otherwise.
@@ -76,4 +70,34 @@ export async function countArtistHistory(userId: string, ...artists: string[]) {
         : undefined,
   });
   return countResult;
+}
+
+/**
+ * Gets each unique genre present in a user's track history.
+ */
+export function getUniqueGenres(userId: string) {
+  return prisma.genre.findMany({
+    select: { name: true },
+    distinct: ["name"],
+    where: {
+      tracks: {
+        some: { sources: { some: { history: { some: { userId } } } } },
+      },
+    },
+  });
+}
+
+/**
+ * Gets each unique artist present in a user's track history.
+ */
+export function getUniqueArtists(userId: string) {
+  return prisma.artist.findMany({
+    select: { name: true },
+    distinct: ["name"],
+    where: {
+      tracks: {
+        some: { sources: { some: { history: { some: { userId } } } } },
+      },
+    },
+  });
 }

@@ -1,56 +1,58 @@
-import {
-  countArtistHistory,
-  countGenreHistory,
-  countHistory,
-} from "@/services/db/history";
-import { getFriends } from "@/services/db/friend";
+import { getUniqueArtists, getUniqueGenres } from "@/services/db/history";
 
-export async function calcGenreScore(userId: string, genre: string) {
-  let genreScore = 0;
-  const tracksInHistory = await countHistory(userId);
-  const genreCount = (await countGenreHistory(userId, genre)).at(0)?._count
-    .tracks;
-
-  if (tracksInHistory && genreCount) {
-    genreScore = genreCount / tracksInHistory;
-  }
-  return genreScore;
+/**
+ * Gets a compatibility score based on the two user IDs given.
+ */
+export async function getCompatScore(user1Id: string, user2Id: string) {
+  const user1 = {
+    genres: (await getUniqueGenres(user1Id)).map((g) => g.name),
+    artists: (await getUniqueArtists(user1Id)).map((a) => a.name),
+  };
+  const user2 = {
+    genres: (await getUniqueGenres(user2Id)).map((g) => g.name),
+    artists: (await getUniqueArtists(user2Id)).map((a) => a.name),
+  };
+  return calcCompatScore(user1, user2);
 }
 
-export async function calcArtistScore(userId: string, artist: string) {
-  let artistScore = 0;
-  const tracksInHistory = await countHistory(userId);
-  const artistCount = (await countArtistHistory(userId, artist)).at(0)?._count
-    .tracks;
-
-  if (tracksInHistory && artistCount) {
-    artistScore = artistCount / tracksInHistory;
-  }
-  return artistScore;
-}
-
-export async function calcCompatScore(
-  userId: string,
-  genre: string,
-  artist: string,
+/**
+ * Used to calculate a user's compatibility score.
+ * @returns The compatibility score as a percentage.
+ */
+function calcCompatScore(
+  user1: {
+    genres: string[];
+    artists: string[];
+  },
+  user2: {
+    genres: string[];
+    artists: string[];
+  },
 ) {
-  const userScore =
-    (await calcGenreScore(userId, genre)) +
-    (await calcArtistScore(userId, artist));
+  const genreScore = calcOverlap(user1.genres, user2.genres);
+  const artistScore = calcOverlap(user1.artists, user2.artists);
 
-  const friends = await getFriends(userId);
-  const friendCounts: number[] = [];
+  return ((genreScore + artistScore) / 2) * 100;
+}
 
-  for (const friend of friends) {
-    const genreScore = await calcGenreScore(friend.id, genre);
-    const artistScore = await calcArtistScore(friend.id, artist);
+function calcOverlap<T>(user1Items: T[], user2Items: T[]) {
+  const user1Set = new Set(user1Items);
+  const user2Set = new Set(user2Items);
+  const commonItems = new Set<T>();
 
-    friendCounts.push(genreScore + artistScore);
+  for (const item of user2Set) {
+    if (user1Set.has(item)) {
+      commonItems.add(item);
+    }
   }
-  const friendAvg =
-    friendCounts.reduce((a, b) => a + b, 0) / friendCounts.length;
 
-  if (friendAvg) {
-    return userScore / friendAvg;
+  const uniqueItems = new Set([...user1Set, ...user2Set]);
+
+  let overlapResult = 0;
+
+  if (uniqueItems.size !== 0) {
+    overlapResult = commonItems.size / uniqueItems.size;
   }
+
+  return overlapResult;
 }
