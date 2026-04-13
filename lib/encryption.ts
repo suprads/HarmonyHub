@@ -1,16 +1,17 @@
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
 const ALGORITHM = "aes-256-gcm";
 
 function getEncryptionKeyBuffer() {
-  if (!ENCRYPTION_KEY) {
+  const encryptionKey = process.env.ENCRYPTION_KEY;
+
+  if (!encryptionKey) {
     throw new Error(
       "ENCRYPTION_KEY is not set. Add it to your Vercel environment variables and local .env file.",
     );
   }
 
-  return Buffer.from(ENCRYPTION_KEY, "hex");
+  return Buffer.from(encryptionKey, "hex");
 }
 
 export function encrypt(text: string): string {
