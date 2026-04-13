@@ -46,59 +46,24 @@
 :root {
   --radius: 0.625rem;
 
-  /* --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0); */
-
-  --background: #232946;
-  --foreground: #d4d8f0;
-
-  --card: #ffffff;
-  --card-foreground: #232946;
-
-  --primary: #adedcf;
-  --primary-foreground: #232946;
-
-  --accent: #ed9784;
-  --accent-foreground: #232946;
-
-  --muted: #c3c7e6;
-  --muted-foreground: #232946;
-
-  --border: #b8c1ec;
-
-  /* LIGHT MODE */
-
-  /* --background: #d4d8f0;
+  --background: #d4d8f0;
   --foreground: #232946;
-
   --card: #ffffff;
   --card-foreground: #232946;
-
-  --primary: #adedcf; 
+  --primary: #ed9784;
   --primary-foreground: #232946;
-
-  --accent: #ed9784; 
+  --accent: #adedcf;
   --accent-foreground: #232946;
-
   --muted: #c3c7e6;
   --muted-foreground: #232946;
+  --border: #0b0b0b;
+  --border: rgba(35, 41, 70, 0.2);
 
-  --border: #b8c1ec; */
-
-  --secondary: oklch(0.97 0 0);
+  /* --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
@@ -113,26 +78,43 @@
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: oklch(0.708 0 0); */
+
+  --secondary: #c3c7e6;
+  --secondary-foreground: #232946;
+  --popover: #ffffff;
+  --popover-foreground: #232946;
+  --input: #ffffff;
+  --ring: #adedcf;
+  --destructive: #ff6b6b;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #232946;
+  --sidebar-primary: #ed9784;
+  --sidebar-primary-foreground: #232946;
+  --sidebar-accent: #adedcf;
+  --sidebar-accent-foreground: #232946;
+  --sidebar-border: rgba(35, 41, 70, 0.2);
+  --sidebar-ring: #adedcf;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
+  --background: #232946;
+  --foreground: #d4d8f0;
+  --card: #2a2f4a;
+  --card-foreground: #d4d8f0;
+  --primary: #adedcf;
+  --primary-foreground: #232946;
+  --accent: #ed9784;
+  --accent-foreground: #d4d8f0;
+  --muted: #c3c7e6;
+  --muted-foreground: #d4d8f0;
+  --border: #b8c1ec;
+
+  /* --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
@@ -147,7 +129,28 @@
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: oklch(0.556 0 0); */
+
+  --popover: #2a2f4a;
+  --popover-foreground: #d4d8f0;
+  --secondary: #2a2f4a;
+  --secondary-foreground: #d4d8f0;
+  --destructive: #ff6b6b;
+  --input: #2a2f4a;
+  --ring: #ed9784;
+  --chart-1: #ed9784;
+  --chart-2: #adedcf;
+  --chart-3: #c3c7e6;
+  --chart-4: #b8c1ec;
+  --chart-5: #d4d8f0;
+  --sidebar: #232946;
+  --sidebar-foreground: #d4d8f0;
+  --sidebar-primary: #adedcf;
+  --sidebar-primary-foreground: #232946;
+  --sidebar-accent: #ed9784;
+  --sidebar-accent-foreground: #232946;
+  --sidebar-border: rgba(255, 255, 255, 0.2);
+  --sidebar-ring: #ed9784;
 }
 
 @layer base {
@@ -175,10 +178,7 @@
 .navbar-links {
   @apply text-foreground flex flex-1 items-center gap-8 font-medium md:justify-center lg:gap-16;
 }
-/* 
-.navbar-links {
-  @apply text-muted-foreground flex flex-1 items-center gap-8 font-medium md:justify-center lg:gap-16;
-} */
+
 .navbar-link {
   @apply hover:text-primary max-md:hidden;
 }

@@ -27,10 +27,13 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
   const { data: session, isPending, isRefetching } = authClient.useSession();
 
   return (
-    <header className="navbar-header">
-      <div className="navbar-container">
+    <header className="navbar-header border-b border-border">
+      <div className="w-full text-center py-6">
+        <h1 className="text-4xl font-medium tracking-[0.3em]">HARMONYHUB</h1>
+      </div>
+      <div className="navbar-container flex justify-center">
         <div className="navbar-links">
-          {navigationData.map((item, index) =>
+          {/* {navigationData.map((item, index) =>
             item.logo ? (
               <Link key={index} href={item.href}>
                 <Logo className="navbar-logo" />
@@ -40,10 +43,15 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
                 {item.title}
               </Link>
             ),
-          )}
+          )} */}
+          {navigationData.map((item, index) => (
+            <Link key={index} href={item.href} className="navbar-link">
+              {item.title}
+            </Link>
+          ))}
         </div>
 
-        <div className="navbar-actions">
+        <div className="navbar-actions absolute right-6 flex items-center gap-4">
           <Link href="/notifications">
             <Button variant="ghost" size="icon">
               <BellIcon />

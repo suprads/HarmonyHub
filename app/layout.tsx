@@ -64,13 +64,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground min-h-screen`}
       >
-        <ServiceWorkerWrapper>
-          <ThemeProvider attribute="class">
+        <ThemeProvider attribute="class">
+          <ServiceWorkerWrapper>
             <Navbar navigationData={navigationData} />
             <main>{children}</main>
             <Footer />
-          </ThemeProvider>
-        </ServiceWorkerWrapper>
+          </ServiceWorkerWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );
