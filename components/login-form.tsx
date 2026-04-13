@@ -88,6 +88,7 @@ export function LoginForm({
                   {pending && <Spinner />} Login
                 </Button>
                 <Button
+                  className="bg-primary text-primary-foreground"
                   variant="outline"
                   type="button"
                   disabled={pending}

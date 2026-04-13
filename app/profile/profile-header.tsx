@@ -34,7 +34,7 @@ export default function ProfileHeader() {
       <div className={styles.headerLeft}>
         <Avatar className={styles.avatar}>
           <AvatarImage src={user.image ?? undefined} alt={user.name} />
-          <AvatarFallback>
+          <AvatarFallback className="bg-primary text-primary-foreground">
             {isPending || isRefetching ? <Spinner /> : user.name?.at(0)}
           </AvatarFallback>
         </Avatar>

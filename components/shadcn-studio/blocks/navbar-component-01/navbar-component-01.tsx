@@ -70,7 +70,7 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
                   src={session.user.image ?? undefined}
                   alt={session.user.name}
                 />
-                <AvatarFallback>
+                <AvatarFallback className="bg-primary text-primary-foreground">
                   {isPending || isRefetching ? (
                     <Spinner />
                   ) : (

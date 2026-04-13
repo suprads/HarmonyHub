@@ -45,7 +45,7 @@ export default async function ProfilePage() {
           label="Friends"
           displayValue={friendsNum?.toString() ?? "Error"}
         />
-        <StatCard label="Playlists" displayValue={me.playlists.toString()} />
+        {/* <StatCard label="Playlists" displayValue={me.playlists.toString()} /> */}
       </div>
 
       <Tabs defaultValue="overview" className={styles.tabs}>

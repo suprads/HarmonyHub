@@ -364,7 +364,7 @@ a.secondary {
 .home-page-shell {
   min-height: 100vh;
   padding: 3rem 1.5rem;
-  background: #ecfeff;
+  /* background: #ecfeff; */
 }
 
 .home-page-main {
@@ -379,7 +379,7 @@ a.secondary {
 .home-page-kicker {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #000000;
+  /* color: #000000; */
   text-transform: uppercase;
   letter-spacing: 0.18em;
 }
@@ -389,12 +389,12 @@ a.secondary {
   font-size: 2.25rem;
   line-height: 1.1;
   font-weight: 700;
-  color: #18181b;
+  /* color: #18181b; */
 }
 
 .home-page-subtitle {
   margin-top: 0.75rem;
-  color: #52525b;
+  /* color: #52525b; */
 }
 
 .recent-tracks-carousel {
@@ -404,16 +404,16 @@ a.secondary {
   padding-bottom: 1rem;
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
-  scrollbar-color: black transparent;
+  /* scrollbar-color: black transparent; */
 }
 
 .recent-track-card {
   min-width: 15rem;
   scroll-snap-align: start;
   overflow: hidden;
-  border: 1px solid #000000;
+  /* border: 1px solid #000000; */
   border-radius: 1rem;
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   transition: box-shadow 150ms ease;
 }
@@ -426,7 +426,7 @@ a.secondary {
   position: relative;
   aspect-ratio: 1 / 1;
   width: 100%;
-  background-color: #000000;
+  /* background-color: #000000; */
 }
 
 .recent-track-cover-image {
@@ -450,19 +450,19 @@ a.secondary {
 .recent-track-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #18181b;
+  /* color: #18181b; */
 }
 
 .recent-track-artists {
   margin-top: 0.5rem;
   font-size: 0.875rem;
-  color: #52525b;
+  /* color: #52525b; */
 }
 
 .recent-track-played-at {
   margin-top: 0.5rem;
   font-size: 0.75rem;
-  color: #71717a;
+  /* color: #71717a; */
 }
 
 .recent-track-link {
@@ -470,21 +470,21 @@ a.secondary {
   margin-top: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #047857;
+  /* color: #047857; */
 }
 
-.recent-track-link:hover {
+/* .recent-track-link:hover {
   color: #09c08c;
-}
+} */
 
 .recent-tracks-empty-state {
   margin-top: 1.5rem;
   padding: 1rem;
   border: 1px solid #000000;
   border-radius: 0.75rem;
-  background-color: #fffbeb;
+  /* background-color: #fffbeb; */
   font-size: 0.875rem;
-  color: #000000;
+  /* color: #000000; */
 }
 
 @media (min-width: 640px) {

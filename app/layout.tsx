@@ -64,7 +64,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground min-h-screen`}
       >
-        <ThemeProvider attribute="class">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ServiceWorkerWrapper>
             <Navbar navigationData={navigationData} />
             <main>{children}</main>
