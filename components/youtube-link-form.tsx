@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Spinner } from "./ui/spinner";
 import { useActionState } from "react";
-import { linkYouTubeAccount } from "@/services/db/youtube";
+import { linkYouTubeAccount } from "@/services/db/youtubedb";
 import { useRouter } from "next/navigation";
 
 /**

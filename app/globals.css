@@ -356,6 +356,21 @@ a.secondary {
   color: #52525b;
 }
 
+.carousel-section-heading {
+  margin: 2rem 0 1rem;
+}
+
+.carousel-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.carousel-section-description {
+  margin-top: 0.35rem;
+  color: #475569;
+}
+
 .recent-tracks-carousel {
   display: flex;
   gap: 1rem;
@@ -392,6 +407,17 @@ a.secondary {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.recent-track-cover-fallback {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  background: linear-gradient(135deg, #0f172a, #14532d);
+  color: #f8fafc;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 .recent-track-content {

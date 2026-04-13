@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { YouTubeLinkForm } from "../../../components/youtube-link-form";
-import { unlinkYouTubeAccount } from "@/services/db/youtube";
+import { unlinkYouTubeAccount } from "@/services/db/youtubedb";
 import { useRouter } from "next/navigation";
 
 type YouTubeServiceDisplayProps = {

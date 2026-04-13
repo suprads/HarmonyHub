@@ -4,6 +4,8 @@ from ytmusicapi import YTMusic
 import json
 import tempfile
 import os
+import re
+from datetime import datetime, timedelta, timezone
 
 class AuthHeaders(BaseModel):
     cookie: str
@@ -69,8 +71,60 @@ def extract_track_info(track: dict) -> dict:
         "duration": track.get("duration"),
         "videoId": track.get("videoId"),
         "thumbnails": track.get("thumbnails", []),
+        "played": track.get("played"),
+        "playedAtEpochMs": track.get("playedAtEpochMs"),
         "source": "youtube_music",
     }
+
+
+def parse_played_label_to_epoch_ms(label: str | None, index: int) -> int | None:
+    if not label:
+        return None
+
+    normalized = label.strip().lower()
+    now = datetime.now(timezone.utc)
+
+    if normalized == "just now":
+        return int((now - timedelta(seconds=index)).timestamp() * 1000)
+
+    if normalized == "today":
+        return int((now - timedelta(minutes=index * 5)).timestamp() * 1000)
+
+    if normalized == "yesterday":
+        return int((now - timedelta(days=1, minutes=index * 5)).timestamp() * 1000)
+
+    relative_match = re.match(
+        r"^(\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago$",
+        normalized,
+    )
+    if relative_match:
+        amount = int(relative_match.group(1))
+        unit = relative_match.group(2)
+        delta_map = {
+            "second": timedelta(seconds=amount),
+            "minute": timedelta(minutes=amount),
+            "hour": timedelta(hours=amount),
+            "day": timedelta(days=amount),
+            "week": timedelta(weeks=amount),
+            "month": timedelta(days=30 * amount),
+            "year": timedelta(days=365 * amount),
+        }
+        return int((now - delta_map[unit]).timestamp() * 1000)
+
+    for pattern in (
+        "%b %d, %Y",
+        "%B %d, %Y",
+        "%m/%d/%Y",
+        "%Y-%m-%d",
+        "%m/%d/%y",
+    ):
+        try:
+            parsed = datetime.strptime(label.strip(), pattern).replace(tzinfo=timezone.utc)
+            return int(parsed.timestamp() * 1000)
+        except ValueError:
+            continue
+
+    return None
  
 app = FastAPI()
  
@@ -101,8 +155,16 @@ async def get_history(req: UserRequest):
         history = yt.get_history()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch history: {str(e)}")
- 
-    tracks = [extract_track_info(t) for t in history[: req.limit]]
+
+    tracks = []
+    for index, track in enumerate(history[: req.limit]):
+        played_at_epoch_ms = parse_played_label_to_epoch_ms(track.get("played"), index)
+        if played_at_epoch_ms is not None:
+            played_at_epoch_ms -= index * 1000
+
+        track["playedAtEpochMs"] = played_at_epoch_ms
+        tracks.append(extract_track_info(track))
+
     return {"tracks": tracks, "count": len(tracks)}
  
  
