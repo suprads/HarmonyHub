@@ -1,22 +1,15 @@
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY!;
 const ALGORITHM = "aes-256-gcm";
-
-function getEncryptionKeyBuffer() {
-  const encryptionKey = process.env.ENCRYPTION_KEY;
-
-  if (!encryptionKey) {
-    throw new Error(
-      "ENCRYPTION_KEY is not set. Add it to your Vercel environment variables and local .env file.",
-    );
-  }
-
-  return Buffer.from(encryptionKey, "hex");
-}
 
 export function encrypt(text: string): string {
   const iv = randomBytes(12);
-  const cipher = createCipheriv(ALGORITHM, getEncryptionKeyBuffer(), iv);
+  const cipher = createCipheriv(
+    ALGORITHM,
+    Buffer.from(ENCRYPTION_KEY, "hex"),
+    iv,
+  );
 
   let encrypted = cipher.update(text, "utf8", "hex");
   encrypted += cipher.final("hex");
@@ -32,7 +25,7 @@ export function decrypt(encryptedText: string): string {
 
   const decipher = createDecipheriv(
     ALGORITHM,
-    getEncryptionKeyBuffer(),
+    Buffer.from(ENCRYPTION_KEY, "hex"),
     Buffer.from(ivHex, "hex"),
   );
   decipher.setAuthTag(Buffer.from(authTagHex, "hex"));

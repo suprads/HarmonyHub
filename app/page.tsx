@@ -83,20 +83,13 @@ export default async function HomePage() {
         })()
       : Promise.resolve(null),
     youtubeAccount
-      ? (async () => {
-          try {
-            return await getYouTubeRecentlyPlayedTracks({
-              headers: {
-                cookie: decrypt(youtubeAccount.cookie),
-                authorization: decrypt(youtubeAccount.authorization),
-              },
-              limit: 12,
-            });
-          } catch (error) {
-            console.error("Failed to fetch YouTube tracks:", error);
-            return null;
-          }
-        })()
+      ? getYouTubeRecentlyPlayedTracks({
+          headers: {
+            cookie: decrypt(youtubeAccount.cookie),
+            authorization: decrypt(youtubeAccount.authorization),
+          },
+          limit: 12,
+        })
       : Promise.resolve(null),
   ]);
 
