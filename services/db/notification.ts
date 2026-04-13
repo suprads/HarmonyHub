@@ -15,12 +15,17 @@ if (
   );
 }
 
-// TODO Figure out what email/url we're supposed to put here
-webpush.setVapidDetails(
-  "mailto:austinschnee@proton.me",
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!,
-);
+const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+
+if (vapidPublicKey && vapidPrivateKey) {
+  // TODO Figure out what email/url we're supposed to put here
+  webpush.setVapidDetails(
+    "mailto:austinschnee@proton.me",
+    vapidPublicKey,
+    vapidPrivateKey,
+  );
+}
 
 export async function subscribeUser(
   subscription: webpush.PushSubscription,
