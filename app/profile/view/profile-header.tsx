@@ -18,7 +18,6 @@ export default function ProfileHeader({
     handle: string | null;
   };
 }) {
-  console.log(profileView);
   if (!profileView) {
     return <header className={styles.header}></header>;
   }
