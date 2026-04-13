@@ -48,6 +48,8 @@ middleware.ts   # Next.js Middleware
 6. Run `npm run dev` to start the app.
 7. Open the app by going to `127.0.0.1:3000`.
 
+Note: `npm run dev` and `npm start` both run the Next.js app and the local FastAPI YouTube service.
+
 ### Database Set Up
 
 1. Use the exact `POSTGRES*`, `DATABASE_URL`, and `BETTER_AUTH_URL` environment variables from `.env.example` in your `.env` file.
@@ -61,6 +63,8 @@ Note: To use the actual production database hosted by Neon, set the `POSTGRES*` 
 ### API
 
 Ask team members what values `SPOTIFY_CLIENT_SECRET` and `SPOTIFY_CLIENT_ID` should be assigned in your `.env` file, as the correct values are needed to connect to the API.
+
+Set `YTMUSIC_API_BASE_URL` in your `.env` if your YouTube FastAPI service runs somewhere other than `http://127.0.0.1:8000`.
 
 ### Type Issues
 
