@@ -33,3 +33,21 @@ export async function searchForUser(searchTerm: string, numOfResults?: number) {
   });
   return userSearchResult;
 }
+
+/**
+ * Gets a user's handle and ID by their user ID.
+ * @param userId The ID of the user to get the handle for.
+ * @return The user's handle, or null if no user with the given ID exists.
+ */
+export async function getHandleByUserId(userId: string) {
+  const user = await prisma.user.findUnique({
+    select: {
+      handle: true,
+    },
+    where: {
+      id: userId,
+    },
+  });
+
+  return user?.handle || null;
+}
