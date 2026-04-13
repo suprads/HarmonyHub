@@ -15,11 +15,7 @@ function getEncryptionKeyBuffer() {
 
 export function encrypt(text: string): string {
   const iv = randomBytes(12);
-  const cipher = createCipheriv(
-    ALGORITHM,
-    getEncryptionKeyBuffer(),
-    iv,
-  );
+  const cipher = createCipheriv(ALGORITHM, getEncryptionKeyBuffer(), iv);
 
   let encrypted = cipher.update(text, "utf8", "hex");
   encrypted += cipher.final("hex");
