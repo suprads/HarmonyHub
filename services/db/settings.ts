@@ -26,21 +26,22 @@ export async function checkNotificationsEnabled(
   >,
 ) {
   let enabled = false;
+  let settings = await prisma.settings.findUnique({
+    where: { userId },
+    include: {
+      notificationSettings: true,
+    },
+  });
+  if (!settings) {
+    settings = await createSettings({ userId });
+  }
+  const notificationSettings = settings?.notificationSettings;
 
-  const settings = (
-    await prisma.settings.findUniqueOrThrow({
-      where: { userId },
-      include: {
-        notificationSettings: { omit: { id: true, settingsId: true } },
-      },
-      omit: { id: true, userId: true },
-    })
-  ).notificationSettings;
-
-  if (settings && settingToCheck) {
-    enabled = settings.enabled && settings[settingToCheck];
-  } else if (settings) {
-    enabled = settings.enabled;
+  if (notificationSettings && settingToCheck) {
+    enabled =
+      notificationSettings.enabled && notificationSettings[settingToCheck];
+  } else if (notificationSettings) {
+    enabled = notificationSettings.enabled;
   }
 
   return enabled;
