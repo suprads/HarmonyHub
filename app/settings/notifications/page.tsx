@@ -49,7 +49,7 @@ async function save(
   const friendRequests = Boolean(formData.get("friend-requests"));
 
   try {
-    const settings = await prisma.notification.findUniqueOrThrow({
+    const settings = await prisma.notification.findFirstOrThrow({
       select: { id: true },
       where: { userId: user.id },
     });
