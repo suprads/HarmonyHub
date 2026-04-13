@@ -20,7 +20,7 @@ export function LinkServiceButton({
         const linkResult = await authClient.linkSocial({
           provider: provider,
           scopes: scopes,
-          callbackURL: "http://127.0.0.1:3000/settings/services",
+          callbackURL: `${window.location.origin}/settings/services`,
         });
 
         if (linkResult && linkResult.data?.redirect && linkResult.data?.url) {
