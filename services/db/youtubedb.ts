@@ -30,9 +30,8 @@ async function validateYouTubeCredentials(
       const err = await res.json().catch(() => null);
       throw new Error(err?.detail || `Status ${res.status}`);
     }
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    throw new Error(`Failed to validate YouTube credentials: ${message}`);
+  } catch (err: any) {
+    throw new Error(`Failed to validate YouTube credentials: ${err.message}`);
   }
 }
 
@@ -45,10 +44,7 @@ export async function linkYouTubeAccount(
 
   await prisma.youtubeMusicAccount.upsert({
     where: { userId },
-    update: {
-      cookie: encrypt(cookie),
-      authorization: encrypt(authorization),
-    },
+    update: { cookie, authorization },
     create: {
       userId,
       cookie: encrypt(cookie),

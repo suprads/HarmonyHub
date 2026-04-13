@@ -21,16 +21,7 @@ export function encrypt(text: string): string {
 }
 
 export function decrypt(encryptedText: string): string {
-  // Backward compatibility: some older records may still be plaintext.
-  if (!encryptedText.includes(":")) {
-    return encryptedText;
-  }
-
   const [ivHex, authTagHex, ciphertext] = encryptedText.split(":");
-
-  if (!ivHex || !authTagHex || !ciphertext) {
-    throw new Error("Invalid encrypted value format");
-  }
 
   const decipher = createDecipheriv(
     ALGORITHM,
