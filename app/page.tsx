@@ -8,6 +8,7 @@ import { decrypt } from "@/lib/encryption";
 import RecentTracksCarousel, {
   type RecentTrack,
 } from "@/components/recent-tracks-carousel";
+import FriendsRecentTracksCarousel from "@/components/friends-recent-tracks-carousel";
 import {
   getBestYouTubeThumbnailUrl,
   getYouTubeRecentlyPlayedTracks,
@@ -17,6 +18,7 @@ import {
 type CombinedRecentTrack = RecentTrack & {
   sortEpochMs: number;
 };
+
 function getYouTubeTimestamp(track: YouTubeHistoryTrack): number {
   if (
     typeof track.playedAtEpochMs === "number" &&
@@ -32,6 +34,7 @@ function getYouTubeTimestamp(track: YouTubeHistoryTrack): number {
 // See https://nextjs.org/docs/15/app/getting-started/layouts-and-pages#route-props-helpers
 export default async function HomePage() {
   const session = await verifySession();
+  const requestHeaders = await headers();
 
   const spotifyAccount = await prisma.account.findFirst({
     where: {
@@ -71,7 +74,7 @@ export default async function HomePage() {
               accountId: spotifyAccount.accountId,
               userId: session.user.id,
             },
-            headers: await headers(),
+            headers: requestHeaders,
           });
 
           return SpotifyAPI.getRecentlyPlayedTracks(tokenResponse.accessToken, {
@@ -152,6 +155,8 @@ export default async function HomePage() {
           emptyMessage="No recent listens were returned. Play a few songs on Spotify or YouTube Music and refresh."
           tracks={combinedTracks}
         />
+
+        <FriendsRecentTracksCarousel userId={session.user.id} />
       </main>
     </div>
   );

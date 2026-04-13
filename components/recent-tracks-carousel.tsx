@@ -5,6 +5,8 @@ type RecentTrack = {
   sourceLabel: string;
   source: "spotify" | "youtube";
   coverImage?: string;
+  listenerName?: string;
+  listenerAvatar?: string;
   href: string;
   playedAtDisplay: string;
 };
@@ -54,6 +56,28 @@ export default function RecentTracksCarousel({
               <div className="recent-track-content">
                 <h2 className="recent-track-name">{track.title}</h2>
                 <p className="recent-track-artists">{track.artists}</p>
+
+                {track.listenerName ? (
+                  <div className="recent-track-listener-row">
+                    {track.listenerAvatar ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={track.listenerAvatar}
+                        alt={`${track.listenerName} avatar`}
+                        className="recent-track-listener-avatar"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="recent-track-listener-fallback-avatar">
+                        {track.listenerName.slice(0, 1).toUpperCase()}
+                      </div>
+                    )}
+                    <p className="recent-track-listener-name">
+                      Played by {track.listenerName}
+                    </p>
+                  </div>
+                ) : null}
+
                 <p className="recent-track-played-at">
                   {track.sourceLabel} • {track.playedAtDisplay}
                 </p>
