@@ -138,6 +138,7 @@ export async function getFriends(userId: string) {
       friend: {
         select: {
           id: true,
+          name: true,
           handle: true,
           email: true,
           image: true,

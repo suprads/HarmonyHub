@@ -39,7 +39,7 @@ const navigationData = [
   },
   {
     title: "Leaderboards",
-    href: "/settings", // placeholder for now since the leaderboards page isn't ready yet
+    href: "/leaderboards",
   },
   {
     title: "Settings",

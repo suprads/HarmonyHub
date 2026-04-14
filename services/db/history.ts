@@ -2,6 +2,18 @@
 
 import { prisma } from "@/lib/prisma";
 
+type DailyListenCounts = {
+  spotifyPlays: number;
+  youtubePlays: number;
+  totalPlays: number;
+};
+
+function getDayStart(referenceDate = new Date()) {
+  const dayStart = new Date(referenceDate);
+  dayStart.setHours(0, 0, 0, 0);
+  return dayStart;
+}
+
 /**
  * @param genres If you only want the count for specific genres. Will return
  * count corresponding to every existing genre otherwise.
@@ -100,4 +112,58 @@ export async function getUniqueArtists(userId: string) {
       },
     },
   });
+}
+
+/**
+ * Counts a user's listens for the current day based on persisted history.
+ */
+export async function countDailyHistory(
+  userId: string,
+  since: Date = getDayStart(),
+): Promise<DailyListenCounts> {
+  const history = await prisma.history.findMany({
+    select: {
+      trackSource: {
+        select: {
+          provider: true,
+        },
+      },
+    },
+    where: {
+      userId,
+      OR: [
+        {
+          playedAt: {
+            gte: since,
+          },
+        },
+        {
+          playedAt: null,
+          createdAt: {
+            gte: since,
+          },
+        },
+      ],
+    },
+  });
+
+  return history.reduce(
+    (counts, play) => {
+      if (play.trackSource.provider === "SPOTIFY") {
+        counts.spotifyPlays += 1;
+      }
+
+      if (play.trackSource.provider === "YTMUSIC") {
+        counts.youtubePlays += 1;
+      }
+
+      counts.totalPlays += 1;
+      return counts;
+    },
+    {
+      spotifyPlays: 0,
+      youtubePlays: 0,
+      totalPlays: 0,
+    },
+  );
 }
