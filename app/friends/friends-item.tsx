@@ -126,7 +126,9 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
     const friend = await getHandleByUserId(userId);
     const handle = friend ? friend : "unknown";
     params.set("handle", handle);
-    router.push(`http://127.0.0.1:3000/profile/view?${params.toString()}`);
+    router.push(
+      `https://harmony-hub-ten-delta.vercel.app/profile/view?${params.toString()}`,
+    );
   };
 
   const handleRemoveFriend = async (friendId: string) => {
