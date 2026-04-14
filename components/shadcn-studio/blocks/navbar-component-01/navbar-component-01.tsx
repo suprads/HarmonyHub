@@ -15,6 +15,7 @@ import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Spinner } from "@/components/ui/spinner";
 import LogoutButton from "@/components/logout-button";
+import { ThemeToggle } from "@/app/themeToggle";
 
 type NavigationItem = {
   title: string;
@@ -27,10 +28,13 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
   const { data: session, isPending, isRefetching } = authClient.useSession();
 
   return (
-    <header className="navbar-header">
-      <div className="navbar-container">
+    <header className="navbar-header border-b border-border">
+      <div className="w-full text-center py-6">
+        <h1 className="text-4xl font-medium tracking-[0.3em]">HARMONYHUB</h1>
+      </div>
+      <div className="navbar-container flex justify-center">
         <div className="navbar-links">
-          {navigationData.map((item, index) =>
+          {/* {navigationData.map((item, index) =>
             item.logo ? (
               <Link key={index} href={item.href}>
                 <Logo className="navbar-logo" />
@@ -40,10 +44,15 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
                 {item.title}
               </Link>
             ),
-          )}
+          )} */}
+          {navigationData.map((item, index) => (
+            <Link key={index} href={item.href} className="navbar-link">
+              {item.title}
+            </Link>
+          ))}
         </div>
 
-        <div className="navbar-actions">
+        <div className="navbar-actions absolute right-6 flex items-center gap-4">
           <Link href="/notifications">
             <Button variant="ghost" size="icon">
               <BellIcon />
@@ -53,6 +62,8 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
             <SearchIcon />
             <span className="sr-only">Search</span>
           </Button> */}
+
+          <ThemeToggle />
           <DropdownMenu>
             <div className="hidden md:block">
               <DropdownMenuTrigger asChild>
@@ -65,7 +76,7 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
                       src={session?.user.image ?? undefined}
                       alt={session?.user.name ?? "Guest"}
                     />
-                    <AvatarFallback>
+                    <AvatarFallback className="bg-accent text-secondary-foreground">
                       {isPending || isRefetching ? (
                         <Spinner />
                       ) : (
