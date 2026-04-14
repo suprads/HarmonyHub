@@ -43,6 +43,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-theme-button: var(--theme-button);
   --color-theme-button-foreground: var(--theme-button-foreground);
+  --color-card-border: var(--card-border);
 }
 
 :root {
@@ -102,8 +103,9 @@
 .dark {
   --background: #232946;
   --foreground: #d4d8f0;
-  --card: #d4d8f0;
-  --card-foreground: #232946;
+  --card: #111827;
+  --card-border: #1f2937;
+  --card-foreground: #f9fafb;
   --primary: #adedcf;
   --primary-foreground: #232946;
   --accent: #ed9784;

@@ -6,7 +6,7 @@ type ChartItemProps = {
   name: string;
   subtitle: string;
 };
-
+// make a change here for card
 export default function ChartItem({
   itemNumber,
   imgUrl,

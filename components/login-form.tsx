@@ -54,7 +54,7 @@ export function LoginForm({
       <Card>
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
-          <CardDescription className="text-primary-foreground">
+          <CardDescription className="text-card-foreground">
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
@@ -64,6 +64,7 @@ export function LoginForm({
               <Field data-disabled={pending}>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
+                  className="border-card-border 1px solid"
                   id="email"
                   name="email"
                   type="email"
@@ -81,14 +82,20 @@ export function LoginForm({
                     Forgot your password?
                   </Link> */}
                 </div>
-                <Input id="password" name="password" type="password" required />
+                <Input
+                  className="card-background border-card-border 1px solid"
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                />
               </Field>
               <Field>
                 <Button type="submit" disabled={pending}>
                   {pending && <Spinner />} Login
                 </Button>
                 <Button
-                  className="bg-accent text-primary-foreground !important"
+                  className="bg-accent text-primary-foreground"
                   // variant="outline"
                   type="button"
                   disabled={pending}
@@ -96,7 +103,7 @@ export function LoginForm({
                 >
                   Login with Spotify
                 </Button>
-                <FieldDescription className="text-center text-primary-foreground">
+                <FieldDescription className="text-center text-card-foreground">
                   Don&apos;t have an account?{" "}
                   <Link href="/sign-up">Sign up</Link>
                 </FieldDescription>

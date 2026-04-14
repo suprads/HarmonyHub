@@ -48,7 +48,7 @@ export default async function HomePage() {
       userId: session.user.id,
     },
   });
-
+  // make changes here for card
   if (!spotifyAccount && !youtubeAccount) {
     return (
       <div className="home-page-shell">
