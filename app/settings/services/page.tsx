@@ -24,7 +24,7 @@ export default async function ServicesPage() {
   });
 
   return (
-    <div className="font-sans flex flex-col items-center gap-6 sm:p-20">
+    <div className="services-page font-sans flex flex-col items-center gap-6 sm:p-20">
       <header>
         <h1 className="text-4xl font-bold m-0 p-[auto]">Services</h1>
       </header>

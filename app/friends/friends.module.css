@@ -88,6 +88,16 @@
   flex: 1;
 }
 
+.compatibilitySection {
+  margin-top: 0.5rem;
+}
+
+.compatibilityTotal {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .removeButton {
   flex-shrink: 0;
 }

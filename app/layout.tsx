@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/shadcn-studio/blocks/navbar-component-01/navbar-component-01";
 import ServiceWorkerWrapper from "@/components/service-worker-wrapper";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,11 +40,11 @@ const navigationData = [
   },
   {
     title: "Leaderboards",
-    href: "/settings", // placeholder for now since the leaderboards page isn't ready yet
+    href: "/leaderboards",
   },
   {
     title: "Settings",
-    href: "/settings",
+    href: "/settings/services",
   },
 ];
 
@@ -54,11 +55,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ServiceWorkerWrapper>
-          <Navbar navigationData={navigationData} />
-          <main>{children}</main>
-        </ServiceWorkerWrapper>
+      {/* <body className={`${geistSans.variable} ${geistMono.variable}`}> */}
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground min-h-screen`}
+      >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ServiceWorkerWrapper>
+            <Navbar navigationData={navigationData} />
+            <main>{children}</main>
+          </ServiceWorkerWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );
