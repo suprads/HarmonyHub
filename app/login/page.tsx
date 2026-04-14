@@ -9,7 +9,7 @@ export default async function LoginPage() {
   // if (session) redirect("/profile");
 
   return (
-    <div className="font-sans flex items-center justify-items-center sm:p-20">
+    <div className="login-page font-sans flex items-center justify-items-center sm:p-20">
       <main className="flex flex-col items-center justify-items-center w-full">
         {session ? (
           <>
