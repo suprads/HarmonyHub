@@ -76,11 +76,7 @@ async function getUserComparisonItems(
   userId: string,
   context?: CompatibilityContext,
 ) {
-  const [
-    userGenres,
-    userArtists,
-    userLiveArtists,
-  ] = await Promise.all([
+  const [userGenres, userArtists, userLiveArtists] = await Promise.all([
     getUniqueGenres(userId),
     getUniqueArtists(userId),
     getLiveRecentArtists(userId, context),
@@ -117,7 +113,9 @@ async function getSpotifyAccount(
   return spotifyAccount;
 }
 
-function getYouTubeAccount(userId: string): Promise<YouTubeAccountSnapshot | null> {
+function getYouTubeAccount(
+  userId: string,
+): Promise<YouTubeAccountSnapshot | null> {
   return prisma.youtubeMusicAccount.findUnique({
     where: {
       userId,
