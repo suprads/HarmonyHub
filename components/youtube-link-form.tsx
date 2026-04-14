@@ -19,65 +19,28 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Spinner } from "./ui/spinner";
 import { useActionState } from "react";
-import { linkYouTubeAccount } from "@/services/db/youtubedb";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 /**
  * @url https://ui.shadcn.com/blocks/signup
  */
 export function YouTubeLinkForm({
   className,
-  userId,
+  linkAction,
   ...props
 }: React.ComponentProps<"div"> & {
-  userId: string;
-}) {
-  const router = useRouter();
-
-  async function handleSubmit(
-    prevState: { message: string } | null,
+  linkAction: (
+    prevState: { message?: string; success: boolean },
     formData: FormData,
-  ) {
-    try {
-      const headerRequest = formData.get("headerRequest") as string;
-      const parsedHeaderRequest = JSON.parse(headerRequest);
+  ) => Promise<{ message?: string; success: boolean }>;
+}) {
+  const [state, formAction, pending] = useActionState(linkAction, {
+    success: false,
+  });
 
-      if (!parsedHeaderRequest?.requestHeaders?.headers) {
-        throw new Error(
-          "Invalid header request. Please enter a valid JSON string.",
-        );
-      }
-
-      const headers: { name: string; value: string }[] =
-        parsedHeaderRequest.requestHeaders.headers;
-
-      const cookie = headers.find(
-        (h) => h.name.toLowerCase() === "cookie",
-      )?.value;
-      const authorization = headers.find(
-        (h) => h.name.toLowerCase() === "authorization",
-      )?.value;
-
-      if (!cookie || !authorization) {
-        throw new Error(
-          "Missing required headers. Please ensure both Cookie and Authorization headers are included.",
-        );
-      }
-
-      await linkYouTubeAccount(userId, cookie, authorization);
-      router.refresh();
-      return { message: "YouTube account linked successfully!" };
-    } catch (error) {
-      return {
-        message:
-          error instanceof Error
-            ? error.message
-            : "Failed to link YouTube account. Please try again.",
-      };
-    }
+  if (state.success) {
+    redirect("/settings/services");
   }
-
-  const [error, formAction, pending] = useActionState(handleSubmit, null);
 
   return (
     <div className={cn("flex flex-col gap-6 w-full", className)} {...props}>
@@ -112,7 +75,7 @@ export function YouTubeLinkForm({
                     {pending && <Spinner />} Link YouTube Account
                   </Button>
                 </Field>
-                {error?.message && <FieldError>{error?.message}</FieldError>}
+                {state?.message && <FieldError>{state?.message}</FieldError>}
               </FieldGroup>
             </FieldGroup>
           </form>

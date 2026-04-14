@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { YouTubeLinkForm } from "../../../components/youtube-link-form";
 import { unlinkYouTubeAccount } from "@/services/db/youtubedb";
 import { useRouter } from "next/navigation";
+import { linkAction } from "./actions";
 
 type YouTubeServiceDisplayProps = {
   userId: string;
@@ -38,6 +39,6 @@ export default function YouTubeServiceDisplay({
       </CardContent>
     </Card>
   ) : (
-    <YouTubeLinkForm userId={userId} />
+    <YouTubeLinkForm linkAction={linkAction} />
   );
 }
