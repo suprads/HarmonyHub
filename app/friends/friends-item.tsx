@@ -210,6 +210,9 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
                     <p className={styles.friendEmail}>{friend.email}</p>
                   )}
                 </div>
+                <Button onClick={() => handleViewFriend(friend.id)}>
+                  View
+                </Button>
                 <Button
                   variant="destructive"
                   onClick={() => handleOpenRemoveDialog(friend)}
