@@ -16,7 +16,9 @@ import { Input } from "@/components/ui/input";
 import { User } from "@/generated/prisma/browser";
 import styles from "./friends.module.css";
 
-type Friend = Pick<User, "id" | "handle" | "email" | "image">;
+type Friend = Pick<User, "id" | "handle" | "email" | "image"> & {
+  compatibility: number;
+};
 
 interface UserSearchResult {
   id: string;
@@ -196,6 +198,11 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
                   {friend.email && (
                     <p className={styles.friendEmail}>{friend.email}</p>
                   )}
+                  <div className={styles.compatibilitySection}>
+                    <p className={styles.compatibilityTotal}>
+                      Compatibility: {friend.compatibility}%
+                    </p>
+                  </div>
                 </div>
                 <Button
                   variant="destructive"
