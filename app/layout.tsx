@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/shadcn-studio/blocks/navbar-component-01/navbar-component-01";
-import Footer from "@/components/shadcn-studio/blocks/footer-component-01/footer-component-01";
 import ServiceWorkerWrapper from "@/components/service-worker-wrapper";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,16 +39,12 @@ const navigationData = [
     logo: true,
   },
   {
+    title: "Leaderboards",
+    href: "/leaderboards",
+  },
+  {
     title: "Settings",
-    href: "/settings",
-  },
-  {
-    title: "Profile",
-    href: "/profile",
-  },
-  {
-    title: "Login",
-    href: "/login",
+    href: "/settings/services",
   },
 ];
 
@@ -59,12 +55,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ServiceWorkerWrapper>
-          <Navbar navigationData={navigationData} />
-          <main>{children}</main>
-          <Footer />
-        </ServiceWorkerWrapper>
+      {/* <body className={`${geistSans.variable} ${geistMono.variable}`}> */}
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground min-h-screen`}
+      >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ServiceWorkerWrapper>
+            <Navbar navigationData={navigationData} />
+            <main>{children}</main>
+          </ServiceWorkerWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );

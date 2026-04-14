@@ -6,6 +6,41 @@ import { createAuthMiddleware } from "better-auth/api";
 import { createSettings } from "@/services/db/settings";
 import * as SpotifyAPI from "@/services/spotify";
 
+function normalizeOrigin(url: string): string {
+  return url.replace(/\/$/, "");
+}
+
+const appUrl = normalizeOrigin(
+  process.env.BETTER_AUTH_URL ??
+    process.env.NEXT_PUBLIC_APP_URL ??
+    (process.env.VERCEL_ENV === "production" &&
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : "http://127.0.0.1:3000"),
+);
+
+const spotifyRedirectUri = normalizeOrigin(
+  process.env.SPOTIFY_REDIRECT_URI ?? `${appUrl}/api/auth/callback/spotify`,
+);
+
+const trustedOrigins = Array.from(
+  new Set([
+    appUrl,
+    ...(process.env.VERCEL_URL
+      ? [normalizeOrigin(`https://${process.env.VERCEL_URL}`)]
+      : []),
+    ...(process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? [
+          normalizeOrigin(
+            `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`,
+          ),
+        ]
+      : []),
+  ]),
+);
+
 /**
  * auth.api methods should be executed on the server.
  */
@@ -13,6 +48,7 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+  trustedOrigins,
   emailAndPassword: {
     enabled: true,
   },
@@ -27,7 +63,7 @@ export const auth = betterAuth({
           image: profile.images.at(0)?.url,
         };
       },
-      redirectURI: "http://127.0.0.1:3000/api/auth/callback/spotify",
+      redirectURI: spotifyRedirectUri,
       scope: [...SpotifyAPI.SCOPES],
     },
   },

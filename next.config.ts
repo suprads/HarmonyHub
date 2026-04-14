@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+const ytmusicApiBaseUrl =
+  process.env.YTMUSIC_API_BASE_URL ?? "http://127.0.0.1:8000";
+
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1"],
   images: {
@@ -39,6 +42,14 @@ const nextConfig: NextConfig = {
       ],
     },
   ],
+  async rewrites() {
+    return [
+      {
+        source: "/api/ytmusic/:path*",
+        destination: `${ytmusicApiBaseUrl}/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

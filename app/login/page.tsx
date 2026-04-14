@@ -3,19 +3,17 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { APIError } from "better-auth";
 import { getSession } from "@/services/auth/server";
-import LogoutButton from "./logout-button";
 
 export default async function LoginPage() {
   const session = await getSession();
   // if (session) redirect("/profile");
 
   return (
-    <div className="font-sans flex items-center justify-items-center sm:p-20">
+    <div className="login-page font-sans flex items-center justify-items-center sm:p-20">
       <main className="flex flex-col items-center justify-items-center w-full">
         {session ? (
           <>
             <p>{`Logged in as ${session.user.email}`}</p>
-            <LogoutButton />
           </>
         ) : (
           <>
