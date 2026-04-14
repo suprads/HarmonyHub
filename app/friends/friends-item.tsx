@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -15,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { User } from "@/generated/prisma/browser";
 import styles from "./friends.module.css";
+import { getHandleByUserId } from "@/services/db/user";
 
 type Friend = Pick<User, "id" | "handle" | "email" | "image"> & {
   compatibility: number;
@@ -31,6 +33,9 @@ interface FriendsItemProps {
 }
 
 export default function FriendsItem({ initialFriends }: FriendsItemProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [friends, setFriends] = useState<Friend[]>(initialFriends);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredFriends, setFilteredFriends] =
@@ -114,6 +119,14 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
     } finally {
       setSendingRequestTo(null);
     }
+  };
+
+  const handleViewFriend = async (userId: string) => {
+    const params = new URLSearchParams(searchParams);
+    const friend = await getHandleByUserId(userId);
+    const handle = friend ? friend : "unknown";
+    params.set("handle", handle);
+    router.push(`http://127.0.0.1:3000/profile/view?${params.toString()}`);
   };
 
   const handleRemoveFriend = async (friendId: string) => {
@@ -204,6 +217,9 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
                     </p>
                   </div>
                 </div>
+                <Button onClick={() => handleViewFriend(friend.id)}>
+                  View
+                </Button>
                 <Button
                   variant="destructive"
                   onClick={() => handleOpenRemoveDialog(friend)}
@@ -265,6 +281,9 @@ export default function FriendsItem({ initialFriends }: FriendsItemProps) {
                       <div className={styles.userInfo}>
                         <h4 className={styles.userHandle}>{user.handle}</h4>
                       </div>
+                      <Button onClick={() => handleViewFriend(user.id)}>
+                        View
+                      </Button>
                       <Button
                         onClick={() => handleSendFriendRequest(user.id)}
                         disabled={sendingRequestTo === user.id}

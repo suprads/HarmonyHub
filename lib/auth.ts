@@ -58,9 +58,14 @@ export const auth = betterAuth({
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
       // Maps Spotify profile fields to the User model fields.
       mapProfileToUser: (profile) => {
+        const base = profile.display_name
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, "");
+        const suffix = Math.random().toString(36).slice(2, 6);
         return {
           name: profile.display_name,
           image: profile.images.at(0)?.url,
+          handle: `${base}_${suffix}`,
         };
       },
       redirectURI: spotifyRedirectUri,
