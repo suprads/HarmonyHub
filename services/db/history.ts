@@ -75,7 +75,7 @@ export async function countArtistHistory(userId: string, ...artists: string[]) {
 /**
  * Gets each unique genre present in a user's track history.
  */
-export function getUniqueGenres(userId: string) {
+export async function getUniqueGenres(userId: string) {
   return prisma.genre.findMany({
     select: { name: true },
     distinct: ["name"],
@@ -90,7 +90,7 @@ export function getUniqueGenres(userId: string) {
 /**
  * Gets each unique artist present in a user's track history.
  */
-export function getUniqueArtists(userId: string) {
+export async function getUniqueArtists(userId: string) {
   return prisma.artist.findMany({
     select: { name: true },
     distinct: ["name"],
