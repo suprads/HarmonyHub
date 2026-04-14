@@ -183,14 +183,7 @@ export default async function ProfilePage({
     (a, b) => b.sortEpochMs - a.sortEpochMs,
   );
 
-  const shortActivity = combinedTracks.slice(0, 5).map((track) => ({
-    id: track.id,
-    title: track.title,
-    artists: track.artists,
-    coverImage: track.coverImage,
-    source: track.source,
-    playedAtDisplay: track.playedAtDisplay,
-  }));
+  const shortActivity = combinedTracks.slice(0, 5);
 
   return (
     <main className={styles.page}>
@@ -280,28 +273,13 @@ export default async function ProfilePage({
             </CardHeader>
             {shortActivity.length ? (
               <CardContent className={styles.cardBody}>
-                <div className={styles.activityList}>
-                  {shortActivity.map((track, i) => (
-                    <div key={i} className={styles.activityRow}>
-                      {track.coverImage ? (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
-                          src={track.coverImage}
-                          alt={`${track.title} cover art`}
-                          className="recent-track-cover-image"
-                        />
-                      ) : (
-                        <div className="recent-track-cover-fallback">
-                          {track.source === "spotify" ? "SP" : "YT"}
-                        </div>
-                      )}
-                      <div className={styles.activityText}>
-                        <p>{track.title}</p>
-                        <p>{track.artists}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <RecentTracksCarousel
+                  ariaLabel="Recently listened tracks carousel"
+                  title=""
+                  description=""
+                  emptyMessage="No recent listens were returned. Play a few songs on Spotify or YouTube Music and refresh."
+                  tracks={shortActivity}
+                />
               </CardContent>
             ) : (
               <CardContent className={styles.cardBody}>
