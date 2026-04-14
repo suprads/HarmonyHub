@@ -54,7 +54,7 @@ export function LoginForm({
       <Card>
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
+          <CardDescription className="text-primary-foreground">
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
@@ -88,15 +88,15 @@ export function LoginForm({
                   {pending && <Spinner />} Login
                 </Button>
                 <Button
-                  className="bg-primary text-primary-foreground"
-                  variant="outline"
+                  className="bg-accent text-primary-foreground !important"
+                  // variant="outline"
                   type="button"
                   disabled={pending}
                   onClick={spotifySignIn}
                 >
                   Login with Spotify
                 </Button>
-                <FieldDescription className="text-center">
+                <FieldDescription className="text-center text-primary-foreground">
                   Don&apos;t have an account?{" "}
                   <Link href="/sign-up">Sign up</Link>
                 </FieldDescription>

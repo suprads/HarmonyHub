@@ -30,7 +30,6 @@
 .avatar {
   width: 150px;
   height: 150px;
-  color: var(--primary);
 }
 
 /* Text styling */
@@ -97,8 +96,8 @@
   gap: 8px;
   padding: 6px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
+  border: var(--border);
+  background: var(--secondary);
 }
 
 .tabTrigger {
@@ -174,7 +173,6 @@
   justify-content: space-between;
   gap: 16px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .trackRow:last-child {
@@ -209,9 +207,11 @@
 }
 
 .artistItem {
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 2px solid rgba(0, 0, 0, 0.08);
   border-radius: 10px;
   padding: 12px 12px;
+  background-color: #232946;
+  color: #d4d8f0;
 }
 
 .artistName {
