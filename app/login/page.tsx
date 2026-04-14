@@ -3,7 +3,6 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { APIError } from "better-auth";
 import { getSession } from "@/services/auth/server";
-import LogoutButton from "./logout-button";
 
 export default async function LoginPage() {
   const session = await getSession();
@@ -15,7 +14,6 @@ export default async function LoginPage() {
         {session ? (
           <>
             <p>{`Logged in as ${session.user.email}`}</p>
-            <LogoutButton />
           </>
         ) : (
           <>

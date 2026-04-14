@@ -30,9 +30,6 @@
   self.addEventListener("notificationclick", function (event) {
     console.log("Notification click received.");
     event.notification.close();
-    // TODO Remember to change link in service worker as needed
-    event.waitUntil(
-      self.clients.openWindow("http://127.0.0.1:3000/notifications"),
-    );
+    event.waitUntil(self.clients.openWindow("/notifications"));
   });
 })();

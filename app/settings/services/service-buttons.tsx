@@ -15,11 +15,12 @@ export function LinkServiceButton({
 }: LinkServiceButtonProps) {
   return (
     <Button
+      className="w-full"
       onClick={async () => {
         const linkResult = await authClient.linkSocial({
           provider: provider,
           scopes: scopes,
-          callbackURL: "http://127.0.0.1:3000/settings/services",
+          callbackURL: `${window.location.origin}/settings/services`,
         });
 
         if (linkResult && linkResult.data?.redirect && linkResult.data?.url) {
@@ -30,7 +31,7 @@ export function LinkServiceButton({
         }
       }}
     >
-      Link
+      Link Spotify Account
     </Button>
   );
 }
@@ -42,6 +43,7 @@ type UnlinkServiceButtonProps = {
 export function UnlinkServiceButton({ provider }: UnlinkServiceButtonProps) {
   return (
     <Button
+      className="w-full"
       onClick={async () => {
         const unlinkResult = await authClient.unlinkAccount({
           providerId: provider,
@@ -54,7 +56,7 @@ export function UnlinkServiceButton({ provider }: UnlinkServiceButtonProps) {
         redirect("/settings/services");
       }}
     >
-      Unlink
+      Unlink Spotify Account
     </Button>
   );
 }

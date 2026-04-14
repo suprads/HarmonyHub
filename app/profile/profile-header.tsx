@@ -47,7 +47,7 @@ export default function ProfileHeader() {
       </div>
       <div className={styles.headerActions}>
         <Button variant="secondary">Follow</Button>
-        <Button variant="secondary">Message</Button>
+        {/* <Button variant="secondary">Message</Button> */}
         <Dialog
           open={editOpen}
           onOpenChange={(open) => {

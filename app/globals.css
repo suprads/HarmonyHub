@@ -356,6 +356,21 @@ a.secondary {
   color: #52525b;
 }
 
+.carousel-section-heading {
+  margin: 2rem 0 1rem;
+}
+
+.carousel-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.carousel-section-description {
+  margin-top: 0.35rem;
+  color: #475569;
+}
+
 .recent-tracks-carousel {
   display: flex;
   gap: 1rem;
@@ -394,6 +409,17 @@ a.secondary {
   object-fit: cover;
 }
 
+.recent-track-cover-fallback {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  background: linear-gradient(135deg, #0f172a, #14532d);
+  color: #f8fafc;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
 .recent-track-content {
   padding: 1rem;
 }
@@ -416,6 +442,43 @@ a.secondary {
   margin-top: 0.5rem;
   font-size: 0.875rem;
   color: #52525b;
+}
+
+.recent-track-listener-row {
+  margin-top: 0.625rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.recent-track-listener-avatar,
+.recent-track-listener-fallback-avatar {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  border: 1px solid #0f172a;
+  flex-shrink: 0;
+}
+
+.recent-track-listener-avatar {
+  object-fit: cover;
+}
+
+.recent-track-listener-fallback-avatar {
+  display: grid;
+  place-items: center;
+  background-color: #e2e8f0;
+  color: #0f172a;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.recent-track-listener-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  color: #334155;
 }
 
 .recent-track-played-at {
