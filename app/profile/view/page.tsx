@@ -4,11 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import styles from "../page.module.css";
 import ProfileHeader from "./profile-header";
-import { verifySession } from "@/services/auth/server";
 import StatCard from "../stat-card";
 import { getNumOfFriends } from "@/services/db/friend";
 import { prisma } from "@/lib/prisma";
-import { headers } from "next/headers";
 import * as SpotifyAPI from "@/services/spotify";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
@@ -43,8 +41,6 @@ export default async function ProfilePage({
   searchParams: Promise<{ handle?: string }>;
 }) {
   const params = await searchParams;
-  // const { user } = await verifySession();
-  const requestHeaders = await headers();
 
   if (!params.handle) {
     return (
@@ -98,7 +94,6 @@ export default async function ProfilePage({
         accountId: spotifyAccount.accountId,
         userId: profileView.id,
       },
-      headers: await headers(),
     });
 
     topTracks = await SpotifyAPI.getTopTracks(tokenResponse.accessToken, {
@@ -121,7 +116,6 @@ export default async function ProfilePage({
               accountId: spotifyAccount.accountId,
               userId: profileView.id,
             },
-            headers: requestHeaders,
           });
 
           return SpotifyAPI.getRecentlyPlayedTracks(tokenResponse.accessToken, {
