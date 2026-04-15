@@ -2,15 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import styles from "./page.module.css";
+import styles from "../page.module.css";
 import ProfileHeader from "./profile-header";
-import { verifySession } from "@/services/auth/server";
-import StatCard from "./stat-card";
+import StatCard from "../stat-card";
 import { getNumOfFriends } from "@/services/db/friend";
 import { prisma } from "@/lib/prisma";
 import * as SpotifyAPI from "@/services/spotify";
 import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { decrypt } from "@/lib/encryption";
 import RecentTracksCarousel, {
@@ -37,21 +35,49 @@ function getYouTubeTimestamp(track: YouTubeHistoryTrack): number {
   return 0;
 }
 
-export default async function ProfilePage() {
-  const { user } = await verifySession();
-  const requestHeaders = await headers();
-  const friendsNum = await getNumOfFriends(user.id);
+export default async function ProfilePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ handle?: string }>;
+}) {
+  const params = await searchParams;
+
+  if (!params.handle) {
+    return (
+      <main className={styles.page}>
+        <p>
+          No user specified. Please provide a user handle in the query params.
+        </p>
+      </main>
+    );
+  }
+
+  const profileView = await prisma.user.findUnique({
+    where: {
+      handle: params.handle,
+    },
+  });
+
+  if (!profileView) {
+    return (
+      <main className={styles.page}>
+        <p>User not found.</p>
+      </main>
+    );
+  }
+
+  const friendsNum = await getNumOfFriends(profileView.id);
 
   const spotifyAccount = await prisma.account.findFirst({
     where: {
-      userId: user.id,
+      userId: profileView.id,
       providerId: "spotify",
     },
   });
 
   const youtubeAccount = await prisma.youtubeMusicAccount.findUnique({
     where: {
-      userId: user.id,
+      userId: profileView.id,
     },
   });
 
@@ -66,9 +92,8 @@ export default async function ProfilePage() {
       body: {
         providerId: "spotify",
         accountId: spotifyAccount.accountId,
-        userId: user.id,
+        userId: profileView.id,
       },
-      headers: await headers(),
     });
 
     topTracks = await SpotifyAPI.getTopTracks(tokenResponse.accessToken, {
@@ -89,9 +114,8 @@ export default async function ProfilePage() {
             body: {
               providerId: "spotify",
               accountId: spotifyAccount.accountId,
-              userId: user.id,
+              userId: profileView.id,
             },
-            headers: requestHeaders,
           });
 
           return SpotifyAPI.getRecentlyPlayedTracks(tokenResponse.accessToken, {
@@ -157,7 +181,7 @@ export default async function ProfilePage() {
 
   return (
     <main className={styles.page}>
-      <ProfileHeader />
+      <ProfileHeader profileView={profileView} />
 
       <Separator />
 
@@ -241,16 +265,21 @@ export default async function ProfilePage() {
                 Recent Activity
               </CardTitle>
             </CardHeader>
-
-            <CardContent className={styles.cardBody}>
-              <RecentTracksCarousel
-                ariaLabel="Recently listened tracks carousel"
-                title=""
-                description=""
-                emptyMessage="No recent listens were returned. Play a few songs on Spotify or YouTube Music and refresh."
-                tracks={shortActivity}
-              />
-            </CardContent>
+            {shortActivity.length ? (
+              <CardContent className={styles.cardBody}>
+                <RecentTracksCarousel
+                  ariaLabel="Recently listened tracks carousel"
+                  title=""
+                  description=""
+                  emptyMessage="No recent listens were returned. Play a few songs on Spotify or YouTube Music and refresh."
+                  tracks={shortActivity}
+                />
+              </CardContent>
+            ) : (
+              <CardContent className={styles.cardBody}>
+                <p>No recent activity found.</p>
+              </CardContent>
+            )}
           </Card>
         </TabsContent>
 

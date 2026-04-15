@@ -52,8 +52,13 @@ middleware.ts   # Next.js Middleware
 6. Create a copy of `.env.example` renamed to `.env` in the root directory of the project.
 7. In your new `.env` file, fill the empty values from `.env.example` with our secret ones.
 8. Run the command `docker compose up -d db` to start a local PostgresSQL database.
-9. Run `npm run dev` to start the app.
-10. Open the app by going to `127.0.0.1:3000`.
+9. If desired, run `npx prisma db seed` to fill your local database with test data.
+10. Run `npm run dev` to start the app.
+11. Open the app by going to `127.0.0.1:3000`.
+
+Note 1: `npm run dev` and `npm start` both run the Next.js app and the local FastAPI YouTube service.
+
+Note 2: Set `YTMUSIC_API_BASE_URL` in your `.env` if your YouTube FastAPI service runs somewhere other than `http://127.0.0.1:8000`.
 
 ## Troubleshooting
 

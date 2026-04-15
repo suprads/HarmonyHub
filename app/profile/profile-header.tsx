@@ -34,7 +34,7 @@ export default function ProfileHeader() {
       <div className={styles.headerLeft}>
         <Avatar className={styles.avatar}>
           <AvatarImage src={user.image ?? undefined} alt={user.name} />
-          <AvatarFallback>
+          <AvatarFallback className="bg-accent text-secondary-foreground">
             {isPending || isRefetching ? <Spinner /> : user.name?.at(0)}
           </AvatarFallback>
         </Avatar>
@@ -46,8 +46,8 @@ export default function ProfileHeader() {
         </div>
       </div>
       <div className={styles.headerActions}>
-        <Button variant="secondary">Follow</Button>
-        <Button variant="secondary">Message</Button>
+        {/* <Button variant="secondary">Follow</Button>
+        <Button variant="secondary">Message</Button> */}
         <Dialog
           open={editOpen}
           onOpenChange={(open) => {
