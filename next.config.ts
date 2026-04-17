@@ -42,7 +42,8 @@ const nextConfig: NextConfig = {
       ],
     },
   ],
-  async rewrites() {
+  // eslint-disable-next-line require-await
+  rewrites: async () => {
     return [
       {
         source: "/api/ytmusic/:path*",
