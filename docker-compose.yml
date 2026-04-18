@@ -31,5 +31,19 @@ services:
       - db_data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  # Mostly for using Playwright on unsupported Linux distros.
+  # https://playwright.dev/docs/docker#remote-connection
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.59.1
+    container_name: harmonyhub_playwright
+    ports:
+      - 3000:3000
+    init: true
+    stdin_open: true
+    tty: true
+    working_dir: /home/pwuser
+    user: pwuser
+    command: /bin/sh -c "npx -y playwright@1.59.1 run-server --port 3000 --host 0.0.0.0"
+
 volumes:
   db_data:
