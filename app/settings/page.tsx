@@ -1,4 +1,7 @@
+import { verifySession } from "@/services/auth/server";
+
 export default function SettingsPage() {
+  verifySession();
   return (
     <div className="page">
       <main>
