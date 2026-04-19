@@ -14,7 +14,7 @@ import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Spinner } from "@/components/ui/spinner";
 import LogoutButton from "@/components/logout-button";
-import { ThemeToggle } from "@/app/themeToggle";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type NavigationItem = {
   title: string;
