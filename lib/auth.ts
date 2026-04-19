@@ -10,7 +10,7 @@ function normalizeOrigin(url: string): string {
   return url.replace(/\/$/, "");
 }
 
-const appUrl = normalizeOrigin(
+const APP_URL = normalizeOrigin(
   process.env.BETTER_AUTH_URL ??
     process.env.NEXT_PUBLIC_APP_URL ??
     (process.env.VERCEL_ENV === "production" &&
@@ -21,13 +21,13 @@ const appUrl = normalizeOrigin(
         : "http://127.0.0.1:3000"),
 );
 
-const spotifyRedirectUri = normalizeOrigin(
-  process.env.SPOTIFY_REDIRECT_URI ?? `${appUrl}/api/auth/callback/spotify`,
+const SPOTIFY_REDIRECT_URI = normalizeOrigin(
+  process.env.SPOTIFY_REDIRECT_URI ?? `${APP_URL}/api/auth/callback/spotify`,
 );
 
 const trustedOrigins = Array.from(
   new Set([
-    appUrl,
+    APP_URL,
     ...(process.env.VERCEL_URL
       ? [normalizeOrigin(`https://${process.env.VERCEL_URL}`)]
       : []),
@@ -68,7 +68,7 @@ export const auth = betterAuth({
           handle: `${base}_${suffix}`,
         };
       },
-      redirectURI: spotifyRedirectUri,
+      redirectURI: SPOTIFY_REDIRECT_URI,
       scope: [...SpotifyAPI.SCOPES],
     },
   },
