@@ -49,30 +49,14 @@ async function getUsableSpotifyAccessToken(
     return null;
   }
 
-  const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: `Basic ${Buffer.from(
-        `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
-      ).toString("base64")}`,
-    },
-    body: new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: account.refreshToken,
-    }).toString(),
-    cache: "no-store",
-  });
+  let refreshed: SpotifyAPI.AccessTokenResponse;
 
-  if (!tokenResponse.ok) {
+  try {
+    refreshed = await SpotifyAPI.refreshAccessToken(account.refreshToken);
+  } catch (error) {
+    console.error(error);
     return null;
   }
-
-  const refreshed = (await tokenResponse.json()) as {
-    access_token?: string;
-    expires_in?: number;
-    refresh_token?: string;
-  };
 
   if (!refreshed.access_token) {
     return null;
