@@ -47,14 +47,15 @@ middleware.ts   # Next.js Middleware
 1. Clone the project to a local directory.
 2. Open the project in Visual Studio Code.
 3. Download the Visual Studio Code extensions recommended by our workspace (should prompt you, but extensions can be found in [`.vscode/extensions.json`](.vscode/extensions.json) if not).
-4. Run `npm install`.
-5. Run `npx prisma generate` and `npx next typegen` to generate needed types.
-6. Create a copy of `.env.example` renamed to `.env` in the root directory of the project.
-7. In your new `.env` file, fill the empty values from `.env.example` with our secret ones.
-8. Run the command `docker compose up -d db` to start a local PostgresSQL database.
-9. If desired, run `npx prisma db seed` to fill your local database with test data.
-10. Run `npm run dev` to start the app.
-11. Open the app by going to `127.0.0.1:3000`.
+4. Create and active a Python virtual environment using `python3 -m venv .venv` and `.venv\Scripts\Activate.ps1` (activate command differs depending on the platform and shell. see [the Python docs](https://docs.python.org/3/library/venv.html#how-venvs-work) for your platforms specific command).
+5. Run `npm install`.
+6. Run `npx prisma generate` and `npx next typegen` to generate needed types.
+7. Create a copy of `.env.example` renamed to `.env` in the root directory of the project.
+8. In your new `.env` file, fill the empty values from `.env.example` with our secret ones.
+9. Run the command `docker compose up -d db` to start a local PostgresSQL database.
+10. If desired, run `npx prisma db seed` to fill your local database with test data.
+11. Run `npm run dev` to start the app.
+12. Open the app by going to `127.0.0.1:3000`.
 
 Note 1: `npm run dev` and `npm start` both run the Next.js app and the local FastAPI YouTube service.
 
