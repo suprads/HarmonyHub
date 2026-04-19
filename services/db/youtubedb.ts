@@ -8,10 +8,13 @@ const YTMUSIC_API_BASE_URL =
   process.env.YTMUSIC_API_BASE_URL ?? "http://127.0.0.1:8000";
 
 /**
- * Represents an account linked to a user, such as a Spotify or YouTube Music account.
+ * Represents an account linked to a user, such as a Spotify or YouTube Music
+ * account.
  * @param userId The ID of the user linking their account.
- * @param cookie The cookie header from a request to music.youtube.com, used to authenticate API requests.
- * @param authorization The SAPISIDHASH value from the Authorization header of a request to music.youtube.com, used to authenticate API requests.
+ * @param cookie The cookie header from a request to music.youtube.com, used to
+ * authenticate API requests.
+ * @param authorization The SAPISIDHASH value from the Authorization header of a
+ * request to music.youtube.com, used to authenticate API requests.
  */
 
 async function validateYouTubeCredentials(
@@ -30,8 +33,10 @@ async function validateYouTubeCredentials(
       const err = await res.json().catch(() => null);
       throw new Error(err?.detail || `Status ${res.status}`);
     }
-  } catch (err: any) {
-    throw new Error(`Failed to validate YouTube credentials: ${err.message}`);
+  } catch (err) {
+    if (err && typeof err === "object" && "message" in err) {
+      throw new Error(`Failed to validate YouTube credentials: ${err.message}`);
+    }
   }
 }
 
