@@ -22,7 +22,10 @@ type NavigationItem = {
   /** If to display the link as the app logo. */
   logo?: boolean;
 }[];
-
+/**
+ * Created from
+ * https://shadcnstudio.com/blocks/marketing-ui/navbar-component#navbar-1.
+ */
 const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
   const { data: session, isPending, isRefetching } = authClient.useSession();
 
@@ -33,17 +36,6 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
       </div>
       <div className="navbar-container flex justify-center">
         <div className="navbar-links">
-          {/* {navigationData.map((item, index) =>
-            item.logo ? (
-              <Link key={index} href={item.href}>
-                <Logo className="navbar-logo" />
-              </Link>
-            ) : (
-              <Link key={index} href={item.href} className="navbar-link">
-                {item.title}
-              </Link>
-            ),
-          )} */}
           {navigationData.map((item, index) => (
             <Link key={index} href={item.href} className="navbar-link">
               {item.title}
@@ -57,11 +49,6 @@ const Navbar = ({ navigationData }: { navigationData: NavigationItem }) => {
               <BellIcon />
             </Button>
           </Link>
-          {/* <Button variant="ghost" size="icon">
-            <SearchIcon />
-            <span className="sr-only">Search</span>
-          </Button> */}
-
           <ThemeToggle />
           <DropdownMenu>
             <div className="hidden md:block">
