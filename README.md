@@ -16,19 +16,22 @@ Note: Some of this information with specific version numbers can be found in [`p
 ## Project Structure
 
 ```text
-app             # Next.js app router
-└─ api          # Where request handlers are nested (Next.js route.ts files)
-components      # Reusable UI components
-└─ ui           # Basic component building blocks
-docs            # Documentation related files
-hooks           # Reusable custom react hooks
-lib             # Utility functions
-public          # Static files/assets
-services        # For backend related functions (e.g. API and database)
-tests           # Where tests are stored
+app/            # Next.js app router
+└─ api/         # Where request handlers are nested (Next.js route.ts files)
+components/     # Reusable UI components
+└─ ui/          # Basic component building blocks
+docs/           # Documentation related files
+hooks/          # Reusable custom react hooks
+lib/            # Utility functions
+public/         # Static files/assets
+services/       # For backend related functions (e.g. API and database)
+tests/          # Where tests are stored
+├─ e2e/         # Playwright end-to-end test files
+└─ unit/        # Jest unit test files
 .env.example    # Showcase of important environment variables
 components.json # Config file for shadcn
 envConfig.ts    # For loading environment variables outside Next.js
+jest.setup.ts   # Set up code run before every Jest test and mocks
 middleware.ts   # Next.js Middleware
 ```
 
