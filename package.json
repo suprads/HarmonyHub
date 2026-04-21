@@ -16,7 +16,7 @@
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
     "install:python": "pip3 install -r requirements.txt",
-    "postinstall": "prisma generate && npm run install:python"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@next/env": "15.5.4",
