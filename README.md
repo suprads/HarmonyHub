@@ -47,22 +47,41 @@ middleware.ts   # Next.js Middleware
 
 ### First Time Set Up
 
-1. Clone the project to a local directory.
-2. Open the project in Visual Studio Code.
-3. Download the Visual Studio Code extensions recommended by our workspace (should prompt you, but extensions can be found in [`.vscode/extensions.json`](.vscode/extensions.json) if not).
-4. Create and active a Python virtual environment using `python3 -m venv .venv` and `.venv\Scripts\Activate.ps1` (activate command differs depending on the platform and shell. see [the Python docs](https://docs.python.org/3/library/venv.html#how-venvs-work) for your platforms specific command).
-5. Run `npm install`.
-6. Run `npx prisma generate` and `npx next typegen` to generate needed types.
-7. Create a copy of `.env.example` renamed to `.env` in the root directory of the project.
-8. In your new `.env` file, fill the empty values from `.env.example` with our secret ones.
-9. Run the command `docker compose up -d db` to start a local PostgresSQL database.
-10. If desired, run `npx prisma db seed` to fill your local database with test data.
-11. Run `npm run dev` to start the app.
-12. Open the app by going to `127.0.0.1:3000`.
+1\. It's recommended to start by opening the project in Visual Studio Code and downloading the Visual Studio Code extensions recommended by our workspace (should prompt you, but extensions can be found in [`.vscode/extensions.json`](.vscode/extensions.json) if not).
 
-Note 1: `npm run dev` and `npm start` both run the Next.js app and the local FastAPI YouTube service.
+2\. Install the apps node dependencies, then generate the needed TypeScript types.
 
-Note 2: Set `YTMUSIC_API_BASE_URL` in your `.env` if your YouTube FastAPI service runs somewhere other than `http://127.0.0.1:8000`.
+```PowerShell
+npm install
+npx prisma generate
+npx next typegen
+```
+
+3\. Create and activate a Python virtual environment, then download the required Python packages.
+
+```PowerShell
+python3 -m venv .venv
+.venv\Scripts\activate 
+pip3 install -r requirements.txt
+```
+
+***Note:** The command to active the virtual environment differs depending on your OS and shell. See [the Python docs](https://docs.python.org/3/library/venv.html#how-venvs-work) for your platforms specific command.*
+
+4\. Create a local copy of `.env.example` renamed to `.env` in the root directory of the project.
+
+5\. In your new `.env` file, fill the empty values from `.env.example` with our secret ones.
+
+***Note:** Set `YTMUSIC_API_BASE_URL` in your `.env` if your YouTube FastAPI service runs somewhere other than `http://127.0.0.1:8000`.*
+
+6\. Run the command `docker compose up -d db` to start a local PostgresSQL database.
+
+7\. If desired, run `npx prisma db seed` to fill your local database with test data.
+
+8\. Run `npm run dev` to start the app in development mode.
+
+***Note:** `npm run dev` and `npm start` both run the Next.js app and the local FastAPI YouTube service.*
+
+9\. Open the app by going to `127.0.0.1:3000` in your browser.
 
 ## Troubleshooting
 
