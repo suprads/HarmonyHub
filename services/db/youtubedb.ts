@@ -4,8 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { encrypt } from "@/lib/encryption";
 
-const YTMUSIC_API_BASE_URL =
-  process.env.YTMUSIC_API_BASE_URL ?? "http://127.0.0.1:8000";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://127.0.0.1:3000";
 
 /**
  * Represents an account linked to a user, such as a Spotify or YouTube Music
@@ -22,7 +21,7 @@ async function validateYouTubeCredentials(
   authorization: string,
 ) {
   try {
-    const res = await fetch(`${YTMUSIC_API_BASE_URL}/health`, {
+    const res = await fetch(`${APP_URL}/api/ytmusic/health`, {
       method: "GET",
       headers: {
         "X-Cookie": cookie,

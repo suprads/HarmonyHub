@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const ytmusicApiBaseUrl =
+const YTMUSIC_API_BASE_URL =
   process.env.YTMUSIC_API_BASE_URL ?? "http://127.0.0.1:8000";
 
 const nextConfig: NextConfig = {
@@ -46,7 +46,10 @@ const nextConfig: NextConfig = {
   rewrites: async () => [
     {
       source: "/api/ytmusic/:path*",
-      destination: `${ytmusicApiBaseUrl}/:path*`,
+      destination:
+        process.env.NODE_ENV === "development"
+          ? `${YTMUSIC_API_BASE_URL}/api/ytmusic/:path*`
+          : "/api/ytmusic/",
     },
   ],
 };
