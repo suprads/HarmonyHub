@@ -52,8 +52,8 @@ export default async function HomePage() {
   if (!spotifyAccount && !youtubeAccount) {
     return (
       <div className="home-page-shell">
-        <main className="main">
-          <p>
+        <main className="home-page-main flex min-h-[60vh] items-center justify-center text-center">
+          <p className="max-w-xl">
             No tracks to display. Please connect to Spotify or YouTube Music{" "}
             <Link className="underline" href="/settings/services">
               here

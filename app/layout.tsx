@@ -39,7 +39,7 @@ const navigationData = [
   },
   {
     title: "Settings",
-    href: "/settings/services",
+    href: "/settings",
   },
 ];
 
