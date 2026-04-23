@@ -2,7 +2,11 @@ import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/services/auth/server";
 import ServiceDisplay from "./service-display";
 import * as SpotifyAPI from "@/services/spotify";
-import YouTubeServiceDisplay from "./youtube-service-display";
+import {
+  YouTubeServiceDisplayJson,
+  YouTubeServiceDisplayCookieAuthorization,
+} from "./youtube-service-display";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 /**
  * Page where you can manage the services (e.g. Spotify) linked to your account.
@@ -39,10 +43,38 @@ export default async function ServicesPage() {
           />
         </div>
         <div className="w-full max-w-sm">
-          <YouTubeServiceDisplay
-            userId={session.user.id}
-            isLinked={!youtubeMusicAccount ? false : true}
-          />
+          <Tabs defaultValue="JSON" className="w-full">
+            <TabsList className="flex border-b border-gray-300">
+              <TabsTrigger
+                value="JSON"
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600"
+              >
+                JSON Header
+              </TabsTrigger>
+              <TabsTrigger
+                value="Cookie_Authrization"
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600"
+              >
+                Cookie & Authrization
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="JSON" className="p-4">
+              <div className="w-full max-w-sm">
+                <YouTubeServiceDisplayJson
+                  userId={session.user.id}
+                  isLinked={!youtubeMusicAccount ? false : true}
+                />
+              </div>
+            </TabsContent>
+            <TabsContent value="Cookie_Authrization" className="p-4">
+              <div className="w-full max-w-sm">
+                <YouTubeServiceDisplayCookieAuthorization
+                  userId={session.user.id}
+                  isLinked={!youtubeMusicAccount ? false : true}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
     </div>
