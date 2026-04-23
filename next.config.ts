@@ -51,6 +51,20 @@ const nextConfig: NextConfig = {
           ? `${YTMUSIC_API_BASE_URL}/api/ytmusic/:path*`
           : "/api/ytmusic/",
     },
+    {
+      source: "/api/ytmusic/docs",
+      destination:
+        process.env.NODE_ENV === "development"
+          ? `${YTMUSIC_API_BASE_URL}/api/ytmusic/docs`
+          : "/api/ytmusic/docs",
+    },
+    {
+      source: "/api/ytmusic/openapi.json",
+      destination:
+        process.env.NODE_ENV === "development"
+          ? `${YTMUSIC_API_BASE_URL}/api/ytmusic/openapi.json`
+          : "/api/ytmusic/openapi.json",
+    },
   ],
 };
 

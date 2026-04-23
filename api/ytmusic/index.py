@@ -126,9 +126,9 @@ def parse_played_label_to_epoch_ms(label: str | None, index: int) -> int | None:
 
     return None
 
-app = FastAPI()
-
 BASE_PATH = "/api/ytmusic"
+
+app = FastAPI(openapi_url=f'{BASE_PATH}/openapi.json', docs_url=f'{BASE_PATH}/docs')
  
 @app.get(f'{BASE_PATH}/health')
 async def health_check(
