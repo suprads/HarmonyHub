@@ -66,7 +66,12 @@ export function YouTubeLinkFormJson({
                 <FieldDescription>
                   Enter the whole header request from a request to
                   music.youtube.com. Found in the Network tab of your
-                  browser&apos;s developer tools.
+                  browser&apos;s developer tools. Search for the header by
+                  entering &quot;browse&quot; in the filter box and copying the
+                  value of the Request header.
+                  <br />
+                  <br />
+                  Used for Firefox and non Chromium based browsers.
                 </FieldDescription>
               </Field>
               <FieldGroup>
@@ -135,7 +140,13 @@ export function YouTubeLinkFormCookieAuthorization({
                 <FieldDescription>
                   Enter the Cookie and Authorization values from a request to
                   music.youtube.com. Found in the Network tab of your
-                  browser&apos;s developer tools.
+                  browser&apos;s developer tools. Search for the header by
+                  entering &quot;browse&quot; in the filter box and copying the
+                  Cookie and Authorization values under the Request Headers
+                  section.
+                  <br />
+                  <br />
+                  Used for Chromium based browsers.
                 </FieldDescription>
               </Field>
               <FieldGroup>

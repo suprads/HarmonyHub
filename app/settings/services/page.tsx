@@ -42,9 +42,9 @@ export default async function ServicesPage() {
             action={spotifyAccount ? "unlink" : "link"}
           />
         </div>
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-sm mx-auto">
           <Tabs defaultValue="JSON" className="w-full">
-            <TabsList className="flex border-b border-gray-300">
+            <TabsList className="self-center border-b border-gray-300">
               <TabsTrigger
                 value="JSON"
                 className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600"
