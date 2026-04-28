@@ -125,10 +125,12 @@ def parse_played_label_to_epoch_ms(label: str | None, index: int) -> int | None:
             continue
 
     return None
+
+BASE_PATH = "/api/ytmusic"
+
+app = FastAPI(openapi_url=f'{BASE_PATH}/openapi.json', docs_url=f'{BASE_PATH}/docs')
  
-app = FastAPI()
- 
-@app.get("/health")
+@app.get(f'{BASE_PATH}/health')
 async def health_check(
     x_cookie: str = Header(...),
     x_authorization: str = Header(...),
@@ -147,7 +149,7 @@ async def health_check(
     return {"status": "ok", "service": "ytmusic"}
  
  
-@app.post("/history")
+@app.post(f'{BASE_PATH}/history')
 async def get_history(req: UserRequest):
     yt = create_ytmusic_client(req.headers)
  
@@ -168,7 +170,7 @@ async def get_history(req: UserRequest):
     return {"tracks": tracks, "count": len(tracks)}
  
  
-@app.post("/top-tracks")
+@app.post(f'{BASE_PATH}/top-tracks')
 async def get_top_tracks(req: UserRequest):
     yt = create_ytmusic_client(req.headers)
  

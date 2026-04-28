@@ -88,7 +88,7 @@ export async function countArtistHistory(userId: string, ...artists: string[]) {
  * Gets each unique genre present in a user's track history.
  */
 export async function getUniqueGenres(userId: string) {
-  return prisma.genre.findMany({
+  return await prisma.genre.findMany({
     select: { name: true },
     distinct: ["name"],
     where: {
@@ -103,7 +103,7 @@ export async function getUniqueGenres(userId: string) {
  * Gets each unique artist present in a user's track history.
  */
 export async function getUniqueArtists(userId: string) {
-  return prisma.artist.findMany({
+  return await prisma.artist.findMany({
     select: { name: true },
     distinct: ["name"],
     where: {
@@ -149,16 +149,17 @@ export async function countDailyHistory(
 
   return history.reduce(
     (counts, play) => {
+      const countsMod = { ...counts };
       if (play.trackSource.provider === "SPOTIFY") {
-        counts.spotifyPlays += 1;
+        countsMod.spotifyPlays += 1;
       }
 
       if (play.trackSource.provider === "YTMUSIC") {
-        counts.youtubePlays += 1;
+        countsMod.youtubePlays += 1;
       }
 
-      counts.totalPlays += 1;
-      return counts;
+      countsMod.totalPlays += 1;
+      return countsMod;
     },
     {
       spotifyPlays: 0,

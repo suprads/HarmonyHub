@@ -1,3 +1,4 @@
+import { verifySession } from "@/services/auth/server";
 import Link from "next/link";
 import {
   Card,
@@ -9,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 export default function SettingsPage() {
+  verifySession();
   return (
     <div className="font-sans flex flex-col items-center gap-6 sm:p-20">
       <header>

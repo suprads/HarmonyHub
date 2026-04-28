@@ -19,7 +19,6 @@ export function ThemeToggle() {
       className="bg-theme-button text-theme-button-foreground px-3 py-1 border border-border rounded-md"
     >
       {theme === "dark" ? "☀️" : "🌙"}
-      {/* {theme === "dark" ? "light" : "dark"} */}
     </button>
   );
 }
