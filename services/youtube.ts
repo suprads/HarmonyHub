@@ -37,8 +37,7 @@ type YouTubeApiError = {
   detail?: string;
 };
 
-const YTMUSIC_API_BASE_URL =
-  process.env.YTMUSIC_API_BASE_URL ?? "http://127.0.0.1:8000";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://127.0.0.1:3000";
 
 export function getBestYouTubeThumbnailUrl(
   thumbnails: YouTubeThumbnail[] | undefined,
@@ -69,7 +68,7 @@ export function getBestYouTubeThumbnailUrl(
 export async function getYouTubeRecentlyPlayedTracks(
   request: YouTubeHistoryRequest,
 ): Promise<YouTubeHistoryResponse> {
-  const response = await fetch(`${YTMUSIC_API_BASE_URL}/history`, {
+  const response = await fetch(`${APP_URL}/api/ytmusic/history`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -5,6 +5,15 @@ export const SCOPES = Object.freeze([
   "user-read-recently-played",
 ]);
 
+export type AccessTokenResponse = {
+  access_token: string;
+  token_type: "Bearer";
+  /** Time until token expires in seconds. */
+  expires_in: number;
+  scope?: string;
+  refresh_token?: string;
+};
+
 /** For queries that support paging of data. */
 type Paging = {
   /** Number of items per page. */
@@ -93,6 +102,11 @@ export type TopArtistsResponse = Omit<TopItemsResponse, "items"> & {
   items: Artist[];
 };
 
+type AuthenticationError = {
+  error: string;
+  error_description: string;
+};
+
 /** Returned by Spotify for errors relating to API calls */
 type SpotifyError = {
   error: {
@@ -102,9 +116,51 @@ type SpotifyError = {
 };
 
 /**
+ * Used to refresh the access token when it expires. Recommended to do this
+ * through Better Auth instead.
+ * @returns JSON response from requesting a refresh. If a new refresh_token
+ * isn't included, keep using the existing token.
+ * @throws Error if something went wrong with the authentication request.
+ * @url
+ * https://developer.spotify.com/documentation/web-api/tutorials/refreshing-tokens
+ */
+export async function refreshAccessToken(
+  refreshToken: string,
+): Promise<AccessTokenResponse> {
+  const encodedKeys = Buffer.from(
+    `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
+  ).toString("base64");
+
+  const searchParams = new URLSearchParams({
+    grant_type: "refresh_token",
+    refresh_token: refreshToken,
+  });
+
+  const response = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    body: searchParams.toString(),
+    headers: {
+      Authorization: `Basic ${encodedKeys}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    cache: "no-store",
+  });
+
+  const json = await response.json();
+
+  if (json.error) {
+    const authError: AuthenticationError = json;
+    throw new Error(`${authError.error}: ${authError.error_description}}`);
+  }
+
+  return json;
+}
+
+/**
  * Gets the user's top tracks or artists from Spotify.
  * @throws Error if something went wrong when trying to access the API.
- * @url https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
+ * @url
+ * https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
  */
 export async function getTopItems(
   accessToken: string,
@@ -167,7 +223,8 @@ export async function getTopArtists(
 /**
  * Gets the user's recently played tracks from Spotify.
  * @throws Error if something went wrong when trying to access the API.
- * @url https://developer.spotify.com/documentation/web-api/reference/get-recently-played
+ * @url
+ * https://developer.spotify.com/documentation/web-api/reference/get-recently-played
  */
 export async function getRecentlyPlayedTracks(
   accessToken: string,

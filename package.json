@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev-next": "next dev --turbopack --hostname 127.0.0.1",
-    "dev-fastapi": "python3 -m uvicorn app.api.ytmusic.YTImport:app --reload --port 8000",
+    "dev-fastapi": "pip3 install -r requirements.txt && python3 -m uvicorn api.ytmusic.index:app --reload",
     "dev": "concurrently \"npm run dev-next\" \"npm run dev-fastapi\"",
     "build": "next build",
     "start-next": "next start --hostname 127.0.0.1",
-    "start-fastapi": "python3 -m uvicorn app.api.ytmusic.YTImport:app --host 127.0.0.1 --port 8000",
+    "start-fastapi": "pip3 install -r requirements.txt && python3 -m uvicorn api.ytmusic.index:app",
     "start": "concurrently \"npm run start-next\" \"npm run start-fastapi\"",
     "lint": "eslint",
     "test": "jest",
