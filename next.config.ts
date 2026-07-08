@@ -42,14 +42,13 @@ const nextConfig: NextConfig = {
       ],
     },
   ],
-  async rewrites() {
-    return [
-      {
-        source: "/api/ytmusic/:path*",
-        destination: `${ytmusicApiBaseUrl}/:path*`,
-      },
-    ];
-  },
+  // eslint-disable-next-line require-await
+  rewrites: async () => [
+    {
+      source: "/api/ytmusic/:path*",
+      destination: `${ytmusicApiBaseUrl}/:path*`,
+    },
+  ],
 };
 
 export default nextConfig;
